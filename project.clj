@@ -1,4 +1,5 @@
 (defproject first-blood "1.0.0"
+  :dependencies [[org.clojure/clojure "1.4.0"]]
   :plugins [[lein-cljsbuild "0.2.4"]]
   :cljsbuild {
     :builds [{
@@ -9,4 +10,5 @@
         :compiler {
           :output-to "web/js/main.js"  ; default: main.js in current directory
           :optimizations :whitespace
+          ; :optimizations :advanced
           :pretty-print true}}]})
