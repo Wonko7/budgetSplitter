@@ -1,5 +1,6 @@
 (defproject first-blood "1.0.0"
-  :dependencies [[org.clojure/clojure "1.4.0"]]
+  :dependencies [[org.clojure/clojure "1.4.0"]
+                 [jayq "0.1.0-alpha2"]]
   :plugins [[lein-cljsbuild "0.2.4"]]
   :cljsbuild {
     :builds [{
