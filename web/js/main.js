@@ -21011,5 +21011,14 @@ goog.require("cljs.core");
 goog.require("jayq.core");
 goog.require("jayq.core");
 fb.lol.change = function change() {
-  return alert("ok")
+  return jayq.core.$.call(null, "body div").hide("slow").append("<br> looooooooooooooooooooooooooooooools <br>").show("slow")
 };
+jayq.core.$.call(null, function() {
+  return jayq.core.delegate.call(null, jayq.core.$.call(null, "body"), "a", "\ufdd0'click", function(e) {
+    alert(jayq.core.$.call(null, e.currentTarget).attr("href"));
+    return false
+  })
+});
+jayq.core.$.call(null, function() {
+  return jayq.core.$.call(null, "#content").append(jayq.core.$.call(null, "#project"))
+});
