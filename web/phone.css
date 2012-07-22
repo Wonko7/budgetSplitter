@@ -11,3 +11,11 @@ body {
 	/* Amount of negative space around the
 	inside of the body */
 }
+
+.hidden {
+	visibility: hidden;
+}
+
+.visible {
+	visibility: visible;
+}
