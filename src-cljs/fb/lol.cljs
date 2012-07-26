@@ -60,6 +60,17 @@
                                ; #(js/alert "INSERT INTO costs (name, pid, tot) VALUES (?, ?); failed."))
                                ))))
 
+(defn get-proj [& id]
+  (let [rq (if id
+             (str "SELECT * FROM projects WHERE projects.id = " id ";" )
+             "SELECT * FROM projects")]
+    (.transaction db
+                  (fn [t]
+                    (.executeSql t rq (clj->js [])
+                                 (fn [t r]
+                                   (js/alert (str "found " (.-length (.-rows r)))))
+                                 #(js/alert (str "fuck. " (.-message %2)))
+                               )))))
 ($ #(do
       (def db (js/openDatabase "projs" "1.0" "projs" 65536))
       (add-db! :projects (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
@@ -82,4 +93,5 @@
       ;(add-buddy "john" "img")
       ;(add-buddy "dalek" "img")
       ;(add-cost "tardis" [1 2 3 4] 1 744)
+      ;(get-proj)
       ))
