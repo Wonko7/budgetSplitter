@@ -40,8 +40,6 @@
   (.transaction db
                 (fn [t]
                   (.executeSql t "INSERT INTO projects (name) VALUES (?);" (clj->js [name]) 
-                               ; #(js/alert (str name " added!") )
-                               ; #(js/alert "failed!")
                                ))))
 (defn add-buddy [name img]
   (.transaction db
@@ -56,11 +54,11 @@
                                  (doseq [b buddies]
                                    (.executeSql t "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
                                                 (clj->js [proj b (.-insertId r) 3])
-                                                #(js/alert (str :done [proj b (.-insertId r) 3] ))
-                                                #(js/alert (str :failed [proj b (.-insertId r) 3] ))
+                                                ; #(js/alert (str :done [proj b (.-insertId r) 3] ))
+                                                ; #(js/alert (str :failed [proj b (.-insertId r) 3] ))
                                                 ))) 
-                               #(js/alert "INSERT INTO costs (name, pid, tot) VALUES (?, ?); failed."))
-                  )))
+                               ; #(js/alert "INSERT INTO costs (name, pid, tot) VALUES (?, ?); failed."))
+                               ))))
 
 ($ #(do
       (def db (js/openDatabase "projs" "1.0" "projs" 65536))
@@ -83,5 +81,5 @@
       ;(add-buddy "jack" "img")
       ;(add-buddy "john" "img")
       ;(add-buddy "dalek" "img")
-      (add-cost "tardis" [1 2 3 4] 1 744)
+      ;(add-cost "tardis" [1 2 3 4] 1 744)
       ))
