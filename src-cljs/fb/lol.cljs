@@ -6,13 +6,23 @@
 ;;;;;; page loading
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(def page-dyn-inits {})
+
+(defn add-init! [name func]
+  (def page-dyn-inits (into page-dyn-inits {name func})))
+
+(defn load-dyn-page [name]
+   (if-let [f (page-dyn-inits name)]
+     (f))) 
+
 (defn load-page [name]
   (let [newp ($ (str "#" name))
         newp (if (zero? (.-length newp)) ($ "#404") newp)
         curr ($ "#content")]
     (.hide curr 300 #(-> curr
-                      (.html (.html newp))
-                      (.show 300)))))
+                       (.html (.html newp))
+                       (load-dyn-page name)
+                       (.show 300)))))
 
 ($ #(delegate ($ "body") "a" "click touchend"
               (fn [e] 
@@ -20,9 +30,6 @@
                       link (.attr a "href")]
                   (load-page link)
                   false)))) 
-
-($ #(load-page "projects"))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; sql storage
@@ -60,17 +67,37 @@
                                ; #(js/alert "INSERT INTO costs (name, pid, tot) VALUES (?, ?); failed."))
                                ))))
 
-(defn get-proj [& id]
+(defn do-proj [f & id]
   (let [rq (if id
              (str "SELECT * FROM projects WHERE projects.id = " id ";" )
              "SELECT * FROM projects")]
     (.transaction db
                   (fn [t]
                     (.executeSql t rq (clj->js [])
-                                 (fn [t r]
-                                   (js/alert (str "found " (.-length (.-rows r)))))
-                                 #(js/alert (str "fuck. " (.-message %2)))
+                                 #(f %1 %2)
+                                 ;#(js/alert (str "fuck. " (.-message %2)))
                                )))))
+
+(defn do-row [f r]
+  (doseq [i (range (.-length (.-rows r)))]
+    (f (.item (.-rows r) i))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;; pages
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(defn show-projects []
+  (let [ul ($ "#projects div:list ul")]
+    (do-proj (fn [t r]
+                 (do-row (fn [i]
+                           (js/alert (.-name  i)))
+                          r)
+                 ))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;; init
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ($ #(do
       (def db (js/openDatabase "projs" "1.0" "projs" 65536))
       (add-db! :projects (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
@@ -94,4 +121,7 @@
       ;(add-buddy "dalek" "img")
       ;(add-cost "tardis" [1 2 3 4] 1 744)
       ;(get-proj)
+      (load-page "projects")
+      
       ))
+
