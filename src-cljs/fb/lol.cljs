@@ -11,24 +11,36 @@
 (defn add-init! [name func]
   (def page-dyn-inits (into page-dyn-inits {name func})))
 
-(defn load-page [name]
-  (let [newp ($ (str "div.hidden div." name))
-        newp (if (zero? (.-length newp)) ($ "div.hidden div.404") newp)
-        curr ($ "#content")]
-    (.hide curr 300 #(-> curr
-                       (.html (.html newp))
-                       ;(.show 300)
-                       ))))
+(defn load-template [name]
+  (let [temp ($ (str "div.hidden div." name))
+        temp (if (zero? (.-length temp)) ($ "div.hidden div.404") temp)
+        newp ($ "#newpage")]
+    (.html newp (.html temp))))
 
-(defn show-page []
- (.show ($ "#content") 300))
+(defn swap-page []
+  (let [newp ($ "#newpage")
+        cont ($ "#content")
+        hidd ($ "body div.hidden")]
+    (.hide cont 300 #(do
+                       (-> cont
+                         (.empty)
+                         (.append (-> newp
+                                    (.clone)
+                                    (.removeAttr "style")
+                                    (.attr "id" "wtf") ; FIXME WTF. 
+                                    ))
+                         ;(.append newp)
+                         (.show 300)) 
+                       (.empty newp)
+                       ;(.hide (.append hidd ($ "<div id=\"newpage\"></div>")))
+                       ))))
 
 (defn load-dyn-page [name e]
    (if-let [f (page-dyn-inits name)]
      (f e)
      (do
-       (load-page name)
-       (show-page)))) 
+       (load-template name)
+       (swap-page))))
 
 ($ #(delegate ($ "body") "a" "click touchend"
               (fn [e] 
@@ -93,9 +105,9 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn show-projects []
-  (load-page "projects")
-  (let [ul ($ "#content div ul")
-        li ($ "#content div ul li")]
+  (load-template "projects")
+  (let [ul ($ "#newpage div ul")
+        li ($ "#newpage div ul li")]
     (do-proj (fn [t r]
                (do-row (fn [i]
                          (.append ul (-> li 
@@ -108,23 +120,24 @@
                                                   (.text (.-name i))
                                                   (.attr "href" "proj")
                                                   (.data "projid" (.-id i))))))
-                         ;(js/alert (str (.-id i) " added " (.data ($ "#content div ul li:last a") "projid")))
+                         ;(js/alert (str (.-id i) " added " (.data ($ "#newpage div ul li:last a") "projid")))
                          ;(js/alert (str (.-id i) " added " (.html ($ "#content div ul li:last a"))))
                          )
-                       r)))
-    (show-page)))
+                       r)
+               (swap-page)))
+    ))
 
 (defn show-proj [e]
-  (let [;a   ($ (first ($ (.-currentTarget e))))
-        
-        pid (.data ($ (.-currentTarget e)) "projid")
+  ;(load-template "proj")
+  (let [a   ($ (first ($ (.-currentTarget e))))
+        pid (.data a "projid")
         ;t   ($ "#title")
         ;setdata (fn [t r]
         ;          (.item (.-rows r) 0))
         ]
-    (load-page "proj")
-    ;(js/alert (str "found proj id: " (.html a) " | " (.data a "projid") " | last: " (.data ($ "#content div ul li:last a") "projid")))) 
-    (js/alert (str "found proj id: " pid  "projid"))
+    (js/alert (str "found proj id: " (.html a) " | " (.data a "projid") " | last: " (.data ($ "#content div ul li:last a") "projid")))
+    ;(js/alert (str "found proj id: " pid ))
+    ;(swap-page)
     ))
 
 (add-init! "projects" show-projects)
@@ -156,7 +169,6 @@
       ;(add-buddy "john" "img")
       ;(add-buddy "dalek" "img")
       ;(add-cost "tardis" [1 2 3 4] 1 744)
+      (.hide ($ "#newpage"))
       (load-dyn-page "projects" nil)
-      
       ))
-
