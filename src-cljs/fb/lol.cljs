@@ -11,24 +11,30 @@
 (defn add-init! [name func]
   (def page-dyn-inits (into page-dyn-inits {name func})))
 
-(defn load-dyn-page [name e]
-   (if-let [f (page-dyn-inits name)]
-     (f e))) 
-
-(defn load-page [name e]
+(defn load-page [name]
   (let [newp ($ (str "div.hidden div." name))
         newp (if (zero? (.-length newp)) ($ "div.hidden div.404") newp)
         curr ($ "#content")]
-    (.hide curr 300 #(do
-                       (.html curr (.html newp))
-                       (load-dyn-page name e)
-                       (.show curr 300)))))
+    (.hide curr 300 #(-> curr
+                       (.html (.html newp))
+                       ;(.show 300)
+                       ))))
+
+(defn show-page []
+ (.show ($ "#content") 300))
+
+(defn load-dyn-page [name e]
+   (if-let [f (page-dyn-inits name)]
+     (f e)
+     (do
+       (load-page name)
+       (show-page)))) 
 
 ($ #(delegate ($ "body") "a" "click touchend"
               (fn [e] 
                 (let [a    ($ (.-currentTarget e))
                       link (.attr a "href")]
-                  (load-page link e)
+                  (load-dyn-page link e)
                   false)))) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -67,7 +73,7 @@
                                ; #(js/alert "INSERT INTO costs (name, pid, tot) VALUES (?, ?); failed."))
                                ))))
 
-(defn do-proj [f & id]
+(defn do-proj [f & [id]]
   (let [rq (if id
              (str "SELECT * FROM projects WHERE projects.id = " id ";" )
              "SELECT * FROM projects")]
@@ -87,6 +93,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn show-projects []
+  (load-page "projects")
   (let [ul ($ "#content div ul")
         li ($ "#content div ul li")]
     (do-proj (fn [t r]
@@ -100,18 +107,25 @@
                                        (.append (-> ($ "<a></a>")
                                                   (.text (.-name i))
                                                   (.attr "href" "proj")
-                                                  (.data "projid" (str (.-name i))))))))
-                       r)))))
+                                                  (.data "projid" (.-id i))))))
+                         ;(js/alert (str (.-id i) " added " (.data ($ "#content div ul li:last a") "projid")))
+                         ;(js/alert (str (.-id i) " added " (.html ($ "#content div ul li:last a"))))
+                         )
+                       r)))
+    (show-page)))
 
 (defn show-proj [e]
-  (let [a   ($ (.-currentTarget e))
-        pid (.data a "projid")
-        t   ($ "#title")
-        setdata (fn [t r]
-                  (.item (.-rows r) 0))
+  (let [;a   ($ (first ($ (.-currentTarget e))))
+        
+        pid (.data ($ (.-currentTarget e)) "projid")
+        ;t   ($ "#title")
+        ;setdata (fn [t r]
+        ;          (.item (.-rows r) 0))
         ]
-  (js/alert (str "found proj id: " (.data a "projid")))) 
-  )
+    (load-page "proj")
+    ;(js/alert (str "found proj id: " (.html a) " | " (.data a "projid") " | last: " (.data ($ "#content div ul li:last a") "projid")))) 
+    (js/alert (str "found proj id: " pid  "projid"))
+    ))
 
 (add-init! "projects" show-projects)
 (add-init! "proj" show-proj)
@@ -142,7 +156,7 @@
       ;(add-buddy "john" "img")
       ;(add-buddy "dalek" "img")
       ;(add-cost "tardis" [1 2 3 4] 1 744)
-      (load-page "projects" nil)
+      (load-dyn-page "projects" nil)
       
       ))
 
