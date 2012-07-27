@@ -21016,35 +21016,37 @@ fb.lol.page_dyn_inits = cljs.core.ObjMap.EMPTY;
 fb.lol.add_init_BANG_ = function add_init_BANG_(name, func) {
   fb.lol.page_dyn_inits = cljs.core.into.call(null, fb.lol.page_dyn_inits, cljs.core.PersistentArrayMap.fromArrays([name], [func]))
 };
-fb.lol.load_dyn_page = function load_dyn_page(name) {
-  var temp__3971__auto____1057622 = fb.lol.page_dyn_inits.call(null, name);
-  if(cljs.core.truth_(temp__3971__auto____1057622)) {
-    var f__1057623 = temp__3971__auto____1057622;
-    return f__1057623.call(null)
+fb.lol.load_dyn_page = function load_dyn_page(name, e) {
+  var temp__3971__auto____1320571 = fb.lol.page_dyn_inits.call(null, name);
+  if(cljs.core.truth_(temp__3971__auto____1320571)) {
+    var f__1320572 = temp__3971__auto____1320571;
+    return f__1320572.call(null, e)
   }else {
     return null
   }
 };
-fb.lol.load_page = function load_page(name) {
-  var newp__1057627 = jayq.core.$.call(null, [cljs.core.str("#"), cljs.core.str(name)].join(""));
-  var newp__1057628 = newp__1057627.length === 0 ? jayq.core.$.call(null, "#404") : newp__1057627;
-  var curr__1057629 = jayq.core.$.call(null, "#content");
-  return curr__1057629.hide(300, function() {
-    return fb.lol.load_dyn_page.call(null, curr__1057629.html(newp__1057628.html()), name).show(300)
+fb.lol.load_page = function load_page(name, e) {
+  var newp__1320576 = jayq.core.$.call(null, [cljs.core.str("div.hidden div."), cljs.core.str(name)].join(""));
+  var newp__1320577 = newp__1320576.length === 0 ? jayq.core.$.call(null, "div.hidden div.404") : newp__1320576;
+  var curr__1320578 = jayq.core.$.call(null, "#content");
+  return curr__1320578.hide(300, function() {
+    curr__1320578.html(newp__1320577.html());
+    fb.lol.load_dyn_page.call(null, name, e);
+    return curr__1320578.show(300)
   })
 };
 jayq.core.$.call(null, function() {
   return jayq.core.delegate.call(null, jayq.core.$.call(null, "body"), "a", "click touchend", function(e) {
-    var a__1057630 = jayq.core.$.call(null, e.currentTarget);
-    var link__1057631 = a__1057630.attr("href");
-    fb.lol.load_page.call(null, link__1057631);
+    var a__1320579 = jayq.core.$.call(null, e.currentTarget);
+    var link__1320580 = a__1320579.attr("href");
+    fb.lol.load_page.call(null, link__1320580, e);
     return false
   })
 });
 fb.lol.add_db_BANG_ = function add_db_BANG_(name, schema) {
-  var n__1057633 = cljs.core.apply.call(null, cljs.core.str, cljs.core.next.call(null, [cljs.core.str(name)].join("")));
+  var n__1320582 = cljs.core.apply.call(null, cljs.core.str, cljs.core.next.call(null, [cljs.core.str(name)].join("")));
   return fb.lol.db.transaction(function(t) {
-    return t.executeSql([cljs.core.str("CREATE TABLE IF NOT EXISTS "), cljs.core.str(n__1057633), cljs.core.str(" ( "), cljs.core.str(schema), cljs.core.str(" );")].join(""))
+    return t.executeSql([cljs.core.str("CREATE TABLE IF NOT EXISTS "), cljs.core.str(n__1320582), cljs.core.str(" ( "), cljs.core.str(schema), cljs.core.str(" );")].join(""))
   })
 };
 fb.lol.add_proj = function add_proj(name) {
@@ -21060,19 +21062,19 @@ fb.lol.add_buddy = function add_buddy(name, img) {
 fb.lol.add_cost = function add_cost(name, buddies, proj, amount) {
   return fb.lol.db.transaction(function(t) {
     return t.executeSql("INSERT INTO costs (name, pid, tot) VALUES (?, ?, ?);", jayq.util.clj__GT_js.call(null, cljs.core.PersistentVector.fromArray([name, proj, amount], true)), function(t, r) {
-      var G__1057642__1057643 = cljs.core.seq.call(null, buddies);
-      if(G__1057642__1057643) {
-        var b__1057644 = cljs.core.first.call(null, G__1057642__1057643);
-        var G__1057642__1057645 = G__1057642__1057643;
+      var G__1320591__1320592 = cljs.core.seq.call(null, buddies);
+      if(G__1320591__1320592) {
+        var b__1320593 = cljs.core.first.call(null, G__1320591__1320592);
+        var G__1320591__1320594 = G__1320591__1320592;
         while(true) {
-          t.executeSql("INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);", jayq.util.clj__GT_js.call(null, cljs.core.PersistentVector.fromArray([proj, b__1057644, r.insertId, 3], true)));
-          var temp__3974__auto____1057646 = cljs.core.next.call(null, G__1057642__1057645);
-          if(temp__3974__auto____1057646) {
-            var G__1057642__1057647 = temp__3974__auto____1057646;
-            var G__1057648 = cljs.core.first.call(null, G__1057642__1057647);
-            var G__1057649 = G__1057642__1057647;
-            b__1057644 = G__1057648;
-            G__1057642__1057645 = G__1057649;
+          t.executeSql("INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);", jayq.util.clj__GT_js.call(null, cljs.core.PersistentVector.fromArray([proj, b__1320593, r.insertId, 3], true)));
+          var temp__3974__auto____1320595 = cljs.core.next.call(null, G__1320591__1320594);
+          if(temp__3974__auto____1320595) {
+            var G__1320591__1320596 = temp__3974__auto____1320595;
+            var G__1320597 = cljs.core.first.call(null, G__1320591__1320596);
+            var G__1320598 = G__1320591__1320596;
+            b__1320593 = G__1320597;
+            G__1320591__1320594 = G__1320598;
             continue
           }else {
             return null
@@ -21087,10 +21089,10 @@ fb.lol.add_cost = function add_cost(name, buddies, proj, amount) {
 };
 fb.lol.do_proj = function() {
   var do_proj__delegate = function(f, id) {
-    var rq__1057651 = cljs.core.truth_(id) ? [cljs.core.str("SELECT * FROM projects WHERE projects.id = "), cljs.core.str(id), cljs.core.str(";")].join("") : "SELECT * FROM projects";
+    var rq__1320600 = cljs.core.truth_(id) ? [cljs.core.str("SELECT * FROM projects WHERE projects.id = "), cljs.core.str(id), cljs.core.str(";")].join("") : "SELECT * FROM projects";
     return fb.lol.db.transaction(function(t) {
-      return t.executeSql(rq__1057651, jayq.util.clj__GT_js.call(null, cljs.core.PersistentVector.EMPTY), function(p1__1057634_SHARP_, p2__1057635_SHARP_) {
-        return f.call(null, p1__1057634_SHARP_, p2__1057635_SHARP_)
+      return t.executeSql(rq__1320600, jayq.util.clj__GT_js.call(null, cljs.core.PersistentVector.EMPTY), function(p1__1320583_SHARP_, p2__1320584_SHARP_) {
+        return f.call(null, p1__1320583_SHARP_, p2__1320584_SHARP_)
       })
     })
   };
@@ -21102,28 +21104,28 @@ fb.lol.do_proj = function() {
     return do_proj__delegate.call(this, f, id)
   };
   do_proj.cljs$lang$maxFixedArity = 1;
-  do_proj.cljs$lang$applyTo = function(arglist__1057652) {
-    var f = cljs.core.first(arglist__1057652);
-    var id = cljs.core.rest(arglist__1057652);
+  do_proj.cljs$lang$applyTo = function(arglist__1320601) {
+    var f = cljs.core.first(arglist__1320601);
+    var id = cljs.core.rest(arglist__1320601);
     return do_proj__delegate(f, id)
   };
   do_proj.cljs$lang$arity$variadic = do_proj__delegate;
   return do_proj
 }();
 fb.lol.do_row = function do_row(f, r) {
-  var G__1057659__1057660 = cljs.core.seq.call(null, cljs.core.range.call(null, r.rows.length));
-  if(G__1057659__1057660) {
-    var i__1057661 = cljs.core.first.call(null, G__1057659__1057660);
-    var G__1057659__1057662 = G__1057659__1057660;
+  var G__1320608__1320609 = cljs.core.seq.call(null, cljs.core.range.call(null, r.rows.length));
+  if(G__1320608__1320609) {
+    var i__1320610 = cljs.core.first.call(null, G__1320608__1320609);
+    var G__1320608__1320611 = G__1320608__1320609;
     while(true) {
-      f.call(null, r.rows.item(i__1057661));
-      var temp__3974__auto____1057663 = cljs.core.next.call(null, G__1057659__1057662);
-      if(temp__3974__auto____1057663) {
-        var G__1057659__1057664 = temp__3974__auto____1057663;
-        var G__1057665 = cljs.core.first.call(null, G__1057659__1057664);
-        var G__1057666 = G__1057659__1057664;
-        i__1057661 = G__1057665;
-        G__1057659__1057662 = G__1057666;
+      f.call(null, r.rows.item(i__1320610));
+      var temp__3974__auto____1320612 = cljs.core.next.call(null, G__1320608__1320611);
+      if(temp__3974__auto____1320612) {
+        var G__1320608__1320613 = temp__3974__auto____1320612;
+        var G__1320614 = cljs.core.first.call(null, G__1320608__1320613);
+        var G__1320615 = G__1320608__1320613;
+        i__1320610 = G__1320614;
+        G__1320608__1320611 = G__1320615;
         continue
       }else {
         return null
@@ -21135,18 +21137,30 @@ fb.lol.do_row = function do_row(f, r) {
   }
 };
 fb.lol.show_projects = function show_projects() {
-  var ul__1057668 = jayq.core.$.call(null, "#projects div:list ul");
+  var ul__1320618 = jayq.core.$.call(null, "#content div ul");
+  var li__1320619 = jayq.core.$.call(null, "#content div ul li");
   return fb.lol.do_proj.call(null, function(t, r) {
     return fb.lol.do_row.call(null, function(i) {
-      return alert(i.name)
+      return ul__1320618.append(li__1320619.clone().empty().removeAttr("id").removeAttr("style").addClass("list").append(jayq.core.$.call(null, "<a></a>").text(i.name).attr("href", "proj").data("projid", [cljs.core.str(i.name)].join(""))))
     }, r)
   })
 };
+fb.lol.show_proj = function show_proj(e) {
+  var a__1320624 = jayq.core.$.call(null, e.currentTarget);
+  var pid__1320625 = a__1320624.data("projid");
+  var t__1320626 = jayq.core.$.call(null, "#title");
+  var setdata__1320627 = function(t, r) {
+    return r.rows.item(0)
+  };
+  return alert([cljs.core.str("found proj id: "), cljs.core.str(a__1320624.data("projid"))].join(""))
+};
+fb.lol.add_init_BANG_.call(null, "projects", fb.lol.show_projects);
+fb.lol.add_init_BANG_.call(null, "proj", fb.lol.show_proj);
 jayq.core.$.call(null, function() {
   fb.lol.db = openDatabase("projs", "1.0", "projs", 65536);
   fb.lol.add_db_BANG_.call(null, "\ufdd0'projects", [cljs.core.str(" id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"), cljs.core.str(" name TEXT NOT NULL")].join(""));
   fb.lol.add_db_BANG_.call(null, "\ufdd0'buddies", [cljs.core.str(" id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"), cljs.core.str(" name TEXT NOT NULL,"), cljs.core.str(" img  TEXT NOT NULL")].join(""));
   fb.lol.add_db_BANG_.call(null, "\ufdd0'costs", [cljs.core.str(" id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"), cljs.core.str(" pid  INTEGER NOT NULL,"), cljs.core.str(" name TEXT NOT NULL,"), cljs.core.str(" tot  NUMERIC NOT NULL")].join(""));
   fb.lol.add_db_BANG_.call(null, "\ufdd0'relcbp", [cljs.core.str(" id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"), cljs.core.str(" pid  INTEGER NOT NULL,"), cljs.core.str(" bid  INTEGER NOT NULL,"), cljs.core.str(" cid  INTEGER NOT NULL,"), cljs.core.str(" tot  NUMERIC NOT NULL")].join(""));
-  return fb.lol.load_page.call(null, "projects")
+  return fb.lol.load_page.call(null, "projects", null)
 });

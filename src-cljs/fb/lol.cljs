@@ -11,24 +11,24 @@
 (defn add-init! [name func]
   (def page-dyn-inits (into page-dyn-inits {name func})))
 
-(defn load-dyn-page [name]
+(defn load-dyn-page [name e]
    (if-let [f (page-dyn-inits name)]
-     (f))) 
+     (f e))) 
 
-(defn load-page [name]
-  (let [newp ($ (str "#" name))
-        newp (if (zero? (.-length newp)) ($ "#404") newp)
+(defn load-page [name e]
+  (let [newp ($ (str "div.hidden div." name))
+        newp (if (zero? (.-length newp)) ($ "div.hidden div.404") newp)
         curr ($ "#content")]
-    (.hide curr 300 #(-> curr
-                       (.html (.html newp))
-                       (load-dyn-page name)
-                       (.show 300)))))
+    (.hide curr 300 #(do
+                       (.html curr (.html newp))
+                       (load-dyn-page name e)
+                       (.show curr 300)))))
 
 ($ #(delegate ($ "body") "a" "click touchend"
               (fn [e] 
                 (let [a    ($ (.-currentTarget e))
                       link (.attr a "href")]
-                  (load-page link)
+                  (load-page link e)
                   false)))) 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -87,12 +87,34 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (defn show-projects []
-  (let [ul ($ "#projects div:list ul")]
+  (let [ul ($ "#content div ul")
+        li ($ "#content div ul li")]
     (do-proj (fn [t r]
-                 (do-row (fn [i]
-                           (js/alert (.-name  i)))
-                          r)
-                 ))))
+               (do-row (fn [i]
+                         (.append ul (-> li 
+                                       (.clone) 
+                                       (.empty) 
+                                       (.removeAttr "id") 
+                                       (.removeAttr "style") 
+                                       (.addClass "list") 
+                                       (.append (-> ($ "<a></a>")
+                                                  (.text (.-name i))
+                                                  (.attr "href" "proj")
+                                                  (.data "projid" (str (.-name i))))))))
+                       r)))))
+
+(defn show-proj [e]
+  (let [a   ($ (.-currentTarget e))
+        pid (.data a "projid")
+        t   ($ "#title")
+        setdata (fn [t r]
+                  (.item (.-rows r) 0))
+        ]
+  (js/alert (str "found proj id: " (.data a "projid")))) 
+  )
+
+(add-init! "projects" show-projects)
+(add-init! "proj" show-proj)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; init
@@ -120,8 +142,7 @@
       ;(add-buddy "john" "img")
       ;(add-buddy "dalek" "img")
       ;(add-cost "tardis" [1 2 3 4] 1 744)
-      ;(get-proj)
-      (load-page "projects")
+      (load-page "projects" nil)
       
       ))
 

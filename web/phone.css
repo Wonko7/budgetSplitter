@@ -16,6 +16,14 @@ body {
 	visibility: hidden;
 }
 
+.list {
+	visibility: visible;
+}
+
+#projlist {
+	visibility: hidden;
+}
+
 .visible {
 	visibility: visible;
 }
