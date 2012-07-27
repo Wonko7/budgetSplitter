@@ -14,24 +14,28 @@
 (defn load-template [name]
   (let [temp ($ (str "div.hidden div." name))
         temp (if (zero? (.-length temp)) ($ "div.hidden div.404") temp)
-        newp ($ "#newpage")]
-    (.html newp (.html temp))))
+        ;newp ($ "#newpage")
+        b     ($ "body")
+        newp (.hide ($ "<div id=\"newpage\"></div>"))]
+    (.html (.append b (.html newp temp)))))
 
 (defn swap-page []
   (let [newp ($ "#newpage")
         cont ($ "#content")
         hidd ($ "body div.hidden")]
     (.hide cont 300 #(do
-                       (-> cont
-                         (.empty)
-                         (.append (-> newp
-                                    (.clone)
-                                    (.removeAttr "style")
-                                    (.attr "id" "wtf") ; FIXME WTF. 
-                                    ))
-                         ;(.append newp)
-                         (.show 300)) 
-                       (.empty newp)
+                       (.remove cont)
+                       (.show (.attr newp "id" "#content"))
+                       ;(-> cont
+                       ;  (.romove)
+                       ;  (.append (-> newp
+                       ;             (.clone)
+                       ;             (.removeAttr "style")
+                       ;             (.attr "id" "wtf") ; FIXME WTF. 
+                       ;             ))
+                       ;  ;(.append newp)
+                       ;  (.show 300)) 
+                       ;(.empty newp)
                        ;(.hide (.append hidd ($ "<div id=\"newpage\"></div>")))
                        ))))
 
@@ -113,9 +117,9 @@
                          (.append ul (-> li 
                                        (.clone) 
                                        (.empty) 
-                                       (.removeAttr "id") 
-                                       (.removeAttr "style") 
-                                       (.addClass "list") 
+                                       ;(.removeAttr "id") 
+                                       ;(.removeAttr "style") 
+                                       ;(.addClass "list") 
                                        (.append (-> ($ "<a></a>")
                                                   (.text (.-name i))
                                                   (.attr "href" "proj")
