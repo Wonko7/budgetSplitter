@@ -14,10 +14,9 @@
 (defn load-template [name]
   (let [temp ($ (str "div.hidden div." name))
         temp (if (zero? (.-length temp)) ($ "div.hidden div.404") temp)
-        ;newp ($ "#newpage")
-        b     ($ "body")
+        body ($ "#top")
         newp (.hide ($ "<div id=\"newpage\"></div>"))]
-    (.html (.append b (.html newp temp)))))
+    (.html (.append body (.html newp (.clone temp))))))
 
 (defn swap-page []
   (let [newp ($ "#newpage")
@@ -25,7 +24,7 @@
         hidd ($ "body div.hidden")]
     (.hide cont 300 #(do
                        (.remove cont)
-                       (.show (.attr newp "id" "#content"))
+                       (.show (.attr newp "id" "content"))
                        ;(-> cont
                        ;  (.romove)
                        ;  (.append (-> newp
@@ -173,6 +172,6 @@
       ;(add-buddy "john" "img")
       ;(add-buddy "dalek" "img")
       ;(add-cost "tardis" [1 2 3 4] 1 744)
-      (.hide ($ "#newpage"))
+      ;(.hide ($ "#hidden"))
       (load-dyn-page "projects" nil)
       ))
