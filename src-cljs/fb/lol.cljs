@@ -83,7 +83,7 @@
                 (fn [t]
                   (.executeSql t rq (clj->js [])
                                #(f %1 %2)
-                               ;#(js/alert (str "fuck. " (.-message %2)))
+                               #(js/alert (str "fuck. " (.-message %2)))
                                ))))
 
 (defn do-proj [f & [id]]
@@ -94,6 +94,12 @@
 
 (defn do-costs [f id]
   (let [rq (str "SELECT * FROM costs WHERE costs.pid = " id ";" )]
+    (do-select f rq)))  
+
+(defn do-cost [f id]
+  (let [rq (str "SELECT buddies.name, relcbp.tot, relcbp.id, relcbp.bid, relcbp.cid "
+                "FROM costs, relcbp, buddies "
+                "WHERE costs.id = " id " AND relcbp.cid = costs.id AND relcbp.bid = buddies.id;")]
     (do-select f rq)))
 
 (defn do-row [f r]
@@ -130,12 +136,12 @@
         li      ($ "<li></li>")
         a       ($ "<a></a>")
         set-cost-data (fn [tx r]
-                        (do-row #(let [a (-> a
-                                           (.clone)
-                                           (.text (.-name %))
-                                           (.data "costid" (.-id %))
-                                           (.data "projid" pid)
-                                           (.attr "href" "cost"))
+                        (do-row #(let [a  (-> a
+                                            (.clone)
+                                            (.text (.-name %))
+                                            (.data "costid" (.-id %))
+                                            (.data "projid" pid)
+                                            (.attr "href" "cost"))
                                        li (-> li
                                             (.clone)
                                             (.append a)
@@ -151,8 +157,35 @@
                           (swap-page)))]
     (do-proj set-proj-data pid)))
 
+(defn show-cost [e]
+  (load-template "cost")
+  (let [a       ($ (first ($ (.-currentTarget e))))
+        pid     (.data a "projid")
+        cid     (.data a "costid")
+        t       ($ "#newpage div.cost div.title")
+        ul      ($ "#newpage div.cost div ul")
+        li      ($ "<li></li>")
+        a       ($ "<a></a>") ; FIXME; make a to change tot
+        set-cost-data (fn [tx r]
+                        (do-row #(let [a  (-> a
+                                            (.clone)
+                                            (.text (str (.-name %) ": $" (.-tot %)))
+                                            (.data "costid" cid)
+                                            (.data "projid" pid)
+                                            )
+                                       li (-> li
+                                            (.clone)
+                                            (.append a))]
+                                   (.append ul li))
+                                r)
+                        (swap-page))
+
+         ]
+    (do-cost set-cost-data cid)))
+
 (add-init! "projects" show-projects)
 (add-init! "proj" show-proj)
+(add-init! "cost" show-cost)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -183,3 +216,6 @@
       ;(add-cost "tardis" [1 2 3 4] 1 744)
       ;(.hide ($ "#hidden"))
       (load-dyn-page "projects" nil)))
+
+; v2: multiple people add finance to same projects
+                                ;#(js/console.log %)
