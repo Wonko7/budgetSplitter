@@ -2,6 +2,7 @@
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]))
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; page loading
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -16,7 +17,7 @@
         temp (if (zero? (.-length temp)) ($ "div.hidden div.404") temp)
         body ($ "#top")
         newp (.hide ($ "<div id=\"newpage\"></div>"))]
-    (.html (.append body (.html newp (.clone temp))))))
+    (.html (.append body (.append newp (.clone temp))))))
 
 (defn swap-page []
   (let [newp ($ "#newpage")
@@ -24,19 +25,7 @@
         hidd ($ "body div.hidden")]
     (.hide cont 300 #(do
                        (.remove cont)
-                       (.show (.attr newp "id" "content"))
-                       ;(-> cont
-                       ;  (.romove)
-                       ;  (.append (-> newp
-                       ;             (.clone)
-                       ;             (.removeAttr "style")
-                       ;             (.attr "id" "wtf") ; FIXME WTF. 
-                       ;             ))
-                       ;  ;(.append newp)
-                       ;  (.show 300)) 
-                       ;(.empty newp)
-                       ;(.hide (.append hidd ($ "<div id=\"newpage\"></div>")))
-                       ))))
+                       (.show (.attr newp "id" "content"))))))
 
 (defn load-dyn-page [name e]
    (if-let [f (page-dyn-inits name)]
@@ -51,6 +40,7 @@
                       link (.attr a "href")]
                   (load-dyn-page link e)
                   false)))) 
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; sql storage
@@ -88,20 +78,28 @@
                                ; #(js/alert "INSERT INTO costs (name, pid, tot) VALUES (?, ?); failed."))
                                ))))
 
+(defn do-select [f rq]
+  (.transaction db
+                (fn [t]
+                  (.executeSql t rq (clj->js [])
+                               #(f %1 %2)
+                               ;#(js/alert (str "fuck. " (.-message %2)))
+                               ))))
+
 (defn do-proj [f & [id]]
   (let [rq (if id
              (str "SELECT * FROM projects WHERE projects.id = " id ";" )
-             "SELECT * FROM projects")]
-    (.transaction db
-                  (fn [t]
-                    (.executeSql t rq (clj->js [])
-                                 #(f %1 %2)
-                                 ;#(js/alert (str "fuck. " (.-message %2)))
-                               )))))
+             "SELECT * FROM projects;")]
+    (do-select f rq)))
+
+(defn do-costs [f id]
+  (let [rq (str "SELECT * FROM costs WHERE costs.pid = " id ";" )]
+    (do-select f rq)))
 
 (defn do-row [f r]
   (doseq [i (range (.-length (.-rows r)))]
     (f (.item (.-rows r) i))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; pages
@@ -116,35 +114,46 @@
                          (.append ul (-> li 
                                        (.clone) 
                                        (.empty) 
-                                       ;(.removeAttr "id") 
-                                       ;(.removeAttr "style") 
-                                       ;(.addClass "list") 
                                        (.append (-> ($ "<a></a>")
                                                   (.text (.-name i))
                                                   (.attr "href" "proj")
-                                                  (.data "projid" (.-id i))))))
-                         ;(js/alert (str (.-id i) " added " (.data ($ "#newpage div ul li:last a") "projid")))
-                         ;(js/alert (str (.-id i) " added " (.html ($ "#content div ul li:last a"))))
-                         )
+                                                  (.data "projid" (.-id i)))))))
                        r)
-               (swap-page)))
-    ))
+               (swap-page)))))
 
 (defn show-proj [e]
-  ;(load-template "proj")
-  (let [a   ($ (first ($ (.-currentTarget e))))
-        pid (.data a "projid")
-        ;t   ($ "#title")
-        ;setdata (fn [t r]
-        ;          (.item (.-rows r) 0))
-        ]
-    (js/alert (str "found proj id: " (.html a) " | " (.data a "projid") " | last: " (.data ($ "#content div ul li:last a") "projid")))
-    ;(js/alert (str "found proj id: " pid ))
-    ;(swap-page)
-    ))
+  (load-template "proj")
+  (let [a       ($ (first ($ (.-currentTarget e))))
+        pid     (.data a "projid")
+        t       ($ "#newpage div.proj div.title")
+        ul      ($ "#newpage div.proj div ul")
+        li      ($ "<li></li>")
+        a       ($ "<a></a>")
+        set-cost-data (fn [tx r]
+                        (do-row #(let [a (-> a
+                                           (.clone)
+                                           (.text (.-name %))
+                                           (.data "costid" (.-id %))
+                                           (.data "projid" pid)
+                                           (.attr "href" "cost"))
+                                       li (-> li
+                                            (.clone)
+                                            (.append a)
+                                            (.append (str " : $" (.-tot %))))]
+                                   (.append ul li))
+                                r))
+        set-proj-data (fn [tx r]
+                        (let [i  (.item (.-rows r) 0)
+                              n  (.-name i)
+                              id (.-id i)]
+                          (.text t n) 
+                          (do-costs set-cost-data id)
+                          (swap-page)))]
+    (do-proj set-proj-data pid)))
 
 (add-init! "projects" show-projects)
 (add-init! "proj" show-proj)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; init
@@ -173,5 +182,4 @@
       ;(add-buddy "dalek" "img")
       ;(add-cost "tardis" [1 2 3 4] 1 744)
       ;(.hide ($ "#hidden"))
-      (load-dyn-page "projects" nil)
-      ))
+      (load-dyn-page "projects" nil)))
