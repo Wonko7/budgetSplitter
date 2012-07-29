@@ -157,6 +157,17 @@
                           (swap-page)))]
     (do-proj set-proj-data pid)))
 
+(defn canvas-rect [w-tot h-tot w]
+  (let [c  (first ($ "<canvas></canvas>"))
+        ctx (.getContext c "2d" w-tot h-tot)]
+    (set! (. c -width) w-tot)
+    (set! (. c -height) h-tot)
+    (set! (. ctx -fillStyle) "#121")
+    (.fillRect ctx 0 0 w-tot h-tot)
+    (set! (. ctx -fillStyle) "#131") 
+    (.fillRect ctx 0 0 w h-tot)
+    ctx))
+
 (defn show-cost [e]
   (load-template "cost")
   (let [a       ($ (first ($ (.-currentTarget e))))
@@ -167,25 +178,14 @@
         li      ($ "<li></li>")
         a       ($ "<a></a>")
         a       ($ "<a></a>")
-        c       ($ "<canvas></canvas>")
         w       (.width ($ "body"))
         ;w       500
         h       50
         set-title #(.text t (str (.-cname %) ": " (.-ctot %)))
         set-cost-data (fn [tx r]
                         (set-title (.item (.-rows r) 0))
-                        (do-row #(let [; FIXME better drawing
-                                       nw (int (* w (/ (.-btot %) (.-ctot %))))
-                                       c  (first (-> c (.clone))) 
-                                       c  (do (set! (. c -width) w) (set! (. c -height) h) c)
-                                       ct (.getContext c "2d" w h)
-                                       ct (do
-                                            (set! (. ct -fillStyle) "#121")
-                                            (.fillRect ct 0 0 w h)
-                                            (set! (. ct -fillStyle) "#131") 
-                                            (.fillRect ct 0 0 nw h)
-                                            ct) 
-                                       ; END FIXME
+                        (do-row #(let [nw (int (* w (/ (.-btot %) (.-ctot %))))
+                                       cvs (canvas-rect w h nw)
                                        a  (-> a
                                             (.clone)
                                             (.text (str (.-bname %) ": $" (.-btot %)))
@@ -195,7 +195,7 @@
                                        li (-> li
                                             (.clone)
                                             (.append a)
-                                            (.css "background-image" (str "url(" (.toDataURL (.-canvas ct) "image/png") ")"))
+                                            (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
                                             (.css "background-size" "100%"))]
                                    (.append ul li))
                                 r)
