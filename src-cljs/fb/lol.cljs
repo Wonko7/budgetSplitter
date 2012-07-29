@@ -69,9 +69,9 @@
                 (fn [t]
                   (.executeSql t "INSERT INTO costs (name, pid, tot) VALUES (?, ?, ?);" (clj->js [name proj amount])
                                (fn [t r]
-                                 (doseq [b buddies]
+                                 (doseq [[b c] buddies]
                                    (.executeSql t "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
-                                                (clj->js [proj b (.-insertId r) 3])
+                                                (clj->js [proj b (.-insertId r) c])
                                                 ; #(js/alert (str :done [proj b (.-insertId r) 3] ))
                                                 ; #(js/alert (str :failed [proj b (.-insertId r) 3] ))
                                                 ))) 
@@ -97,7 +97,7 @@
     (do-select f rq)))  
 
 (defn do-cost [f id]
-  (let [rq (str "SELECT buddies.name, relcbp.tot, relcbp.id, relcbp.bid, relcbp.cid "
+  (let [rq (str "SELECT costs.name AS cname, buddies.name AS bname, costs.tot AS ctot, relcbp.tot AS btot, relcbp.id, relcbp.bid, relcbp.cid "
                 "FROM costs, relcbp, buddies "
                 "WHERE costs.id = " id " AND relcbp.cid = costs.id AND relcbp.bid = buddies.id;")]
     (do-select f rq)))
@@ -165,22 +165,40 @@
         t       ($ "#newpage div.cost div.title")
         ul      ($ "#newpage div.cost div ul")
         li      ($ "<li></li>")
-        a       ($ "<a></a>") ; FIXME; make a to change tot
+        a       ($ "<a></a>")
+        a       ($ "<a></a>")
+        c       ($ "<canvas></canvas>")
+        w       (.width ($ "body"))
+        ;w       500
+        h       50
         set-cost-data (fn [tx r]
-                        (do-row #(let [a  (-> a
+                        (do-row #(let [; FIXME better drawing
+                                       nw (int (* w (/ (.-btot %) (.-ctot %))))
+                                       c  (first (-> c (.clone))) 
+                                       c  (do (set! (. c -width) w) (set! (. c -height) h) c)
+                                       ct (.getContext c "2d" w h)
+                                       ct (do
+                                            ;(set! (. ct -fillStyle) "#2F2")
+                                            (set! (. ct -fillStyle) "#121")
+                                            (.fillRect ct 0 0 w h)
+                                            ;(set! (. ct -fillStyle) "#1F1") 
+                                            (set! (. ct -fillStyle) "#131") 
+                                            (.fillRect ct 0 0 nw h)
+                                            ct) 
+                                       a  (-> a
                                             (.clone)
-                                            (.text (str (.-name %) ": $" (.-tot %)))
+                                            (.text (str (.-bname %) ": $" (.-btot %)))
                                             (.data "costid" cid)
                                             (.data "projid" pid)
                                             )
                                        li (-> li
                                             (.clone)
-                                            (.append a))]
+                                            (.append a)
+                                            (.css "background-image" (str "url(" (.toDataURL (.-canvas ct) "image/png") ")"))
+                                            (.css "background-size" "100%"))]
                                    (.append ul li))
                                 r)
-                        (swap-page))
-
-         ]
+                        (swap-page))]
     (do-cost set-cost-data cid)))
 
 (add-init! "projects" show-projects)
@@ -213,9 +231,17 @@
       ;(add-buddy "jack" "img")
       ;(add-buddy "john" "img")
       ;(add-buddy "dalek" "img")
-      ;(add-cost "tardis" [1 2 3 4] 1 744)
+      ;(add-cost "firefly" [[1 100] [2 25] [3 125] [4 50]] 1 400)
+      ;(add-cost "daban urnud" [[1 100] [2 25] [3 225] [4 50]] 1 400)
       ;(.hide ($ "#hidden"))
       (load-dyn-page "projects" nil)))
 
-; v2: multiple people add finance to same projects
-                                ;#(js/console.log %)
+
+; DEBUG:
+; #(js/console.log %)
+;
+; TODO:
+; - v2: multiple people add finance to same projects
+; - consolidate page drawing function; show-cost/proj/costs are too similar.
+; - add phonegap for contacts.
+; - 
