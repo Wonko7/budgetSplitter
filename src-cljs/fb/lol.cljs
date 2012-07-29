@@ -170,33 +170,31 @@
 
 (defn show-cost [e]
   (load-template "cost")
-  (let [a       ($ (first ($ (.-currentTarget e))))
-        pid     (.data a "projid")
-        cid     (.data a "costid")
-        t       ($ "#newpage div.cost div.title")
-        ul      ($ "#newpage div.cost div ul")
-        li      ($ "<li></li>")
-        a       ($ "<a></a>")
-        a       ($ "<a></a>")
-        w       (.width ($ "body"))
-        ;w       500
-        h       50
-        set-title #(.text t (str (.-cname %) ": " (.-ctot %)))
+  (let [a             ($ (first ($ (.-currentTarget e))))
+        pid           (.data a "projid")
+        cid           (.data a "costid")
+        t             ($ "#newpage div.cost div.title")
+        ul            ($ "#newpage div.cost div ul")
+        li            ($ "<li></li>")
+        a             ($ "<a></a>")
+        w             (.width ($ "body"))
+        ;w             500
+        h             50
+        set-title     #(.text t (str (.-cname %) ": " (.-ctot %)))
         set-cost-data (fn [tx r]
                         (set-title (.item (.-rows r) 0))
-                        (do-row #(let [nw (int (* w (/ (.-btot %) (.-ctot %))))
+                        (do-row #(let [nw  (int (* w (/ (.-btot %) (.-ctot %))))
                                        cvs (canvas-rect w h nw)
-                                       a  (-> a
-                                            (.clone)
-                                            (.text (str (.-bname %) ": $" (.-btot %)))
-                                            (.data "costid" cid)
-                                            (.data "projid" pid)
-                                            )
-                                       li (-> li
-                                            (.clone)
-                                            (.append a)
-                                            (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
-                                            (.css "background-size" "100%"))]
+                                       a   (-> a
+                                             (.clone)
+                                             (.text (str (.-bname %) ": $" (.-btot %)))
+                                             (.data "costid" cid)
+                                             (.data "projid" pid))
+                                       li  (-> li
+                                             (.clone)
+                                             (.append a)
+                                             (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
+                                             (.css "background-size" "100%"))]
                                    (.append ul li))
                                 r)
                         (swap-page))]
