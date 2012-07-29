@@ -54,11 +54,11 @@
                   (fn [t]
                     (.executeSql t (str "CREATE TABLE IF NOT EXISTS " n " ( " schema " );"))))))
 
-(defn add-proj [name]
+(defn add-proj [name f]
   (.transaction db
                 (fn [t]
                   (.executeSql t "INSERT INTO projects (name) VALUES (?);" (clj->js [name]) 
-                               ))))
+                               f))))
 (defn add-buddy [name img]
   (.transaction db
                 (fn [t]
@@ -178,7 +178,6 @@
         li            ($ "<li></li>")
         a             ($ "<a></a>")
         w             (.width ($ "body"))
-        ;w             500
         h             50
         set-title     #(.text t (str (.-cname %) ": " (.-ctot %)))
         set-cost-data (fn [tx r]
@@ -204,6 +203,34 @@
 (add-init! "proj" show-proj)
 (add-init! "cost" show-cost)
 
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;; forms
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn add-page-project []
+  ; FIXME make contracts 
+  ;(js/alert (.val ($ "#top div.new form [name=\"name\"]")))
+  (let [name (.val ($ "#top div.new form [name=\"name\"]"))
+        addp (fn [tx r]
+               (-> ($ "<a></a>")
+                 (.attr "href" "proj")
+                 (.data "projid" (.-insertId r))
+                 (.hide)
+                 (.appendTo ($ "#content"))
+                 (.click)))] ; FIXME omg create better events
+    (if (<= (count name) 0)
+      (js/alert "Invalid name")
+      (add-proj name addp))) 
+  false)
+
+(defn show-new-form []
+  (load-template "new")
+  (.submit ($ "#newpage div.new form") add-page-project)
+  (swap-page))
+
+(add-init! "new" show-new-form)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; init
