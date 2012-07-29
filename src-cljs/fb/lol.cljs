@@ -171,20 +171,21 @@
         w       (.width ($ "body"))
         ;w       500
         h       50
+        set-title #(.text t (str (.-cname %) ": " (.-ctot %)))
         set-cost-data (fn [tx r]
+                        (set-title (.item (.-rows r) 0))
                         (do-row #(let [; FIXME better drawing
                                        nw (int (* w (/ (.-btot %) (.-ctot %))))
                                        c  (first (-> c (.clone))) 
                                        c  (do (set! (. c -width) w) (set! (. c -height) h) c)
                                        ct (.getContext c "2d" w h)
                                        ct (do
-                                            ;(set! (. ct -fillStyle) "#2F2")
                                             (set! (. ct -fillStyle) "#121")
                                             (.fillRect ct 0 0 w h)
-                                            ;(set! (. ct -fillStyle) "#1F1") 
                                             (set! (. ct -fillStyle) "#131") 
                                             (.fillRect ct 0 0 nw h)
                                             ct) 
+                                       ; END FIXME
                                        a  (-> a
                                             (.clone)
                                             (.text (str (.-bname %) ": $" (.-btot %)))
