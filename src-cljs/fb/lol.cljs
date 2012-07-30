@@ -209,17 +209,19 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
+(defn trigger-new-page [href data]
+  (-> ($ "<a></a>")
+    (.hide)
+    (.attr "href" href)
+    (#(reduce (fn [a [k v]] (.data a k v)) %1 data))
+    (.appendTo ($ "#content"))
+    (.click)))
+
 (defn add-page-project []
-  ; FIXME make contracts 
-  ;(js/alert (.val ($ "#top div.new form [name=\"name\"]")))
   (let [name (.val ($ "#top div.new form [name=\"name\"]"))
         addp (fn [tx r]
-               (-> ($ "<a></a>")
-                 (.attr "href" "proj")
-                 (.data "projid" (.-insertId r))
-                 (.hide)
-                 (.appendTo ($ "#content"))
-                 (.click)))] ; FIXME omg create better events
+               (trigger-new-page "proj" [["projid" (.-insertId r)]]))]
+    ; FIXME make contracts
     (if (<= (count name) 0)
       (js/alert "Invalid name")
       (add-proj name addp))) 
