@@ -48,6 +48,23 @@
 
 (def db)
 
+(defn nuke-db []
+  (.transaction db
+                (fn [t]
+                  (.executeSql t "DROP TABLE IF EXISTS projects;"  (clj->js [])
+                               (fn [t r] (.executeSql t "DROP TABLE buddies;" (clj->js [])
+                                                      (fn [t r] (.executeSql t "DROP TABLE costs;" (clj->js [])
+                                                                             (fn [t r] (.executeSql t "DROP TABLE relcbp;" (clj->js [])
+                                                                                                    #(js/alert (str "dropped."))
+                                                                                                    #(js/alert (str "fuck. " (.-message %2)))
+                                                                                                    ))
+                                                                             #(js/alert (str "fuck. " (.-message %2)))
+                                                                             ))
+                                                      #(js/alert (str "fuck. " (.-message %2)))
+                                                      ))
+                               #(js/alert (str "fuck. " (.-message %2)))
+                               ))))
+
 (defn add-db! [name schema]
   (let [n (apply str (next (str name)))]
     (.transaction db
@@ -208,7 +225,6 @@
 ;;;;;; forms
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-
 (defn trigger-new-page [href data]
   (-> ($ "<a></a>")
     (.hide)
@@ -234,15 +250,18 @@
 
 (add-init! "new" show-new-form)
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; init
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ($ #(do
       (def db (js/openDatabase "projs" "1.0" "projs" 65536))
+      ;(nuke-db)
       (add-db! :projects (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                               " name TEXT NOT NULL"))
       (add-db! :buddies  (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+                              " pid  INTEGER NOT NULL,"
                               " name TEXT NOT NULL,"
                               " img  TEXT NOT NULL"))
       (add-db! :costs    (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
@@ -272,4 +291,4 @@
 ; - v2: multiple people add finance to same projects
 ; - consolidate page drawing function; show-cost/proj/costs are too similar.
 ; - add phonegap for contacts.
-; - 
+; - add back/forward browser integration
