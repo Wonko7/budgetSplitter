@@ -76,10 +76,10 @@
                 (fn [t]
                   (.executeSql t "INSERT INTO projects (name) VALUES (?);" (clj->js [name]) 
                                f))))
-(defn add-buddy [name img]
+(defn add-buddy [name proj img]
   (.transaction db
                 (fn [t]
-                  (.executeSql t "INSERT INTO buddies (name, img) VALUES (?, ?);" (clj->js [name img])))))
+                  (.executeSql t "INSERT INTO buddies (name, pid, img) VALUES (?, ?);" (clj->js [name proj img])))))
 
 (defn add-cost [name buddies proj amount]
   (.transaction db
@@ -119,6 +119,9 @@
                 "WHERE costs.id = " id " AND relcbp.cid = costs.id AND relcbp.bid = buddies.id;")]
     (do-select f rq)))
 
+(defn do-buddies [f id]
+  (do-select f (str "SELECT * FROM buddies WHERE buddies.id = " id ";")))
+
 (defn do-row [f r]
   (doseq [i (range (.-length (.-rows r)))]
     (f (.item (.-rows r) i))))
@@ -140,14 +143,14 @@
                                        (.append (-> ($ "<a></a>")
                                                   (.text (.-name i))
                                                   (.attr "href" "proj")
-                                                  (.data "projid" (.-id i)))))))
+                                                  (.data "pid" (.-id i)))))))
                        r)
                (swap-page)))))
 
 (defn show-proj [e]
   (load-template "proj")
   (let [a       ($ (first ($ (.-currentTarget e))))
-        pid     (.data a "projid")
+        pid     (.data a "pid")
         t       ($ "#newpage div.proj div.title")
         ul      ($ "#newpage div.proj div ul")
         li      ($ "<li></li>")
@@ -156,8 +159,8 @@
                         (do-row #(let [a  (-> a
                                             (.clone)
                                             (.text (.-name %))
-                                            (.data "costid" (.-id %))
-                                            (.data "projid" pid)
+                                            (.data "cid" (.-id %))
+                                            (.data "pid" pid)
                                             (.attr "href" "cost"))
                                        li (-> li
                                             (.clone)
@@ -188,8 +191,8 @@
 (defn show-cost [e]
   (load-template "cost")
   (let [a             ($ (first ($ (.-currentTarget e))))
-        pid           (.data a "projid")
-        cid           (.data a "costid")
+        pid           (.data a "pid")
+        cid           (.data a "cid")
         t             ($ "#newpage div.cost div.title")
         ul            ($ "#newpage div.cost div ul")
         li            ($ "<li></li>")
@@ -204,8 +207,8 @@
                                        a   (-> a
                                              (.clone)
                                              (.text (str (.-bname %) ": $" (.-btot %)))
-                                             (.data "costid" cid)
-                                             (.data "projid" pid))
+                                             (.data "cid" cid)
+                                             (.data "pid" pid))
                                        li  (-> li
                                              (.clone)
                                              (.append a)
@@ -236,7 +239,7 @@
 (defn add-page-project []
   (let [name (.val ($ "#top div.new form [name=\"name\"]"))
         addp (fn [tx r]
-               (trigger-new-page "proj" [["projid" (.-insertId r)]]))]
+               (trigger-new-page "proj" [["pid" (.-insertId r)]]))]
     ; FIXME make contracts
     (if (<= (count name) 0)
       (js/alert "Invalid name")
@@ -247,6 +250,35 @@
   (load-template "new")
   (.submit ($ "#newpage div.new form") add-page-project)
   (swap-page))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+
+(defn show-buddies [e]
+  (load-template "buddies")
+  (let [a       ($ (first ($ (.-currentTarget e))))
+        pid     (.data a "pid")
+        t       ($ "#newpage div.buddies div.title")
+        d       ($ "#newpage div.buddies form div.list")
+        i       ($ "<input class=\"text\" type=\"text\" name=\"name\" />")
+        set-buddy-data (fn [tx r]
+                        (do-row #(let [i (-> i
+                                            (.clone)
+                                            (.val (.-name %))
+                                            (.data "bid" (.-id %))
+                                            (.data "pid" pid)
+                                            )]
+                                   (.append ul li))
+                                r))
+        set-proj-data (fn [tx r] ; FIXME this is done too often, externalise.
+                        (let [i  (.item (.-rows r) 0)
+                              n  (.-name i)
+                              id (.-id i)]
+                          (.text t n) 
+                          (do-buddies set-buddy-data id)
+                          (.submit ($ "#newpage div.buddies form") add-buddies)
+                          (swap-page)))]
+    (do-proj set-proj-data pid)))
 
 (add-init! "new" show-new-form)
 
@@ -291,4 +323,5 @@
 ; - v2: multiple people add finance to same projects
 ; - consolidate page drawing function; show-cost/proj/costs are too similar.
 ; - add phonegap for contacts.
-; - add back/forward browser integration
+; - add back/forward browser integration -> needed for back button
+; - add total cost to project title
