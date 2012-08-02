@@ -37,10 +37,13 @@
                 (fn [t]
                   (.executeSql t "INSERT INTO projects (name) VALUES (?);" (clj->js [name]) 
                                f))))
-(defn add-buddy [name proj img]
+(defn add-buddy [proj name img f]
   (.transaction db
                 (fn [t]
-                  (.executeSql t "INSERT INTO buddies (name, pid, img) VALUES (?, ?);" (clj->js [name proj img])))))
+                  (.executeSql t "INSERT INTO buddies (name, pid, img) VALUES (?, ?, ?);" (clj->js [name proj img])
+                               f
+                               #(js/alert (str "fuck. " (.-message %2)))
+                               ))))
 
 (defn add-cost [name buddies proj amount]
   (.transaction db
@@ -80,12 +83,33 @@
                 "WHERE costs.id = " id " AND relcbp.cid = costs.id AND relcbp.bid = buddies.id;")]
     (do-select f rq)))
 
-(defn do-buddies [f id]
-  (do-select f (str "SELECT * FROM buddies WHERE buddies.id = " id ";")))
-
 (defn do-row [f r]
   (doseq [i (range (.-length (.-rows r)))]
     (f (.item (.-rows r) i))))
+
+(defn row-seq [r]
+  (for [i (range (.-length (.-rows r)))]
+    (.item (.-rows r) i)))
+
+(defn do-buddies [f pid]
+  (let [;projtot (reduce #(+ %1 (.-tot %2)) (row-seq r))
+        rq (str "SELECT buddies.name, buddies.id, buddies.img, SUM(relcbp.tot) AS btot, SUM(costs.tot) AS ptot "
+                "FROM buddies, relcbp, costs "
+                "WHERE buddies.id = relcbp.bid AND buddies.pid = " pid " and relcbp.pid = " pid " AND costs.pid = " pid " "
+                "GROUP BY buddies.id "
+                " ;")
+        do-bud (fn [tx r]
+                 (js/console.log r)
+                 (do-row ;#(js/alert (str (.-name %) ": " (.-btot %) "/" (.-ptot %)))
+                         f
+                         r))
+        ]
+    (do-select f rq)))
+
+;; (defn do-buddy [f bid pid]
+;;   (do-select f (str " SELECT buddies.name relcbp.tot FROM buddies, relcbp WHERE buddies.id = " bid
+;;                     " "
+;;                     " ;")))
 
 (defn nuke-db []
   (.transaction db

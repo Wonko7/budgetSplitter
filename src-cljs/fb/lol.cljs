@@ -1,7 +1,8 @@
 (ns fb.lol
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only  [do-proj do-buddies do-row do-cost do-costs add-cost add-buddies add-proj add-db! db-init]]
+        [fb.sql :only  [do-proj do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
+        ;'first-blood.fb.sql
         ;[fb.sql]
         ; FIXME get :use to import everything.
         ))
@@ -94,6 +95,7 @@
                           (.text t n) 
                           (do-costs set-cost-data id)
                           (swap-page)))]
+    (.data ($ "#newpage div.proj div.menu a") "pid" pid)
     (do-proj set-proj-data pid)))
 
 (defn canvas-rect [w-tot h-tot w]
@@ -173,32 +175,56 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
+(defn add-page-buddy []
+  (let [i    ($ "#top div.buddies form [name=\"name\"]")
+        name (.val i)
+        pid  (.data i "pid")
+        addb (fn [tx r]
+               (trigger-new-page "buddies" [["pid" pid]]))]
+    (js/alert (str name pid))
+    ; FIXME make contracts
+    (if (<= (count name) 0)
+      (js/alert "Invalid name")
+      (add-buddy pid name "img" addb)))
+  false)
+
 (defn show-buddies [e]
   (load-template "buddies")
   (let [a       ($ (first ($ (.-currentTarget e))))
         pid     (.data a "pid")
         t       ($ "#newpage div.buddies div.title")
-        d       ($ "#newpage div.buddies form div.list")
-        i       ($ "<input class=\"text\" type=\"text\" name=\"name\" />")
+        inp     ($ "#newpage div.buddies form [name=\"name\"]")
+        ul      ($ "#newpage div.buddies form div.list ul")
+        li      ($ "<li></li>")
+        w       (.width ($ "body"))
+        h       50
         set-buddy-data (fn [tx r]
-                        (do-row #(let [i (-> i
+                         (do-row #(let [ptot (.-ptot %)
+                                        btot (.-btot %)
+                                        nw   (int (* w (/ (.-btot %) (.-ptot %))))
+                                        cvs (canvas-rect w h nw)
+                                        li (-> li
                                             (.clone)
-                                            (.val (.-name %))
+                                            (.text (str (.-name %) ": " btot))
                                             (.data "bid" (.-id %))
                                             (.data "pid" pid)
+                                            (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
+                                            (.css "background-size" "100%")  
                                             )]
-                                   (.append d i))
-                                r))
+                                    (.append ul li))
+                                 r))
         set-proj-data (fn [tx r] ; FIXME this is done too often, externalise.
                         (let [i  (.item (.-rows r) 0)
                               n  (.-name i)
                               id (.-id i)]
                           (.text t n) 
+                          (.submit ($ "#newpage div.buddies form") add-page-buddy)
                           (do-buddies set-buddy-data id)
-                          (.submit ($ "#newpage div.buddies form") add-buddies)
                           (swap-page)))]
+    (.data inp "pid" pid)
     (do-proj set-proj-data pid)))
 
+(add-init! "buddies" show-buddies)
 (add-init! "new" show-new-form)
 
 
@@ -209,10 +235,10 @@
 ($ #(do
       (db-init)
       ;(add-proj "Mars!!!")
-      ;(add-buddy "harry" "img")
-      ;(add-buddy "jack" "img")
-      ;(add-buddy "john" "img")
-      ;(add-buddy "dalek" "img")
+      ;(add-buddy 1 "harry" "img")
+      ;(add-buddy 1 "jack" "img")
+      ;(add-buddy 1 "john" "img")
+      ;(add-buddy 1 "dalek" "img")
       ;(add-cost "firefly" [[1 100] [2 25] [3 125] [4 50]] 1 400)
       ;(add-cost "daban urnud" [[1 100] [2 25] [3 225] [4 50]] 1 400)
       ;(.hide ($ "#hidden"))
