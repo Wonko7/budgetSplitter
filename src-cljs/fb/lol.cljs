@@ -1,6 +1,10 @@
 (ns fb.lol
   (:use [jayq.core :only [$ inner delegate]]
-        [jayq.util :only [clj->js]]))
+        [jayq.util :only [clj->js]]
+        [fb.sql :only  [do-proj do-buddies do-row do-cost do-costs add-cost add-buddies add-proj add-db! db-init]]
+        ;[fb.sql]
+        ; FIXME get :use to import everything.
+        ))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -40,91 +44,6 @@
                       link (.attr a "href")]
                   (load-dyn-page link e)
                   false)))) 
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;; sql storage
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(def db)
-
-(defn nuke-db []
-  (.transaction db
-                (fn [t]
-                  (.executeSql t "DROP TABLE IF EXISTS projects;"  (clj->js [])
-                               (fn [t r] (.executeSql t "DROP TABLE buddies;" (clj->js [])
-                                                      (fn [t r] (.executeSql t "DROP TABLE costs;" (clj->js [])
-                                                                             (fn [t r] (.executeSql t "DROP TABLE relcbp;" (clj->js [])
-                                                                                                    #(js/alert (str "dropped."))
-                                                                                                    #(js/alert (str "fuck. " (.-message %2)))
-                                                                                                    ))
-                                                                             #(js/alert (str "fuck. " (.-message %2)))
-                                                                             ))
-                                                      #(js/alert (str "fuck. " (.-message %2)))
-                                                      ))
-                               #(js/alert (str "fuck. " (.-message %2)))
-                               ))))
-
-(defn add-db! [name schema]
-  (let [n (apply str (next (str name)))]
-    (.transaction db
-                  (fn [t]
-                    (.executeSql t (str "CREATE TABLE IF NOT EXISTS " n " ( " schema " );"))))))
-
-(defn add-proj [name f]
-  (.transaction db
-                (fn [t]
-                  (.executeSql t "INSERT INTO projects (name) VALUES (?);" (clj->js [name]) 
-                               f))))
-(defn add-buddy [name proj img]
-  (.transaction db
-                (fn [t]
-                  (.executeSql t "INSERT INTO buddies (name, pid, img) VALUES (?, ?);" (clj->js [name proj img])))))
-
-(defn add-cost [name buddies proj amount]
-  (.transaction db
-                (fn [t]
-                  (.executeSql t "INSERT INTO costs (name, pid, tot) VALUES (?, ?, ?);" (clj->js [name proj amount])
-                               (fn [t r]
-                                 (doseq [[b c] buddies]
-                                   (.executeSql t "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
-                                                (clj->js [proj b (.-insertId r) c])
-                                                ; #(js/alert (str :done [proj b (.-insertId r) 3] ))
-                                                ; #(js/alert (str :failed [proj b (.-insertId r) 3] ))
-                                                ))) 
-                               ; #(js/alert "INSERT INTO costs (name, pid, tot) VALUES (?, ?); failed."))
-                               ))))
-
-(defn do-select [f rq]
-  (.transaction db
-                (fn [t]
-                  (.executeSql t rq (clj->js [])
-                               #(f %1 %2)
-                               #(js/alert (str "fuck. " (.-message %2)))
-                               ))))
-
-(defn do-proj [f & [id]]
-  (let [rq (if id
-             (str "SELECT * FROM projects WHERE projects.id = " id ";" )
-             "SELECT * FROM projects;")]
-    (do-select f rq)))
-
-(defn do-costs [f id]
-  (let [rq (str "SELECT * FROM costs WHERE costs.pid = " id ";" )]
-    (do-select f rq)))  
-
-(defn do-cost [f id]
-  (let [rq (str "SELECT costs.name AS cname, buddies.name AS bname, costs.tot AS ctot, relcbp.tot AS btot, relcbp.id, relcbp.bid, relcbp.cid "
-                "FROM costs, relcbp, buddies "
-                "WHERE costs.id = " id " AND relcbp.cid = costs.id AND relcbp.bid = buddies.id;")]
-    (do-select f rq)))
-
-(defn do-buddies [f id]
-  (do-select f (str "SELECT * FROM buddies WHERE buddies.id = " id ";")))
-
-(defn do-row [f r]
-  (doseq [i (range (.-length (.-rows r)))]
-    (f (.item (.-rows r) i))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -268,7 +187,7 @@
                                             (.data "bid" (.-id %))
                                             (.data "pid" pid)
                                             )]
-                                   (.append ul li))
+                                   (.append d i))
                                 r))
         set-proj-data (fn [tx r] ; FIXME this is done too often, externalise.
                         (let [i  (.item (.-rows r) 0)
@@ -288,23 +207,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ($ #(do
-      (def db (js/openDatabase "projs" "1.0" "projs" 65536))
-      ;(nuke-db)
-      (add-db! :projects (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-                              " name TEXT NOT NULL"))
-      (add-db! :buddies  (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-                              " pid  INTEGER NOT NULL,"
-                              " name TEXT NOT NULL,"
-                              " img  TEXT NOT NULL"))
-      (add-db! :costs    (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-                              " pid  INTEGER NOT NULL,"
-                              " name TEXT NOT NULL,"
-                              " tot  NUMERIC NOT NULL"))
-      (add-db! :relcbp   (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-                              " pid  INTEGER NOT NULL,"
-                              " bid  INTEGER NOT NULL,"
-                              " cid  INTEGER NOT NULL,"
-                              " tot  NUMERIC NOT NULL"))
+      (db-init)
       ;(add-proj "Mars!!!")
       ;(add-buddy "harry" "img")
       ;(add-buddy "jack" "img")

@@ -11,5 +11,6 @@
         :compiler {
           :output-to "web/js/main.js"  ; default: main.js in current directory
           :optimizations :whitespace
+                   ;   :externs ["jquery.min.js"]
           ; :optimizations :advanced
           :pretty-print true}}]})
