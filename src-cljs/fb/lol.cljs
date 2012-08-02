@@ -180,7 +180,7 @@
         name (.val i)
         pid  (.data i "pid")
         addb (fn [tx r]
-               (trigger-new-page "buddies" [["pid" pid]]))]
+               (trigger-new-page "buddies" [["pid" pid]]))] ; FIXME instead of reloading just add to current page
     (js/alert (str name pid))
     ; FIXME make contracts
     (if (<= (count name) 0)
