@@ -73,7 +73,6 @@
   (load-template "proj")
   (let [a       ($ (first ($ (.-currentTarget e))))
         pid     (.data a "pid")
-        ;t       ($ "#newpage div.proj div.title")
         ul      ($ "#newpage div.proj div ul")
         li      ($ "<li></li>")
         a       ($ "<a></a>")
@@ -162,14 +161,24 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; show buddies & add form
 
+(defn append-buddy [ul li pid bid name ptot btot]
+  (.append ul (-> li
+                (.clone)
+                (.text (str name ": $" btot))
+                (.data "bid" bid)
+                (.data "pid" pid)
+                (set-rect-back ptot btot))))
+
 (defn add-page-buddy []
   (let [i    ($ "#top div.buddies form [name=\"name\"]")
         name (.val i)
         pid  (.data i "pid")
         addb (fn [tx r]
-               (trigger-new-page "buddies" [["pid" pid]]))] ; FIXME instead of reloading just add to current page
-    (js/alert (str name pid))
-    ; FIXME make contracts
+               (let [ul      ($ "#content div.buddies form div.list ul")
+                     li      ($ "<li></li>")
+                     inp     ($ "#content div.buddies form [name=\"name\"]")]
+                 (.val inp "")
+                 (append-buddy ul li pid (.-insertId r) name 100 0)))]
     (if (<= (count name) 0)
       (js/alert "Invalid name")
       (add-buddy pid name "img" addb)))
@@ -182,33 +191,15 @@
         inp     ($ "#newpage div.buddies form [name=\"name\"]")
         ul      ($ "#newpage div.buddies form div.list ul")
         li      ($ "<li></li>")
-        w       (.width ($ "body"))
-        h       50
-        set-buddy-data (fn [tx r]
-                         (do-row #(let [ptot (.-ptot %)
-                                        btot (.-btot %)
-                                        nw   (int (* w (/ (.-btot %) (.-ptot %))))
-                                        cvs (canvas-rect w h nw)
-                                        li (-> li
-                                            (.clone)
-                                            (.text (str (.-name %) ": " btot))
-                                            (.data "bid" (.-id %))
-                                            (.data "pid" pid)
-                                            (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
-                                            (.css "background-size" "100%")  
-                                            )]
-                                    (.append ul li))
-                                 r))
-        set-proj-data (fn [tx r] ; FIXME this is done too often, externalise.
-                        (let [i  (.item (.-rows r) 0)
-                              n  (.-name i)
-                              id (.-id i)]
-                          (.text t n) 
+        set-buddy-data  (fn [id name tot tx]
+                          (.data inp "pid" pid)
                           (.submit ($ "#newpage div.buddies form") add-page-buddy)
-                          (do-buddies set-buddy-data id)
-                          (swap-page)))]
-    (.data inp "pid" pid)
-    (do-proj set-proj-data pid)))
+                          (do-buddies (fn [tx r]
+                                        (do-row #(append-buddy ul li pid (.-id %) (.-name %) (.-ptot %) (.-btot %))
+                                                r))
+                                      pid)
+                          (swap-page))]
+    (set-title-project set-buddy-data pid)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
