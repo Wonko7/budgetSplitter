@@ -78,7 +78,6 @@
         li      ($ "<li></li>")
         a       ($ "<a></a>")
         set-proj-data (fn [id name tot tx]
-                        ;; FIXME better vis./ canvas
                         (.data ($ "#newpage div.proj div.menu a") "pid" pid)
                         (do-costs (fn [tx r]
                                     (do-row #(let [a  (-> a
@@ -104,28 +103,25 @@
   (let [a             ($ (first ($ (.-currentTarget e))))
         pid           (.data a "pid")
         cid           (.data a "cid")
-        t             ($ "#newpage div.cost div.title")
         ul            ($ "#newpage div.cost div ul")
         li            ($ "<li></li>")
         a             ($ "<a></a>")
-        set-title     #(.text t (str (.-cname %) ": " (.-ctot %)))
-        set-cost-data (fn [tx r]
-                        (set-title (.item (.-rows r) 0))
-                        (do-row #(let [
-                                       a   (-> a
-                                             (.clone)
-                                             (.text (str (.-bname %) ": $" (.-btot %)))
-                                             (.data "cid" cid)
-                                             (.data "pid" pid))
-                                       li  (-> li
-                                             (.clone)
-                                             (.append a)
-                                             (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
-                                             (.css "background-size" "100%"))]
-                                   (.append ul li))
-                                r)
-                        (swap-page))]
-    (do-cost set-cost-data cid)))
+        set-cost-data (fn [id name tot tx]
+                        (do-cost (fn [tx r]
+                                   (do-row #(let [a   (-> a
+                                                        (.clone)
+                                                        (.text (str (.-bname %) ": $" (.-btot %)))
+                                                        (.data "cid" cid)
+                                                        (.data "pid" pid))
+                                                  li  (-> li
+                                                        (.clone)
+                                                        (.append a)
+                                                        (set-rect-back (.-ctot %) (.-btot %)))]
+                                              (.append ul li))
+                                           r)
+                                   (swap-page))
+                                 cid))]
+    (set-title-project set-cost-data pid)))
 
 (add-init! "projects" show-projects)
 (add-init! "proj" show-proj)
