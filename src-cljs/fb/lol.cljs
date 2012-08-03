@@ -204,8 +204,22 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; new-cost
 
-(defn iter-inp [f inp]
-  (.each f))
+(defn add-page-cost []
+  (let [i     ($ "#content div.newcost form [name=\"name\"]")
+        name  (.val i)
+        pid   (.data i "pid")
+        alli  ($ "#content div.newcost form div.buddies [name=\"tot\"]") 
+        total (reduce + (for [i alli]
+                          (int (.val ($ i)))))
+        done  #(trigger-new-page "proj" [["pid" pid]])]
+    (if (<= (count name) 0)
+      (js/alert "Invalid name")
+      (if (<= total 0)
+        (js/alert "No cost")
+        (add-cost name (for [i alli :let [e ($ i)] :when (<= (count (.val e)) 0)]
+                         [(.data e "bid") (.val e)])
+                  pid total done)))
+    false))
 
 (defn show-new-cost [e]
   (load-template "newcost")
@@ -217,18 +231,17 @@
         bname   ($ "<div class=\"cleft\"></div>")
         bnum    ($ "<div class=\"cright\"></div>")
         binput  ($ "<input type=\"text\" class=\"numbers\" name=\"tot\" />")
-        validate (fn [e]
-                   (let [inp  ($ (.-currentTarget e))
-                         v     (.val inp)
-                         total ($ "#content div.newcost form .costtotal")
-                         alli  ($ "#content div.newcost form div.buddies [name=\"tot\"]")]
-                     (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1"))
-                     (.text total (reduce + (for [i alli]
-                                              (int (.val ($ i))))))))
+        validate        (fn [e]
+                          (let [inp  ($ (.-currentTarget e))
+                                v     (.val inp)
+                                total ($ "#content div.newcost form .costtotal")
+                                alli  ($ "#content div.newcost form div.buddies [name=\"tot\"]")]
+                            (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1"))
+                            (.text total (reduce + (for [i alli]
+                                                     (int (.val ($ i))))))))
         set-buddy-data  (fn [id name tot tx]
                           (.data inp "pid" pid)
-                          (.submit ($ "#newpage div.newcost form")
-                                   #(js/alert (str (.val ($ "#newpage div.newcost form [name=\"name\"]")))))
+                          (.submit ($ "#newpage div.newcost form") add-page-cost)
                           (do-buddies (fn [tx r]
                                         (do-row #(-> cont
                                                    (.append (-> row

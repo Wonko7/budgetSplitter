@@ -45,7 +45,7 @@
                                #(js/alert (str "fuck. " (.-message %2)))
                                ))))
 
-(defn add-cost [name buddies proj amount]
+(defn add-cost [name buddies proj amount f]
   (.transaction db
                 (fn [t]
                   (.executeSql t "INSERT INTO costs (name, pid, tot) VALUES (?, ?, ?);" (clj->js [name proj amount])
@@ -53,6 +53,8 @@
                                  (doseq [[b c] buddies]
                                    (.executeSql t "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
                                                 (clj->js [proj b (.-insertId r) c])
+                                                f
+                                                #(js/alert (str "fuck. " (.-message %2)))
                                                 ; #(js/alert (str :done [proj b (.-insertId r) 3] ))
                                                 ; #(js/alert (str :failed [proj b (.-insertId r) 3] ))
                                                 ))) 
