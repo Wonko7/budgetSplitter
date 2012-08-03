@@ -63,13 +63,15 @@
   (.transaction db
                 (fn [t]
                   (.executeSql t rq (clj->js [])
-                               #(f %1 %2)
+                               f
                                #(js/alert (str "fuck. " (.-message %2)))
                                ))))
 
 (defn do-proj [f & [id]]
   (let [rq (if id
-             (str "SELECT * FROM projects WHERE projects.id = " id ";" )
+             (str "SELECT projects.id, projects.name, SUM(costs.tot) AS tot FROM projects, costs "
+                  "WHERE projects.id = " id " AND costs.pid = projects.id "
+                  "GROUP BY projects.id ;")
              "SELECT * FROM projects;")]
     (do-select f rq)))
 

@@ -1,9 +1,8 @@
 (ns fb.lol
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only  [do-proj do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
-        ;'first-blood.fb.sql
-        ;[fb.sql]
+        [fb.sql :only [do-proj do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
+        [fb.vis :only [set-title-project set-rect-back]]
         ; FIXME get :use to import everything.
         ))
 
@@ -39,6 +38,7 @@
        (load-template name)
        (swap-page))))
 
+; FIXME add this to an init function
 ($ #(delegate ($ "body") "a" "click touchend"
               (fn [e] 
                 (let [a    ($ (.-currentTarget e))
@@ -51,6 +51,7 @@
 ;;;;;; pages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; show all projects
 (defn show-projects []
   (load-template "projects")
   (let [ul ($ "#newpage div ul")
@@ -67,48 +68,37 @@
                        r)
                (swap-page)))))
 
+;; show a project and its costs
 (defn show-proj [e]
   (load-template "proj")
   (let [a       ($ (first ($ (.-currentTarget e))))
         pid     (.data a "pid")
-        t       ($ "#newpage div.proj div.title")
+        ;t       ($ "#newpage div.proj div.title")
         ul      ($ "#newpage div.proj div ul")
         li      ($ "<li></li>")
         a       ($ "<a></a>")
-        set-cost-data (fn [tx r]
-                        (do-row #(let [a  (-> a
-                                            (.clone)
-                                            (.text (.-name %))
-                                            (.data "cid" (.-id %))
-                                            (.data "pid" pid)
-                                            (.attr "href" "cost"))
-                                       li (-> li
-                                            (.clone)
-                                            (.append a)
-                                            (.append (str " : $" (.-tot %))))]
-                                   (.append ul li))
-                                r))
-        set-proj-data (fn [tx r]
-                        (let [i  (.item (.-rows r) 0)
-                              n  (.-name i)
-                              id (.-id i)]
-                          (.text t n) 
-                          (do-costs set-cost-data id)
-                          (swap-page)))]
-    (.data ($ "#newpage div.proj div.menu a") "pid" pid)
-    (do-proj set-proj-data pid)))
+        set-proj-data (fn [id name tot tx]
+                        ;; FIXME better vis./ canvas
+                        (.data ($ "#newpage div.proj div.menu a") "pid" pid)
+                        (do-costs (fn [tx r]
+                                    (do-row #(let [a  (-> a
+                                                        (.clone)
+                                                        (.text (.-name %))
+                                                        (.data "cid" (.-id %))
+                                                        (.data "pid" pid)
+                                                        (.attr "href" "cost"))
+                                                   li (-> li
+                                                        (.clone)
+                                                        (.append a)
+                                                        (.append (str " : $" (.-tot %)))
+                                                        (set-rect-back tot (.-tot %)))]
+                                               (.append ul li))
+                                            r))
+                                  pid)
+                        (swap-page))]
+    (set-title-project set-proj-data pid)))
 
-(defn canvas-rect [w-tot h-tot w]
-  (let [c  (first ($ "<canvas></canvas>"))
-        ctx (.getContext c "2d" w-tot h-tot)]
-    (set! (. c -width) w-tot)
-    (set! (. c -height) h-tot)
-    (set! (. ctx -fillStyle) "#121")
-    (.fillRect ctx 0 0 w-tot h-tot)
-    (set! (. ctx -fillStyle) "#131") 
-    (.fillRect ctx 0 0 w h-tot)
-    ctx))
-
+;; show a cost detail: buddies
 (defn show-cost [e]
   (load-template "cost")
   (let [a             ($ (first ($ (.-currentTarget e))))
@@ -118,13 +108,10 @@
         ul            ($ "#newpage div.cost div ul")
         li            ($ "<li></li>")
         a             ($ "<a></a>")
-        w             (.width ($ "body"))
-        h             50
         set-title     #(.text t (str (.-cname %) ": " (.-ctot %)))
         set-cost-data (fn [tx r]
                         (set-title (.item (.-rows r) 0))
-                        (do-row #(let [nw  (int (* w (/ (.-btot %) (.-ctot %))))
-                                       cvs (canvas-rect w h nw)
+                        (do-row #(let [
                                        a   (-> a
                                              (.clone)
                                              (.text (str (.-bname %) ": $" (.-btot %)))
@@ -149,6 +136,7 @@
 ;;;;;; forms
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;; trigger a click to load new page
 (defn trigger-new-page [href data]
   (-> ($ "<a></a>")
     (.hide)
@@ -156,6 +144,9 @@
     (#(reduce (fn [a [k v]] (.data a k v)) %1 data))
     (.appendTo ($ "#content"))
     (.click)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; create new project:
 
 (defn add-page-project []
   (let [name (.val ($ "#top div.new form [name=\"name\"]"))
@@ -172,8 +163,8 @@
   (.submit ($ "#newpage div.new form") add-page-project)
   (swap-page))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; show buddies & add form
 
 (defn add-page-buddy []
   (let [i    ($ "#top div.buddies form [name=\"name\"]")
@@ -192,7 +183,6 @@
   (load-template "buddies")
   (let [a       ($ (first ($ (.-currentTarget e))))
         pid     (.data a "pid")
-        t       ($ "#newpage div.buddies div.title")
         inp     ($ "#newpage div.buddies form [name=\"name\"]")
         ul      ($ "#newpage div.buddies form div.list ul")
         li      ($ "<li></li>")
@@ -223,6 +213,9 @@
                           (swap-page)))]
     (.data inp "pid" pid)
     (do-proj set-proj-data pid)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (add-init! "buddies" show-buddies)
 (add-init! "new" show-new-form)
