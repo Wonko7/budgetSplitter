@@ -9,14 +9,13 @@ body {
 	/* Amount of negative space around the
 	outside of the body */
 	padding: 0;
+	width: 100%;
 	/* Amount of negative space around the
 	inside of the body */
 }
 
 .hidden {
 	visibility: hidden;
-	height: 0px;
-	width: 0px;
 	display: none;
 }
 
@@ -26,10 +25,12 @@ body {
 
 #projlist {
 	visibility: hidden;
+
 }
 
 .visible {
 	visibility: visible;
+	display: inline;
 }
 
 a:link {
@@ -43,4 +44,18 @@ a:hover {
 }
 a:active {
 	color:#00FF00;
+}
+
+.cleft {
+	padding:1px 0;
+	float:left;
+	width:30%;
+} 
+.cright {
+	padding:1px 0;
+	margin-left:30%;
+} 
+.hrow {
+	width: 100%;
+	display: block;
 }

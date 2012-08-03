@@ -202,10 +202,59 @@
     (set-title-project set-buddy-data pid)))
 
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; new-cost
+
+(defn iter-inp [f inp]
+  (.each f))
+
+(defn show-new-cost [e]
+  (load-template "newcost")
+  (let [a       ($ (first ($ (.-currentTarget e))))
+        pid     (.data a "pid")
+        inp     ($ "#newpage div.newcost form [name=\"name\"]")
+        cont    ($ "#newpage div.newcost form div.buddies")
+        row     ($ "<div class=\"hrow\"></div>")
+        bname   ($ "<div class=\"cleft\"></div>")
+        bnum    ($ "<div class=\"cright\"></div>")
+        binput  ($ "<input type=\"text\" class=\"numbers\" name=\"tot\" />")
+        validate (fn [e]
+                   (let [inp  ($ (.-currentTarget e))
+                         v     (.val inp)
+                         total ($ "#content div.newcost form .costtotal")
+                         alli  ($ "#content div.newcost form div.buddies [name=\"tot\"]")]
+                     (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1"))
+                     (.text total (reduce + (for [i alli]
+                                              (int (.val ($ i))))))))
+        set-buddy-data  (fn [id name tot tx]
+                          (.data inp "pid" pid)
+                          (.submit ($ "#newpage div.newcost form")
+                                   #(js/alert (str (.val ($ "#newpage div.newcost form [name=\"name\"]")))))
+                          (do-buddies (fn [tx r]
+                                        (do-row #(-> cont
+                                                   (.append (-> row
+                                                              (.clone)
+                                                              (.append (-> bname
+                                                                         (.clone)
+                                                                         (.text (.-name %)))) 
+                                                              (.append (-> bnum
+                                                                         (.clone)
+                                                                         (.append (-> binput
+                                                                                    (.clone)
+                                                                                    (.data "pid" pid)
+                                                                                    (.data "bid" (.-id %))
+                                                                                    (.keyup validate)
+                                                                                    )))))))
+                                                r))
+                                      pid)
+                          (swap-page))] 
+    (set-title-project set-buddy-data pid)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; inits;
 
 (add-init! "buddies" show-buddies)
 (add-init! "new" show-new-form)
+(add-init! "newcost" show-new-cost)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -233,4 +282,4 @@
 ; - consolidate page drawing function; show-cost/proj/costs are too similar.
 ; - add phonegap for contacts.
 ; - add back/forward browser integration -> needed for back button
-; - add total cost to project title
+; - logs on error sql

@@ -94,21 +94,14 @@
     (.item (.-rows r) i)))
 
 (defn do-buddies [f pid]
-  (let [;projtot (reduce #(+ %1 (.-tot %2)) (row-seq r))
-        rq (str "SELECT buddies.name, buddies.id, buddies.img, SUM(relcbp.tot) AS btot, SUM(costs.tot) AS ptot "
+  (let [rq (str "SELECT buddies.name, buddies.id, buddies.img, SUM(relcbp.tot) AS btot, SUM(costs.tot) AS ptot "
                 "FROM buddies, relcbp, costs "
                 "WHERE buddies.id = relcbp.bid AND buddies.pid = " pid " and relcbp.pid = " pid " AND costs.pid = " pid " "
                 "GROUP BY buddies.id "
                 "UNION ALL SELECT buddies.name, buddies.id, buddies.img, 0 AS btot, 100 AS ptot FROM buddies "
                 "WHERE NOT EXISTS (SELECT * FROM relcbp WHERE buddies.id = relcbp.bid)"
-                " ;")
-        ]
+                " ;")]
     (do-select f rq)))
-
-;; (defn do-buddy [f bid pid]
-;;   (do-select f (str " SELECT buddies.name relcbp.tot FROM buddies, relcbp WHERE buddies.id = " bid
-;;                     " "
-;;                     " ;")))
 
 (defn nuke-db []
   (.transaction db
