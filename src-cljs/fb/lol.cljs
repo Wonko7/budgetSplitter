@@ -1,7 +1,7 @@
 (ns fb.lol
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only [nuke-db do-proj do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
+        [fb.sql :only [nuke-db do-proj do-buddies do-row row-seq do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
         [fb.vis :only [set-title-project set-rect-back]]
         ; FIXME get :use to import everything.
         ))
@@ -123,9 +123,55 @@
                                  cid))]
     (set-title-project set-cost-data pid)))
 
+;; show total
+(defn show-total [e]
+  (load-template "total")
+  (let [a             ($ (first ($ (.-currentTarget e))))
+        pid           (.data a "pid")
+        ul            ($ "#newpage div.total div ul")
+        li            ($ "<li></li>")
+        ;a             ($ "<a></a>")
+        set-total-data (fn [id name tot tx]
+                        (do-buddies (fn [tx r]
+                                      (let [nbb   (.-length (.-rows r))
+                                            av    (/ tot nbb)
+                                            buds  (group-by #(> av (first %)) (for [b (row-seq r)]
+                                                                                 [(.-btot b) (.-name b)]))
+                                            cmp   #(< (.-btot %1) (.-btot %2))
+                                            bgive (map #(vector (- av (first %)) (first %) (second %)) (sort cmp (buds true)))
+                                            btake (map #(vector (- (first %) av) (first %) (second %)) (sort cmp (buds false)))
+                                            owes  (loop [[tdif ttot tname :as t] (first btake) ts (next btake)
+                                                         [gdif gtot gname :as g] (first bgive) gs (next bgive) 
+                                                         ac []]
+                                                    (if (and g t)
+                                                      (if (> tdif gdif)
+                                                        (recur [(- tdif gdif) ttot tname] ts (first gs) (next gs) (conj ac [gname tname gdif]))
+                                                        (recur (first ts) (next ts) [(- gdif tdif) gtot gname] gs (conj ac [gname tname tdif])))
+                                                      (do
+                                                        (js/console.log (str t " : " g))
+                                                        ac)
+                                                      ))]
+                                        (doseq [[gn tn tot] owes]
+                                          (.append ul (-> li
+                                                        (.clone)
+                                                        (.text (str gn " owes $" tot " to " tn)))))
+                                        (doseq [[d t n] bgive]
+                                          (.append ul (-> li
+                                                        (.clone)
+                                                        (.text (str n " paid: " t ": owes " d)))))
+                                        (doseq [[d t n] btake]
+                                          (.append ul (-> li
+                                                        (.clone)
+                                                        (.text (str n " paid: " t ": needs " d))))))
+
+                                      (swap-page))
+                                    pid))]
+    (set-title-project set-total-data pid)))
+
 (add-init! "projects" show-projects)
 (add-init! "proj" show-proj)
 (add-init! "cost" show-cost)
+(add-init! "total" show-total)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
