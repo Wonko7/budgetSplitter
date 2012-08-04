@@ -53,13 +53,13 @@
                                  (doseq [[b c] buddies]
                                    (.executeSql t "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
                                                 (clj->js [proj b (.-insertId r) c])
-                                                f
-                                                #(js/alert (str "fuck. " (.-message %2)))
+                                                ; #(js/alert (str "relcpb fuck. " (.-message %2)))
                                                 ; #(js/alert (str :done [proj b (.-insertId r) 3] ))
                                                 ; #(js/alert (str :failed [proj b (.-insertId r) 3] ))
                                                 ))) 
-                               ; #(js/alert "INSERT INTO costs (name, pid, tot) VALUES (?, ?); failed."))
-                               ))))
+                               ;#(js/alert "costs failed. " (.-message %2))
+                               )))
+  (f)) ; FIXME; this is the only function where user fun called potentially before finishing transaction. important?
 
 (defn do-select [f rq]
   (.transaction db
@@ -73,7 +73,10 @@
   (let [rq (if id
              (str "SELECT projects.id, projects.name, SUM(costs.tot) AS tot FROM projects, costs "
                   "WHERE projects.id = " id " AND costs.pid = projects.id "
-                  "GROUP BY projects.id ;")
+                  "GROUP BY projects.id "
+                  "UNION ALL SELECT  projects.id, projects.name, 0 AS tot FROM projects "
+                  "WHERE NOT EXISTS (SELECT * FROM costs WHERE projects.id = costs.pid ) "
+                  " ;")
              "SELECT * FROM projects;")]
     (do-select f rq)))
 
@@ -98,11 +101,12 @@
 (defn do-buddies [f pid]
   (let [rq (str "SELECT buddies.name, buddies.id, buddies.img, SUM(relcbp.tot) AS btot, SUM(costs.tot) AS ptot "
                 "FROM buddies, relcbp, costs "
-                "WHERE buddies.id = relcbp.bid AND buddies.pid = " pid " and relcbp.pid = " pid " AND costs.pid = " pid " "
+                "WHERE buddies.id = relcbp.bid AND buddies.pid = " pid " and relcbp.pid = " pid " AND costs.pid = " pid " AND relcbp.cid = costs.id "
                 "GROUP BY buddies.id "
                 "UNION ALL SELECT buddies.name, buddies.id, buddies.img, 0 AS btot, 100 AS ptot FROM buddies "
-                "WHERE NOT EXISTS (SELECT * FROM relcbp WHERE buddies.id = relcbp.bid)"
+                "WHERE NOT EXISTS (SELECT * FROM relcbp, costs WHERE buddies.id = relcbp.bid AND buddies.pid = relcbp.pid AND relcbp.cid = costs.id AND costs.pid = buddies.pid)"
                 " ;")]
+    ;(lol)
     (do-select f rq)))
 
 (defn nuke-db []

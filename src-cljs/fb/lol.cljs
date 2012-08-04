@@ -1,7 +1,7 @@
 (ns fb.lol
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only [do-proj do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
+        [fb.sql :only [nuke-db do-proj do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
         [fb.vis :only [set-title-project set-rect-back]]
         ; FIXME get :use to import everything.
         ))
@@ -106,6 +106,7 @@
         li            ($ "<li></li>")
         a             ($ "<a></a>")
         set-cost-data (fn [id name tot tx]
+                        ;; FIXME should other buddies be shown? $0?
                         (do-cost (fn [tx r]
                                    (do-row #(let [a   (-> a
                                                         (.clone)
@@ -216,8 +217,8 @@
       (js/alert "Invalid name")
       (if (<= total 0)
         (js/alert "No cost")
-        (add-cost name (for [i alli :let [e ($ i)] :when (<= (count (.val e)) 0)]
-                         [(.data e "bid") (.val e)])
+        (add-cost name (for [i alli :let [e ($ i)] :when (> (count (.val e)) 0)]
+                         [(int (.data e "bid")) (int (.val e))])
                   pid total done)))
     false))
 
@@ -255,8 +256,7 @@
                                                                                     (.clone)
                                                                                     (.data "pid" pid)
                                                                                     (.data "bid" (.-id %))
-                                                                                    (.keyup validate)
-                                                                                    )))))))
+                                                                                    (.keyup validate))))))))
                                                 r))
                                       pid)
                           (swap-page))] 
@@ -276,6 +276,7 @@
 
 ($ #(do
       (db-init)
+      ;(nuke-db)
       ;(add-proj "Mars!!!")
       ;(add-buddy 1 "harry" "img")
       ;(add-buddy 1 "jack" "img")
