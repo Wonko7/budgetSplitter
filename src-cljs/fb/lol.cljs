@@ -12,6 +12,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def page-dyn-inits {})
+(def back-pages nil)
 
 (defn add-init! [name func]
   (def page-dyn-inits (into page-dyn-inits {name func})))
@@ -31,19 +32,22 @@
                        (.remove cont)
                        (.show (.attr newp "id" "content"))))))
 
-(defn load-dyn-page [name e]
-   (if-let [f (page-dyn-inits name)]
-     (f e)
-     (do
-       (load-template name)
-       (swap-page))))
+(defn load-dyn-page [name e a]
+  (when (not= name "back")
+    (def back-pages (cons [name (doall (map #(vector % (.data a %)) ["pid" "bid" "cid"]))]
+                          (take 15 back-pages))))
+  (if-let [f (page-dyn-inits name)]
+    (f e)
+    (do
+      (load-template name)
+      (swap-page))))
 
 ; FIXME add this to an init function
 ($ #(delegate ($ "body") "a" "click touchend"
               (fn [e] 
-                (let [a    ($ (.-currentTarget e))
+                (let [a    ($ (first ($ (.-currentTarget e))))
                       link (.attr a "href")]
-                  (load-dyn-page link e)
+                  (load-dyn-page link e a)
                   false)))) 
 
 
@@ -150,9 +154,9 @@
                                                         (if (> tdif gdif)
                                                           (recur [(- tdif gdif) ttot tname] ts (first gs) (next gs) (conj ac [gname tname gdif]))
                                                           (recur (first ts) (next ts) [(- gdif tdif) gtot gname] gs (conj ac [gname tname tdif])))
-                                                        (do
-                                                          (js/console.log (str t " : " g))
-                                                          ac)))]
+                                                        ac
+                                                        ;(do (js/console.log (str t " : " g)) ac)
+                                                        ))]
                                         (doseq [[d t n] buds]
                                           (.append ul (-> li
                                                         (.clone)
@@ -307,12 +311,21 @@
                           (swap-page))] 
     (set-title-project set-buddy-data pid)))
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; back;
+
+
+(defn go-back [e]
+  (let [[x [name d] & bs] back-pages]
+    (def back-pages bs)
+    (trigger-new-page name d)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; inits;
 
 (add-init! "buddies" show-buddies)
 (add-init! "new" show-new-form)
 (add-init! "newcost" show-new-cost)
+(add-init! "back" go-back)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -330,7 +343,7 @@
       ;(add-cost "firefly" [[1 100] [2 25] [3 125] [4 50]] 1 400)
       ;(add-cost "daban urnud" [[1 100] [2 25] [3 225] [4 50]] 1 400)
       ;(.hide ($ "#hidden"))
-      (load-dyn-page "projects" nil)))
+      (trigger-new-page "projects" nil)))
 
 
 ; DEBUG:
