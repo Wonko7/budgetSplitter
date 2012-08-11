@@ -44,11 +44,11 @@
 
 ; FIXME add this to an init function
 ($ #(delegate ($ "body") "a" "click touchend"
-              (fn [e] 
+              (fn [e]
                 (let [a    ($ (first ($ (.-currentTarget e))))
                       link (.attr a "href")]
                   (load-dyn-page link e a)
-                  false)))) 
+                  false))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -62,9 +62,9 @@
         li ($ "#newpage div ul li")]
     (do-proj (fn [t r]
                (do-row (fn [i]
-                         (.append ul (-> li 
-                                       (.clone) 
-                                       (.empty) 
+                         (.append ul (-> li
+                                       (.clone)
+                                       (.empty)
                                        (.append (-> ($ "<a></a>")
                                                   (.text (.-name i))
                                                   (.attr "href" "proj")
@@ -148,12 +148,16 @@
                                             bgive   (sort cmp (divbuds true))
                                             btake   (sort cmp (divbuds false))
                                             owes    (loop [[tdif ttot tname :as t] (first btake) ts (next btake)
-                                                           [gdif gtot gname :as g] (first bgive) gs (next bgive) 
+                                                           [gdif gtot gname :as g] (first bgive) gs (next bgive)
                                                            ac []]
                                                       (if (and g t)
                                                         (if (> tdif gdif)
-                                                          (recur [(- tdif gdif) ttot tname] ts (first gs) (next gs) (conj ac [gname tname gdif]))
-                                                          (recur (first ts) (next ts) [(- gdif tdif) gtot gname] gs (conj ac [gname tname tdif])))
+                                                          (recur [(- tdif gdif) ttot tname] ts
+                                                                 (first gs) (next gs)
+                                                                 (conj ac [gname tname gdif]))
+                                                          (recur (first ts) (next ts)
+                                                                 [(- gdif tdif) gtot gname] gs
+                                                                 (conj ac [gname tname tdif])))
                                                         ac
                                                         ;(do (js/console.log (str t " : " g)) ac)
                                                         ))]
@@ -200,7 +204,7 @@
     ; FIXME make contracts
     (if (<= (count name) 0)
       (js/alert "Invalid name")
-      (add-proj name addp))) 
+      (add-proj name addp)))
   false)
 
 (defn show-new-form []
@@ -258,7 +262,7 @@
   (let [i     ($ "#content div.newcost form [name=\"name\"]")
         name  (.val i)
         pid   (.data i "pid")
-        alli  ($ "#content div.newcost form div.buddies [name=\"tot\"]") 
+        alli  ($ "#content div.newcost form div.buddies [name=\"tot\"]")
         total (reduce + (for [i alli]
                           (int (.val ($ i)))))
         done  #(trigger-new-page "proj" [["pid" pid]])]
@@ -298,7 +302,7 @@
                                                               (.clone)
                                                               (.append (-> bname
                                                                          (.clone)
-                                                                         (.text (.-name %)))) 
+                                                                         (.text (.-name %))))
                                                               (.append (-> bnum
                                                                          (.clone)
                                                                          (.append (-> binput
@@ -308,11 +312,11 @@
                                                                                     (.keyup validate))))))))
                                                 r))
                                       pid)
-                          (swap-page))] 
+                          (swap-page))]
     (set-title-project set-buddy-data pid)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; back;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; back;
 
 (defn go-back [e]
   (let [[x [name d] & bs] back-pages]
@@ -329,20 +333,21 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;;;; jqt
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+($
+  #(def jQT (.jQTouch js/jQuery (clj->js {"icon" "img/icon.png"}))) ; FIXME get this working with $
+ )
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; init
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ($ #(do
       (db-init)
       ;(nuke-db)
-      ;(add-proj "Mars!!!")
-      ;(add-buddy 1 "harry" "img")
-      ;(add-buddy 1 "jack" "img")
-      ;(add-buddy 1 "john" "img")
-      ;(add-buddy 1 "dalek" "img")
-      ;(add-cost "firefly" [[1 100] [2 25] [3 125] [4 50]] 1 400)
-      ;(add-cost "daban urnud" [[1 100] [2 25] [3 225] [4 50]] 1 400)
-      ;(.hide ($ "#hidden"))
       (trigger-new-page "projects" nil)))
 
 
@@ -353,5 +358,5 @@
 ; - v2: multiple people add finance to same projects
 ; - consolidate page drawing function; show-cost/proj/costs are too similar.
 ; - add phonegap for contacts.
-; - add back/forward browser integration -> needed for back button
+; - add back/forward browser integration
 ; - logs on error sql
