@@ -13,6 +13,7 @@
 
 (def page-dyn-inits {})
 (def back-pages nil)
+(def jQT nil)
 
 (defn add-init! [name func]
   (def page-dyn-inits (into page-dyn-inits {name func})))
@@ -28,9 +29,20 @@
   (let [newp ($ "#newpage")
         cont ($ "#content")
         hidd ($ "body div.hidden")]
-    (.hide cont 300 #(do
-                       (.remove cont)
-                       (.show (.attr newp "id" "content"))))))
+    (-> cont
+      (.hide 200 #(do
+                    (.remove cont)
+                    (-> newp
+                      (.attr "id" "content")
+                      (.show 200)))))))
+
+;(defn swap-page []
+;  (let [newp ($ "#newpage")
+;        cont ($ "#content")
+;        hidd ($ "body div.hidden")]
+;    (.goTo jQT "index.html")
+;    ;(.remove cont)
+;    (.attr newp "id" "content")))
 
 (defn load-dyn-page [name e a]
   (when (not= name "back")
@@ -85,14 +97,13 @@
                         (do-costs (fn [tx r]
                                     (do-row #(let [a  (-> a
                                                         (.clone)
-                                                        (.text (.-name %))
+                                                        (.text (str (.-name %) " : $" (.-tot %)))
                                                         (.data "cid" (.-id %))
                                                         (.data "pid" pid)
                                                         (.attr "href" "cost"))
                                                    li (-> li
                                                         (.clone)
                                                         (.append a)
-                                                        (.append (str " : $" (.-tot %)))
                                                         (set-rect-back tot (.-tot %)))]
                                                (.append ul li))
                                             r))
@@ -164,7 +175,10 @@
                                         (doseq [[d t n] buds]
                                           (.append ul (-> li
                                                         (.clone)
-                                                        (.text (str n " paid: " t ": owes " d))
+                                                        (.text (str n " paid: " t (if (> t av)
+                                                                                    ": needs "
+                                                                                    ": owes ")
+                                                                    d))
                                                         (set-tot-rect-back maxpaid av t))))
                                         (doseq [[gn tn tot] owes]
                                           (.append ul (-> li
