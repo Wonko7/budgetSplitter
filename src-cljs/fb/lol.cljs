@@ -21,28 +21,44 @@
 (defn load-template [name]
   (let [temp ($ (str "div.hidden div." name))
         temp (if (zero? (.-length temp)) ($ "div.hidden div.404") temp)
-        body ($ "#top")
+        body ($ "body")
         newp (.hide ($ "<div id=\"newpage\"></div>"))]
-    (.html (.append body (.append newp (.clone temp))))))
-
-(defn swap-page []
-  (let [newp ($ "#newpage")
-        cont ($ "#content")
-        hidd ($ "body div.hidden")]
-    (-> cont
-      (.hide 200 #(do
-                    (.remove cont)
-                    (-> newp
-                      (.attr "id" "content")
-                      (.show 200)))))))
+    (.append body
+             (.append newp
+                      (.clone temp)))))
 
 ;(defn swap-page []
 ;  (let [newp ($ "#newpage")
 ;        cont ($ "#content")
 ;        hidd ($ "body div.hidden")]
-;    (.goTo jQT "index.html")
-;    ;(.remove cont)
-;    (.attr newp "id" "content")))
+;    (-> cont
+;      (.hide 200 #(do
+;                    (.remove cont)
+;                    (-> newp
+;                      (.attr "id" "content")
+;                      (.show 200)))))))
+
+(defn swap-page []
+  (let [newp (.show ($ "#newpage"))
+        cont ($ "#content")
+        ]
+    ;(-> cont
+    ;  (.attr "id" "old")
+    ;  )
+    ;(-> newp
+    ;  (.attr "id" "content"))
+    ;(.remove ($ "#old"))
+    (.attr cont "id" "old")
+    (.attr cont "class" "current")
+    ;(.addClass cont "in")
+    (.attr newp "id" "content")
+    (.goTo jQT "#content" "slideleft")
+    ;(.remove cont)
+    ;(.removeClass newp "in")
+    ;(.removeAttr newp "class")
+    ;(.removeAttr newp "style")
+    ;(.removeClass newp "current")
+    ))
 
 (defn load-dyn-page [name e a]
   (when (not= name "back")
@@ -212,7 +228,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; create new project:
 
 (defn add-page-project []
-  (let [name (.val ($ "#top div.new form [name=\"name\"]"))
+  (let [name (.val ($ "#content div.new form [name=\"name\"]"))
         addp (fn [tx r]
                (trigger-new-page "proj" [["pid" (.-insertId r)]]))]
     ; FIXME make contracts
@@ -238,7 +254,7 @@
                 (set-rect-back ptot btot))))
 
 (defn add-page-buddy []
-  (let [i    ($ "#top div.buddies form [name=\"name\"]")
+  (let [i    ($ "#content div.buddies form [name=\"name\"]")
         name (.val i)
         pid  (.data i "pid")
         addb (fn [tx r]

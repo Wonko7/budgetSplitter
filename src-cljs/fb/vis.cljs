@@ -96,7 +96,7 @@
     (.fillRect ctx 0 0 w-tot h-tot)
     (set! (. ctx -fillStyle) "#131") ; FIXME css that shit
     (.fillRect ctx 0 0 wpaid h-tot)
-    (set! (. ctx -fillStyle) "#522") ; FIXME css that shit
+    (set! (. ctx -fillStyle) "#822") ; FIXME css that shit
     (.fillRect ctx wpaid 0 (- avg wpaid) h-tot)
     (set! (. ctx -fillStyle) "#33F") ; FIXME css that shit
     (.fillRect ctx avg 0 2 h-tot)
