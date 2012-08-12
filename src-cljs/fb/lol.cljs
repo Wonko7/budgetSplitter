@@ -27,38 +27,17 @@
              (.append newp
                       (.clone temp)))))
 
-;(defn swap-page []
-;  (let [newp ($ "#newpage")
-;        cont ($ "#content")
-;        hidd ($ "body div.hidden")]
-;    (-> cont
-;      (.hide 200 #(do
-;                    (.remove cont)
-;                    (-> newp
-;                      (.attr "id" "content")
-;                      (.show 200)))))))
-
 (defn swap-page []
   (let [newp (.show ($ "#newpage"))
         cont ($ "#content")
         ]
-    ;(-> cont
-    ;  (.attr "id" "old")
-    ;  )
-    ;(-> newp
-    ;  (.attr "id" "content"))
-    ;(.remove ($ "#old"))
-    (.attr cont "id" "old")
-    (.attr cont "class" "current")
-    ;(.addClass cont "in")
+    (.goTo jQT "#newpage" "slideleft")
     (.attr newp "id" "content")
-    (.goTo jQT "#content" "slideleft")
-    ;(.remove cont)
-    ;(.removeClass newp "in")
-    ;(.removeAttr newp "class")
-    ;(.removeAttr newp "style")
-    ;(.removeClass newp "current")
-    ))
+    (.attr cont "id" "old")))
+
+; FIXME add this to an init function
+($ #(.bind ($ "body") "pageAnimationEnd" (fn [e info] 
+                                           (.remove ($ "#old")))))
 
 (defn load-dyn-page [name e a]
   (when (not= name "back")
