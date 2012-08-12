@@ -53,7 +53,7 @@
     (do-proj sett pid)))
 
 (defn canvas-rect [w-tot h-tot w]
-  (let [c  (first ($ "<canvas></canvas>"))
+  (let [c   (first ($ "<canvas></canvas>"))
         ctx (.getContext c "2d" w-tot h-tot)]
     (set! (. c -width) w-tot)
     (set! (. c -height) h-tot)
@@ -73,7 +73,7 @@
       (.css "background-size" "100%")))  )
 
 (defn canvas-rect-take [w-tot h-tot wpaid avg max]
-  (let [c  (first ($ "<canvas></canvas>"))
+  (let [c   (first ($ "<canvas></canvas>"))
         ctx (.getContext c "2d" w-tot h-tot)]
     (set! (. c -width) w-tot)
     (set! (. c -height) h-tot)
@@ -88,7 +88,7 @@
     ctx))
 
 (defn canvas-rect-give [w-tot h-tot wpaid avg]
-  (let [c  (first ($ "<canvas></canvas>"))
+  (let [c   (first ($ "<canvas></canvas>"))
         ctx (.getContext c "2d" w-tot h-tot)]
     (set! (. c -width) w-tot)
     (set! (. c -height) h-tot)

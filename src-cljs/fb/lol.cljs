@@ -72,6 +72,7 @@
                          (.append ul (-> li
                                        (.clone)
                                        (.empty)
+                                       ;(.addClass "arrow")
                                        (.append (-> ($ "<a></a>")
                                                   (.text (.-name i))
                                                   (.attr "href" "proj")
@@ -99,6 +100,7 @@
                                                    li (-> li
                                                         (.clone)
                                                         (.append a)
+                                                        ;(.addClass "arrow")
                                                         (set-rect-back tot (.-tot %)))]
                                                (.append ul li))
                                             r))
@@ -369,3 +371,4 @@
 ; - add phonegap for contacts.
 ; - add back/forward browser integration
 ; - logs on error sql
+; - add ryanday.net rss
