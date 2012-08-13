@@ -2,9 +2,11 @@ body {
 	background-color: #222; /* Background color */
 	color: #FFF;
 	/* Foreground color used for text */
+	/*
 	font-family: Helvetica;
 	font-size: 14px;
 	font-color: #FFF;
+	*/
 	margin: 0;
 	/* Amount of negative space around the
 	outside of the body */
@@ -58,4 +60,19 @@ a:active {
 .hrow {
 	width: 100%;
 	display: block;
+}
+.menu {
+	background-color: #333;
+}
+.menu .right {
+	width: 50%;
+	padding: 0;
+	margin: 0;
+	margin-left: 50%;
+}
+.menu .left {
+	padding: 0;
+	margin: 0;
+	width: 50%;
+	float: left;
 }

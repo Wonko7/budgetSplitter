@@ -10,56 +10,27 @@
 
 
 (defn add-menu [pid]
-  (let [m (.addClass ($ "#newpage div.menu") "toolbar")
-        a (.addClass ($ "<a></a>") "button")
-        ;s (.css ($ "<span></span>") "position" "absolute")
-        s ($ "<span></span>")
-        l [["Back" "back"]
-           ["Costs" "proj"]
-           ["New Cost" "newcost"]
-           ["Buddies" "buddies"]
-           ["Total" "total"]
-           ;["" ""]
-           ]
-        ]
-    (when (> (.-length m) 0)
-     (doseq [[t l] l]
-       (.append m (-> s
-                    (.clone)
-                    (.append (-> a
+  (let [top   ($ "#newpage div.top")
+        menu  (.clone ($ "div.hidden div.menu"))]
+    (.append top (.hide menu))) 
+  (let [ulr ($ "#newpage div.menu div.right ul")
+        ull ($ "#newpage div.menu div.left ul")
+        li  ($ "<li></li>")
+        a   ($ "<a></a>")
+        ll  [["Costs" "proj"]
+             ["Buddies" "buddies"] ]
+        lr  [["Total" "total"]
+             ["Setting" "settings"]]
+        add #(doseq [[t l] %1]
+               (.append %2 (-> li
+                             (.clone)
+                             (.append (-> a
                                         (.clone)
                                         (.data "pid" pid)
                                         (.attr "href" l)
-                                        (.css  "position" "relative")
-                                        ;(.css  "position" "float")
-                                        ;(.css  "height" "30px")
-                                        (.text t)))
-                    (.append " ")))))))
-
-(defn add-menu [pid]
-  (let [top   ($ "#newpage div.top")
-        menu  (.clone ($ "div.hidden div.menu"))]
-    (.append top (-> menu
-                   (.hide)
-                   ;(.addClass "toolbar")
-                   ;(.css "height" "")
-                   ))
-    (let [ul ($ "#newpage div.menu ul")
-          li ($ "<li></li>")
-          a  ($ "<a></a>")
-          l  [["Costs" "proj"]
-              ["Buddies" "buddies"]
-              ["Total" "total"]
-              ["Setting" "settings"]] ]
-      (doseq [[t l] l]
-        (.append ul (-> li
-                      (.clone)
-                      (.append  (-> a
-                                  (.clone)
-                                  (.data "pid" pid)
-                                  (.attr "href" l)
-                                  (.text t)))))))))
-
+                                        (.text t))))))]
+    (add ll ull)
+    (add lr ulr)))
 
 ; sets the template's page title then executes a user fn
 ; with the following prototype: fn [pid projname totalcost sqltx]
@@ -69,14 +40,12 @@
                      n   (.-name i)
                      id  (.-id i)
                      tot (.-tot i)
-                     a   (.addClass ($ "<a></a>") "button")
-                     ]
-                 (js/console.log "called :)")
+                     a   (.addClass ($ "<a></a>") "button")]
                  (-> ($ "#newpage div.top")
                    (.data "pid" pid) 
                    (.append (-> ($ "<div class=\"toolbar\"></div>")
-                              (.append  (.text ($ "<h1></h1>")
-                                               (str n ": $" tot)))
+                              (.append (.text ($ "<h1></h1>")
+                                              (str n ": $" tot)))
                               (.append (-> a
                                          (.clone)
                                          (.addClass "back")

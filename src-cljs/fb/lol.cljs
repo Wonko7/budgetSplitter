@@ -69,14 +69,18 @@
 ;; show all projects
 (defn show-projects []
   (load-template "projects")
-  (let [ul ($ "#newpage div ul")
-        li ($ "#newpage div ul li")]
-        ;li      ($ "<li></li>")
+  (let [li ($ "<li></li>")  
+        ul (.append ($ "#newpage div ul")
+                    (-> li
+                      (.clone)
+                      (.append (-> ($ "<a></a>")
+                                 (.text "New Project")
+                                 (.attr "href" "new")))))]
+    (.append ul )
     (do-proj (fn [t r]
                (do-row (fn [i]
                          (.append ul (-> li
                                        (.clone)
-                                       (.empty)
                                        ;(.addClass "arrow")
                                        (.append (-> ($ "<a></a>")
                                                   (.text (.-name i))
@@ -90,9 +94,15 @@
   (load-template "proj")
   (let [a       ($ (first ($ (.-currentTarget e))))
         pid     (.data a "pid")
-        ul      ($ "#newpage div.proj div ul")
         li      ($ "<li></li>")
         a       ($ "<a></a>")
+        ul      (.append ($ "#newpage div.proj ul")
+                         (-> li
+                           (.clone)
+                           (.append (-> ($ "<a></a>")
+                                      (.text "Add Cost")
+                                      (.data "pid" pid)
+                                      (.attr "href" "newcost")))))
         set-proj-data (fn [id name tot tx]
                         (.data ($ "#newpage div.proj div.menu a") "pid" pid)
                         (do-costs (fn [tx r]
@@ -353,7 +363,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ($
-  #(def jQT (.jQTouch js/jQuery (clj->js {"icon" "img/icon.png"}))) ; FIXME get this working with $
+  ;#(def jQT (.jQTouch js/jQuery (clj->js {:icon "img/icon.png"}))) ; FIXME get this working with $
+  #(def jQT (.jQTouch js/jQuery (js-obj "icon" "img/icon.png"))) ; FIXME get this working with $
  )
 
 
@@ -376,4 +387,4 @@
 ; - add phonegap for contacts.
 ; - add back/forward browser integration
 ; - logs on error sql
-; - add ryanday.net rss
+; - add ryanday.net [trend.]builtwith.com blog.jqtouch rss
