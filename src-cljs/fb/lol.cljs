@@ -47,7 +47,8 @@
 
 (defn load-dyn-page [name e a]
   (when (not= name "back")
-    (def back-pages (cons [name (doall (cons ["anim" "back"] (map #(vector % (.data a %)) ["pid" "bid" "cid"])))]
+    (def back-pages (cons [name (doall (cons ["anim" "back"]
+                                             (map #(vector % (.data a %)) ["pid" "bid" "cid"])))]
                           (take 15 back-pages))))
   (if-let [f (page-dyn-inits name)]
     (f e a)
