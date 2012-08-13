@@ -31,11 +31,13 @@
                (.append ($ "<div class=\"bottom\"></div>"))
                (.append )))))
 
-(defn swap-page []
+(defn swap-page [e a]
   (let [newp (.show ($ "#newpage"))
         cont ($ "#content")
-        ]
-    (.goTo jQT "#newpage" "slideleft")
+        back? (if a (= "back" (.data a "anim")) false)]
+    (if back? ; condp on animation
+      (.goTo jQT "#newpage" "slideright")
+      (.goTo jQT "#newpage" "slideleft")) 
     (.attr newp "id" "content")
     (.attr cont "id" "old")))
 
@@ -45,13 +47,13 @@
 
 (defn load-dyn-page [name e a]
   (when (not= name "back")
-    (def back-pages (cons [name (doall (map #(vector % (.data a %)) ["pid" "bid" "cid"]))]
+    (def back-pages (cons [name (doall (cons ["anim" "back"] (map #(vector % (.data a %)) ["pid" "bid" "cid"])))]
                           (take 15 back-pages))))
   (if-let [f (page-dyn-inits name)]
-    (f e)
+    (f e a)
     (do
       (load-template name)
-      (swap-page))))
+      (swap-page e a))))
 
 ; FIXME add this to an init function
 ($ #(delegate ($ "body") "a" "click touchend"
@@ -67,7 +69,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; show all projects
-(defn show-projects []
+(defn show-projects [e a]
   (load-template "projects")
   (let [li ($ "<li></li>")  
         ul (.append ($ "#newpage div ul")
@@ -87,10 +89,10 @@
                                                   (.attr "href" "proj")
                                                   (.data "pid" (.-id i)))))))
                        r)
-               (swap-page)))))
+               (swap-page e a)))))
 
 ;; show a project and its costs
-(defn show-proj [e]
+(defn show-proj [e origa]
   (load-template "proj")
   (let [a       ($ (first ($ (.-currentTarget e))))
         pid     (.data a "pid")
@@ -121,11 +123,11 @@
                                                (.append ul li))
                                             r))
                                   pid)
-                        (swap-page))]
+                        (swap-page e origa))]
     (set-title-project set-proj-data pid)))
 
 ;; show a cost detail: buddies
-(defn show-cost [e]
+(defn show-cost [e origa]
   (load-template "cost")
   (let [a             ($ (first ($ (.-currentTarget e))))
         pid           (.data a "pid")
@@ -147,12 +149,12 @@
                                                         (set-rect-back (.-ctot %) (.-btot %)))]
                                               (.append ul li))
                                            r)
-                                   (swap-page))
+                                   (swap-page e origa))
                                  cid))]
     (set-title-project set-cost-data pid)))
 
 ;; show total
-(defn show-total [e]
+(defn show-total [e origa]
   (load-template "total")
   (let [a             ($ (first ($ (.-currentTarget e))))
         pid           (.data a "pid")
@@ -198,7 +200,7 @@
                                                         (.clone)
                                                         (.text (str gn " owes $" tot " to " tn))))))
 
-                                      (swap-page))
+                                      (swap-page e origa))
                                     pid))]
     (set-title-project set-total-data pid)))
 
@@ -234,10 +236,10 @@
       (add-proj name addp)))
   false)
 
-(defn show-new-form []
+(defn show-new-form [e origa]
   (load-template "new")
   (.submit ($ "#newpage div.new form") add-page-project)
-  (swap-page))
+  (swap-page e origa))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; show buddies & add form
@@ -265,7 +267,7 @@
       (add-buddy pid name "img" addb)))
   false)
 
-(defn show-buddies [e]
+(defn show-buddies [e origa]
   (load-template "buddies")
   (let [a       ($ (first ($ (.-currentTarget e))))
         pid     (.data a "pid")
@@ -279,7 +281,7 @@
                                         (do-row #(append-buddy ul li pid (.-id %) (.-name %) (.-ptot %) (.-btot %))
                                                 r))
                                       pid)
-                          (swap-page))]
+                          (swap-page e origa))]
     (set-title-project set-buddy-data pid)))
 
 
@@ -302,7 +304,7 @@
                   pid total done)))
     false))
 
-(defn show-new-cost [e]
+(defn show-new-cost [e origa]
   (load-template "newcost")
   (let [a       ($ (first ($ (.-currentTarget e))))
         pid     (.data a "pid")
@@ -337,7 +339,7 @@
                                                                          (.keyup validate))))))
                                                 r))
                                       pid)
-                          (swap-page))]
+                          (swap-page e origa))]
     (set-title-project set-buddy-data pid)))
 
 
