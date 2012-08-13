@@ -73,6 +73,7 @@
         ul (.append ($ "#newpage div ul")
                     (-> li
                       (.clone)
+                      (.addClass "addli")
                       (.append (-> ($ "<a></a>")
                                  (.text "New Project")
                                  (.attr "href" "new")))))]
@@ -99,6 +100,7 @@
         ul      (.append ($ "#newpage div.proj ul")
                          (-> li
                            (.clone)
+                           (.addClass "addli")
                            (.append (-> ($ "<a></a>")
                                       (.text "Add Cost")
                                       (.data "pid" pid)

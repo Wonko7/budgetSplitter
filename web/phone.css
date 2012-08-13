@@ -61,6 +61,10 @@ a:active {
 	width: 100%;
 	display: block;
 }
+#jqt li.addli {
+	background-color: #111;
+	background-image: ;
+}
 .menu {
 	background-color: #333;
 }
