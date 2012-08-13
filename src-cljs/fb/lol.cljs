@@ -24,8 +24,12 @@
         body ($ "body")
         newp (.hide ($ "<div id=\"newpage\"></div>"))]
     (.append body
-             (.append newp
-                      (.clone temp)))))
+             (-> newp
+               (.append ($ "<div class=\"top\"></div>"))
+               (.append (.append ($ "<div class=\"middle\"></div>")
+                                 (.clone temp)))
+               (.append ($ "<div class=\"bottom\"></div>"))
+               (.append )))))
 
 (defn swap-page []
   (let [newp (.show ($ "#newpage"))
@@ -36,7 +40,7 @@
     (.attr cont "id" "old")))
 
 ; FIXME add this to an init function
-($ #(.bind ($ "body") "pageAnimationEnd" (fn [e info] 
+($ #(.bind ($ "body") "pageAnimationEnd" (fn [e info]
                                            (.remove ($ "#old")))))
 
 (defn load-dyn-page [name e a]
@@ -67,6 +71,7 @@
   (load-template "projects")
   (let [ul ($ "#newpage div ul")
         li ($ "#newpage div ul li")]
+        ;li      ($ "<li></li>")
     (do-proj (fn [t r]
                (do-row (fn [i]
                          (.append ul (-> li

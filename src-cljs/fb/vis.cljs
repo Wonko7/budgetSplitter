@@ -36,6 +36,30 @@
                                         (.text t)))
                     (.append " ")))))))
 
+(defn add-menu [pid]
+  (let [top   ($ "#newpage div.top")
+        menu  (.clone ($ "div.hidden div.menu"))]
+    (.append top (-> menu
+                   (.hide)
+                   ;(.addClass "toolbar")
+                   ;(.css "height" "")
+                   ))
+    (let [ul ($ "#newpage div.menu ul")
+          li ($ "<li></li>")
+          a  ($ "<a></a>")
+          l  [["Costs" "proj"]
+              ["Buddies" "buddies"]
+              ["Total" "total"]
+              ["Setting" "settings"]] ]
+      (doseq [[t l] l]
+        (.append ul (-> li
+                      (.clone)
+                      (.append  (-> a
+                                  (.clone)
+                                  (.data "pid" pid)
+                                  (.attr "href" l)
+                                  (.text t)))))))))
+
 
 ; sets the template's page title then executes a user fn
 ; with the following prototype: fn [pid projname totalcost sqltx]
@@ -44,10 +68,27 @@
                (let [i   (.item (.-rows r) 0)
                      n   (.-name i)
                      id  (.-id i)
-                     tot (.-tot i)]
-                 (-> ($ "#newpage div.title")
-                   (.text (str n ": $" tot))
-                   (.data "pid" pid))
+                     tot (.-tot i)
+                     a   (.addClass ($ "<a></a>") "button")
+                     ]
+                 (js/console.log "called :)")
+                 (-> ($ "#newpage div.top")
+                   (.data "pid" pid) 
+                   (.append (-> ($ "<div class=\"toolbar\"></div>")
+                              (.append  (.text ($ "<h1></h1>")
+                                               (str n ": $" tot)))
+                              (.append (-> a
+                                         (.clone)
+                                         (.addClass "back")
+                                         (.attr "href" "back")
+                                         (.text "Back")))
+                              (.append (-> a
+                                         (.clone)
+                                         (.attr "href" "menu")
+                                         (.text "Menu")
+                                         (.bind "click touchend" #(do
+                                                                    (.toggle ($ "#content div.menu"))
+                                                                    false)))))))
                  (add-menu pid)
                  (f id n tot tx)))]
     (do-proj sett pid)))
