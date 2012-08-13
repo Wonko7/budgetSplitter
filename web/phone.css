@@ -80,3 +80,20 @@ a:active {
 	width: 50%;
 	float: left;
 }
+
+.biginput {
+	width: 100%;
+	position: center;
+	background-color: #333;
+	font-family: Helvetica;
+	font-size: 20px;
+	font-color: #FFF;
+}
+.inputbox {
+	width: 70%;
+	position: center;
+}
+.ulti {
+	padding-top: 30px;
+	padding-bottom: 30px;
+}

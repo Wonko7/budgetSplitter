@@ -56,7 +56,7 @@
                                          (.attr "href" "menu")
                                          (.text "Menu")
                                          (.bind "click touchend" #(do
-                                                                    (.toggle ($ "#content div.menu"))
+                                                                    (.toggle ($ "#content div.menu") 300)
                                                                     false)))))))
                  (add-menu pid)
                  (f id n tot tx)))]

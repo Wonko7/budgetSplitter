@@ -77,7 +77,6 @@
                       (.append (-> ($ "<a></a>")
                                  (.text "New Project")
                                  (.attr "href" "new")))))]
-    (.append ul )
     (do-proj (fn [t r]
                (do-row (fn [i]
                          (.append ul (-> li
@@ -308,15 +307,14 @@
   (let [a       ($ (first ($ (.-currentTarget e))))
         pid     (.data a "pid")
         inp     ($ "#newpage div.newcost form [name=\"name\"]")
-        cont    ($ "#newpage div.newcost form div.buddies")
-        row     ($ "<div class=\"hrow\"></div>")
-        bname   ($ "<div class=\"cleft\"></div>")
-        bnum    ($ "<div class=\"cright\"></div>")
+        ul      ($ "#newpage div.newcost form div.buddies ul")
+        label   ($ "<label></label>")
+        li      ($ "<li></li>")
         binput  ($ "<input type=\"text\" class=\"numbers\" name=\"tot\" />")
         validate        (fn [e]
                           (let [inp  ($ (.-currentTarget e))
                                 v     (.val inp)
-                                total ($ "#content div.newcost form .costtotal")
+                                total ($ "#content div.newcost .costtotal")
                                 alli  ($ "#content div.newcost form div.buddies [name=\"tot\"]")]
                             (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1"))
                             (.text total (reduce + (for [i alli]
@@ -325,19 +323,18 @@
                           (.data inp "pid" pid)
                           (.submit ($ "#newpage div.newcost form") add-page-cost)
                           (do-buddies (fn [tx r]
-                                        (do-row #(-> cont
-                                                   (.append (-> row
+                                        (do-row #(-> ul
+                                                   (.append (-> li
                                                               (.clone)
-                                                              (.append (-> bname
+                                                              (.append (-> label
                                                                          (.clone)
-                                                                         (.text (.-name %))))
-                                                              (.append (-> bnum
+                                                                         (.text (str (.-name %) ":"))))
+                                                              (.append (-> binput
                                                                          (.clone)
-                                                                         (.append (-> binput
-                                                                                    (.clone)
-                                                                                    (.data "pid" pid)
-                                                                                    (.data "bid" (.-id %))
-                                                                                    (.keyup validate))))))))
+                                                                         (.data "pid" pid)
+                                                                         (.data "bid" (.-id %))
+                                                                         (.attr "placeholder" (str (.-name %) " paid..."))
+                                                                         (.keyup validate))))))
                                                 r))
                                       pid)
                           (swap-page))]
