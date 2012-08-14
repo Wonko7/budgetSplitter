@@ -337,13 +337,7 @@
                           (.data inp "pid" pid)
                           (.submit ($ "#newpage div.newcost form") add-page-cost)
                           (do-buddies (fn [tx r]
-                                        (if (zero? (.-length (.-rows r))) 
-                                          (.append ul (-> li
-                                                        (.clone)
-                                                        (.append (-> ($ "<a></a>")
-                                                                   (.attr "href" "buddies")
-                                                                   (.data "pid" pid)
-                                                                   (.text "Add buddies first!")))))
+                                        (if (> (.-length (.-rows r)) 0) 
                                           (do-row #(-> ul
                                                      (.append (-> li
                                                                 (.clone)
@@ -362,7 +356,15 @@
                                                                          (.trigger (.children ($ (.-currentTarget e))
                                                                                               "input")
                                                                                    "focus"))))))
-                                                  r)))
+                                                  r)
+                                          (do 
+                                            (.remove ($ "#content div.newcost form input[type=\"submit\"]"))
+                                            (.append ul (-> li
+                                                          (.clone)
+                                                          (.append (-> ($ "<a></a>")
+                                                                     (.attr "href" "buddies")
+                                                                     (.data "pid" pid)
+                                                                     (.text "Add buddies first!"))))))))
                                       pid)
                           (swap-page e origa))]
     (set-title-project set-buddy-data pid)))
