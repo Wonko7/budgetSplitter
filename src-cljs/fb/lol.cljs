@@ -349,7 +349,14 @@
                                                                          (.data "pid" pid)
                                                                          (.data "bid" (.-id %))
                                                                          (.attr "placeholder" (str (.-name %) " paid..."))
-                                                                         (.keyup validate))))))
+                                                                         (.keyup validate)))
+                                                              (.bind
+                                                                "focus click touchend"
+                                                                (fn [e]
+                                                                  (js/console.log "focus!")
+                                                                  (.trigger (.children ($ (.-currentTarget e))
+                                                                                       "input")
+                                                                            "focus"))))))
                                                 r))
                                       pid)
                           (swap-page e origa))]
