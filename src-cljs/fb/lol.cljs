@@ -37,7 +37,7 @@
         back? (if a (= "back" (.data a "anim")) false)]
     (if back? ; condp on animation
       (.goTo jQT "#newpage" "slideright")
-      (.goTo jQT "#newpage" "slideleft")) 
+      (.goTo jQT "#newpage" "slideleft"))
     (.attr newp "id" "content")
     (.attr cont "id" "old")))
 
@@ -72,7 +72,7 @@
 ;; show all projects
 (defn show-projects [e a]
   (load-template "projects")
-  (let [li ($ "<li></li>")  
+  (let [li ($ "<li></li>")
         ul (.append ($ "#newpage div ul")
                     (-> li
                       (.clone)
@@ -133,11 +133,16 @@
   (let [pid           (.data origa "pid")
         cid           (.data origa "cid")
         ul            ($ "#newpage div.cost div ul")
+        ti            ($ "#newpage div.cost div.title")
         li            ($ "<li></li>")
         a             ($ "<a></a>")
         set-cost-data (fn [id name tot tx]
                         ;; FIXME should other buddies be shown? $0?
                         (do-cost (fn [tx r]
+                                   (let [i (.item (.-rows r) 0)]
+                                     (-> ti
+                                       (.append (str (.-cname i) ": "))
+                                       (.append (money (.-ctot i)))))
                                    (do-row #(let [a   (-> a
                                                         (.clone)
                                                         (.append (buddy (.-bname %)))
