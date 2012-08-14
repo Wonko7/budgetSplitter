@@ -2,7 +2,7 @@
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
         [fb.sql :only [nuke-db do-proj do-buddies do-row row-seq do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
-        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back]]
+        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
         ; FIXME get :use to import everything.
         ))
 
@@ -112,7 +112,8 @@
                         (do-costs (fn [tx r]
                                     (do-row #(let [a  (-> a
                                                         (.clone)
-                                                        (.text (str (.-name %) " : $" (.-tot %)))
+                                                        (.text (str (.-name %) ": " ))
+                                                        (.append (money (.-tot %)))
                                                         (.data "cid" (.-id %))
                                                         (.data "pid" pid)
                                                         (.attr "href" "cost"))
@@ -141,7 +142,9 @@
                         (do-cost (fn [tx r]
                                    (do-row #(let [a   (-> a
                                                         (.clone)
-                                                        (.text (str (.-bname %) ": $" (.-btot %)))
+                                                        (.append (buddy (.-bname %)))
+                                                        (.append ": ")
+                                                        (.append (money (.-btot %)))
                                                         (.data "cid" cid)
                                                         (.data "pid" pid))
                                                   li  (-> li
@@ -191,16 +194,22 @@
                                         (doseq [[d t n] buds]
                                           (.append ul (-> li
                                                         (.clone)
-                                                        (.text (str n " paid: " t (if (> t av)
-                                                                                    ": needs "
-                                                                                    ": owes ")
-                                                                    d))
+                                                        (.append (buddy n))
+                                                        (.append " paid: ")
+                                                        (.append (money t))
+                                                        (.append (if (> t av)
+                                                                   ": needs "
+                                                                   ": owes "))
+                                                        (.append (money d))
                                                         (set-tot-rect-back maxpaid av t))))
                                         (doseq [[gn tn tot] owes]
                                           (.append ul (-> li
                                                         (.clone)
-                                                        (.text (str gn " owes $" tot " to " tn))))))
-
+                                                        (.append (buddy gn))
+                                                        (.append " owes ")
+                                                        (.append (money tot))
+                                                        (.append " to ")
+                                                        (.append (buddy tn))))))
                                       (swap-page e origa))
                                     pid))]
     (set-title-project set-total-data pid)))
@@ -248,7 +257,9 @@
 (defn append-buddy [ul li pid bid name ptot btot]
   (.append ul (-> li
                 (.clone)
-                (.text (str name ": $" btot))
+                (.append (buddy name))
+                (.append ": ")
+                (.append (money btot))
                 (.data "bid" bid)
                 (.data "pid" pid)
                 (set-rect-back ptot btot))))
@@ -320,8 +331,8 @@
                                 total ($ "#content div.newcost .costtotal")
                                 alli  ($ "#content div.newcost form div.buddies [name=\"tot\"]")]
                             (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1"))
-                            (.text total (reduce + (for [i alli]
-                                                     (int (.val ($ i))))))))
+                            (.html total (money (reduce + (for [i alli]
+                                                            (int (.val ($ i)))))))))
         set-buddy-data  (fn [id name tot tx]
                           (.data inp "pid" pid)
                           (.submit ($ "#newpage div.newcost form") add-page-cost)
@@ -331,7 +342,8 @@
                                                               (.clone)
                                                               (.append (-> label
                                                                          (.clone)
-                                                                         (.text (str (.-name %) ":"))))
+                                                                         (.append (buddy (.-name %)))
+                                                                         (.append ":")))
                                                               (.append (-> binput
                                                                          (.clone)
                                                                          (.data "pid" pid)

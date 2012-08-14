@@ -9,10 +9,27 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
+;; round off value and return amount in a span
+(let [sp (-> ($ "<span></span>")
+           (.addClass "money"))]
+  (defn money [amount]
+    (-> sp
+      (.clone)
+      (.text (-> amount
+               (str)
+               (.replace #"^([0-9]*\.?[0-9]{0,2})?.*$" "$$$1"))))))
+
+(let [sp (-> ($ "<span></span>")
+           (.addClass "buddy"))]
+  (defn buddy [name]
+    (-> sp
+      (.clone)
+      (.text name))))
+
 (defn add-menu [pid]
   (let [top   ($ "#newpage div.top")
         menu  (.clone ($ "div.hidden div.menu"))]
-    (.append top (.hide menu))) 
+    (.append top (.show menu)))  ;; FIXME get show/hide from settings
   (let [ulr ($ "#newpage div.menu div.right ul")
         ull ($ "#newpage div.menu div.left ul")
         li  ($ "<li></li>")
@@ -44,8 +61,9 @@
                  (-> ($ "#newpage div.top")
                    (.data "pid" pid) 
                    (.append (-> ($ "<div class=\"toolbar\"></div>")
-                              (.append (.text ($ "<h1></h1>")
-                                              (str n ": $" tot)))
+                              (.append (-> ($ "<h1></h1>")
+                                         (.append (str n ": "))
+                                         (.append (money tot))))
                               (.append (-> a
                                          (.clone)
                                          (.addClass "back")
