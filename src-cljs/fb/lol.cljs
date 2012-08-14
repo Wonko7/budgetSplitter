@@ -95,8 +95,7 @@
 ;; show a project and its costs
 (defn show-proj [e origa]
   (load-template "proj")
-  (let [a       ($ (first ($ (.-currentTarget e))))
-        pid     (.data a "pid")
+  (let [pid     (.data origa "pid")
         li      ($ "<li></li>")
         a       ($ "<a></a>")
         ul      (.append ($ "#newpage div.proj ul")
@@ -131,9 +130,8 @@
 ;; show a cost detail: buddies
 (defn show-cost [e origa]
   (load-template "cost")
-  (let [a             ($ (first ($ (.-currentTarget e))))
-        pid           (.data a "pid")
-        cid           (.data a "cid")
+  (let [pid           (.data origa "pid")
+        cid           (.data origa "cid")
         ul            ($ "#newpage div.cost div ul")
         li            ($ "<li></li>")
         a             ($ "<a></a>")
@@ -160,8 +158,7 @@
 ;; show total
 (defn show-total [e origa]
   (load-template "total")
-  (let [a             ($ (first ($ (.-currentTarget e))))
-        pid           (.data a "pid")
+  (let [pid           (.data origa "pid")
         ul            ($ "#newpage div.total div ul")
         li            ($ "<li></li>")
         ;a             ($ "<a></a>")
@@ -281,8 +278,7 @@
 
 (defn show-buddies [e origa]
   (load-template "buddies")
-  (let [a       ($ (first ($ (.-currentTarget e))))
-        pid     (.data a "pid")
+  (let [pid     (.data origa "pid")
         inp     ($ "#newpage div.buddies form [name=\"name\"]")
         ul      ($ "#newpage div.buddies form div.list ul")
         li      ($ "<li></li>")
@@ -318,8 +314,7 @@
 
 (defn show-new-cost [e origa]
   (load-template "newcost")
-  (let [a       ($ (first ($ (.-currentTarget e))))
-        pid     (.data a "pid")
+  (let [pid     (.data origa "pid")
         inp     ($ "#newpage div.newcost form [name=\"name\"]")
         ul      ($ "#newpage div.newcost form div.buddieslist ul")
         label   ($ "<label></label>")
