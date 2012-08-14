@@ -75,7 +75,7 @@
                   "WHERE projects.id = " id " AND costs.pid = projects.id "
                   "GROUP BY projects.id "
                   "UNION ALL SELECT  projects.id, projects.name, 0 AS tot FROM projects "
-                  "WHERE NOT EXISTS (SELECT * FROM costs WHERE projects.id = costs.pid ) "
+                  "WHERE projects.id = " id " AND NOT EXISTS (SELECT * FROM costs WHERE projects.id = costs.pid )"
                   " ;")
              "SELECT * FROM projects;")]
     (do-select f rq)))

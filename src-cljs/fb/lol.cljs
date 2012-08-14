@@ -337,27 +337,31 @@
                           (.data inp "pid" pid)
                           (.submit ($ "#newpage div.newcost form") add-page-cost)
                           (do-buddies (fn [tx r]
-                                        (do-row #(-> ul
-                                                   (.append (-> li
-                                                              (.clone)
-                                                              (.append (-> label
-                                                                         (.clone)
-                                                                         (.append (buddy (.-name %)))
-                                                                         (.append ":")))
-                                                              (.append (-> binput
-                                                                         (.clone)
-                                                                         (.data "pid" pid)
-                                                                         (.data "bid" (.-id %))
-                                                                         (.attr "placeholder" (str (.-name %) " paid..."))
-                                                                         (.keyup validate)))
-                                                              (.bind
-                                                                "focus click touchend"
-                                                                (fn [e]
-                                                                  (js/console.log "focus!")
-                                                                  (.trigger (.children ($ (.-currentTarget e))
-                                                                                       "input")
-                                                                            "focus"))))))
-                                                r))
+                                        (if (zero? (.-length (.-rows r))) 
+                                          (.append ul (-> li
+                                                        (.clone)
+                                                        (.append (.text ($ "<a></a>") 
+                                                                        "Add buddies first!"))))
+                                          (do-row #(-> ul
+                                                     (.append (-> li
+                                                                (.clone)
+                                                                (.append (-> label
+                                                                           (.clone)
+                                                                           (.append (buddy (.-name %)))
+                                                                           (.append ":")))
+                                                                (.append (-> binput
+                                                                           (.clone)
+                                                                           (.data "pid" pid)
+                                                                           (.data "bid" (.-id %))
+                                                                           (.attr "placeholder" (str (.-name %) " paid..."))
+                                                                           (.keyup validate)))
+                                                                (.bind
+                                                                  "focus click touchend"
+                                                                  (fn [e]
+                                                                    (.trigger (.children ($ (.-currentTarget e))
+                                                                                         "input")
+                                                                              "focus"))))))
+                                                  r)))
                                       pid)
                           (swap-page e origa))]
     (set-title-project set-buddy-data pid)))
