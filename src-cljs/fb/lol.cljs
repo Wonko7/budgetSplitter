@@ -250,8 +250,16 @@
 
 (defn show-new-form [e origa]
   (load-template "new")
-  (.submit ($ "#newpage div.new form") add-page-project)
-  (swap-page e origa))
+  (let [addb ($ "#newpage div.new form [type=\"submit\"]")
+        inp  ($ "#newpage div.new form [name=\"name\"]")
+        validate #(let [z? (zero? (count (.val inp)))]
+                    (if z?
+                      (.hide addb)
+                      (.show addb)))]
+    (.hide addb)
+    (.keyup inp validate)
+    (.submit ($ "#newpage div.new form") add-page-project)
+    (swap-page e origa)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; show buddies & add form
@@ -337,7 +345,7 @@
                           (.data inp "pid" pid)
                           (.submit ($ "#newpage div.newcost form") add-page-cost)
                           (do-buddies (fn [tx r]
-                                        (if (> (.-length (.-rows r)) 0) 
+                                        (if (> (.-length (.-rows r)) 0)
                                           (do-row #(-> ul
                                                      (.append (-> li
                                                                 (.clone)
@@ -357,7 +365,7 @@
                                                                                               "input")
                                                                                    "focus"))))))
                                                   r)
-                                          (do 
+                                          (do
                                             (.remove ($ "#content div.newcost form input[type=\"submit\"]"))
                                             (.append ul (-> li
                                                           (.clone)
