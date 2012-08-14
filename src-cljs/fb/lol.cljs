@@ -303,7 +303,7 @@
   (let [i     ($ "#content div.newcost form [name=\"name\"]")
         name  (.val i)
         pid   (.data i "pid")
-        alli  ($ "#content div.newcost form div.buddies [name=\"tot\"]")
+        alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
         total (reduce + (for [i alli]
                           (int (.val ($ i)))))
         done  #(trigger-new-page "proj" [["pid" pid]])]
@@ -321,7 +321,7 @@
   (let [a       ($ (first ($ (.-currentTarget e))))
         pid     (.data a "pid")
         inp     ($ "#newpage div.newcost form [name=\"name\"]")
-        ul      ($ "#newpage div.newcost form div.buddies ul")
+        ul      ($ "#newpage div.newcost form div.buddieslist ul")
         label   ($ "<label></label>")
         li      ($ "<li></li>")
         binput  ($ "<input type=\"text\" class=\"numbers\" name=\"tot\" />")
@@ -329,7 +329,7 @@
                           (let [inp  ($ (.-currentTarget e))
                                 v     (.val inp)
                                 total ($ "#content div.newcost .costtotal")
-                                alli  ($ "#content div.newcost form div.buddies [name=\"tot\"]")]
+                                alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")]
                             (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1"))
                             (.html total (money (reduce + (for [i alli]
                                                             (int (.val ($ i)))))))))
