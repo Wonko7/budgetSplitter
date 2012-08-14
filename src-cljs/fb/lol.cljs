@@ -340,8 +340,10 @@
                                         (if (zero? (.-length (.-rows r))) 
                                           (.append ul (-> li
                                                         (.clone)
-                                                        (.append (.text ($ "<a></a>") 
-                                                                        "Add buddies first!"))))
+                                                        (.append (-> ($ "<a></a>")
+                                                                   (.attr "href" "buddies")
+                                                                   (.data "pid" pid)
+                                                                   (.text "Add buddies first!")))))
                                           (do-row #(-> ul
                                                      (.append (-> li
                                                                 (.clone)
@@ -355,12 +357,11 @@
                                                                            (.data "bid" (.-id %))
                                                                            (.attr "placeholder" (str (.-name %) " paid..."))
                                                                            (.keyup validate)))
-                                                                (.bind
-                                                                  "focus click touchend"
-                                                                  (fn [e]
-                                                                    (.trigger (.children ($ (.-currentTarget e))
-                                                                                         "input")
-                                                                              "focus"))))))
+                                                                (.bind "focus click touchend"
+                                                                       (fn [e]
+                                                                         (.trigger (.children ($ (.-currentTarget e))
+                                                                                              "input")
+                                                                                   "focus"))))))
                                                   r)))
                                       pid)
                           (swap-page e origa))]
