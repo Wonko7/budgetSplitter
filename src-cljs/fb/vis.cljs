@@ -1,7 +1,7 @@
 (ns fb.vis
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only  [do-proj do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
+        [fb.sql :only  [do-proj do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init update-settings]]
         ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -26,10 +26,14 @@
       (.clone)
       (.text name))))
 
-(defn add-menu [pid]
-  (let [top   ($ "#newpage div.top")
+(defn add-menu [pid settings]
+  (let [place (if (= :top (:menuPos settings)) 
+                ($ "#newpage div.top") 
+                ($ "#newpage div.bottom"))
         menu  (.clone ($ "div.hidden div.menu"))]
-    (.append top (.show menu)))  ;; FIXME get show/hide from settings
+    (.append place (if (:menuOn settings) 
+                     (.show menu)
+                     (.hide menu))))  ;; FIXME get show/hide from settings
   (let [ulr ($ "#newpage div.menu div.right ul")
         ull ($ "#newpage div.menu div.left ul")
         li  ($ "<li></li>")
@@ -37,7 +41,7 @@
         ll  [["Costs" "proj"]
              ["Buddies" "buddies"] ]
         lr  [["Total" "total"]
-             ["Setting" "settings"]]
+             ["Settings" "settings"]]
         add #(doseq [[t l] %1]
                (.append %2 (-> li
                              (.clone)
@@ -57,6 +61,9 @@
                      n   (.-name i)
                      id  (.-id i)
                      tot (.-tot i)
+                     settings {:menuOn  (= 1 (.-menuOn i))
+                               :help    (= 1 (.-help i)) 
+                               :menuPos (if (= 1 (.-menuPos i)) :top :bottom)}
                      a   (.addClass ($ "<a></a>") "button")]
                  (-> ($ "#newpage div.top")
                    (.data "pid" pid) 
@@ -74,9 +81,14 @@
                                          (.attr "href" "menu")
                                          (.text "Menu")
                                          (.bind "click touchend" #(do
-                                                                    (.toggle ($ "#content div.menu") 300)
+                                                                    (update-settings (into settings (if (:menuOn settings)
+                                                                                                      {:menuOn false}
+                                                                                                      {:menuOn true}))) 
+                                                                    ;; FIXME settings needs to be reset/def on each modification
+                                                                    ((fn []
+                                                                       (.toggle ($ "#content div.menu") 300)))
                                                                     false)))))))
-                 (add-menu pid)
+                 (add-menu pid settings)
                  (f id n tot tx)))]
     (do-proj sett pid)))
 

@@ -8,11 +8,20 @@
 
 (def db)
 
-(defn add-db! [name schema]
+(defn init-settings [t r]
+    (.executeSql t "SELECT * FROM settings;"
+                 (clj->js [])
+                 #(if (zero? (.-length (.-rows %2)))
+                    (.executeSql %1 "INSERT INTO settings (menuPos, menuOn, help) VALUES (1, 1, 1)"))))
+
+(defn add-db! [name schema & [f]]
   (let [n (apply str (next (str name)))]
     (.transaction db
                   (fn [t]
-                    (.executeSql t (str "CREATE TABLE IF NOT EXISTS " n " ( " schema " );"))))))
+                    (let [rq (str "CREATE TABLE IF NOT EXISTS " n " ( " schema " );")]
+                      (if f 
+                        (.executeSql t rq (clj->js []) f)      
+                        (.executeSql t rq)))))))
 
 (defn db-init []
   (def db (js/openDatabase "projs" "1.0" "projs" 65536)) 
@@ -25,12 +34,25 @@
   (add-db! :costs    (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                           " pid  INTEGER NOT NULL,"
                           " name TEXT NOT NULL,"
-                          " tot  NUMERIC NOT NULL")) 
+                          " tot  NUMERIC NOT NULL"))
+  (add-db! :settings (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
+                          " menuPos INTEGER NOT NULL,"
+                          " menuOn INTEGER NOT NULL,"
+                          " help INTEGER NOT NULL")
+           init-settings) 
   (add-db! :relcbp   (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                           " pid  INTEGER NOT NULL,"
                           " bid  INTEGER NOT NULL,"
                           " cid  INTEGER NOT NULL,"
                           " tot  NUMERIC NOT NULL"))) 
+
+(defn update-settings [settings & [f]]
+    (.transaction db
+     (fn [t]
+       (.executeSql t "UPDATE settings SET menuPos = ?, menuOn = ?, help = ? WHERE id = 1;"       
+                    (clj->js [(if (= :top (:menuPos settings)) 1 0)
+                              (if (:menuOn settings) 1 0)  
+                              (if (:help settings) 1 0)])))))
 
 (defn add-proj [name f]
   (.transaction db
@@ -71,10 +93,10 @@
 
 (defn do-proj [f & [id]]
   (let [rq (if id
-             (str "SELECT projects.id, projects.name, SUM(costs.tot) AS tot FROM projects, costs "
+             (str "SELECT projects.id, projects.name, SUM(costs.tot) AS tot, settings.menuOn, settings.menuPos, settings.help FROM projects, costs, settings "
                   "WHERE projects.id = " id " AND costs.pid = projects.id "
                   "GROUP BY projects.id "
-                  "UNION ALL SELECT  projects.id, projects.name, 0 AS tot FROM projects "
+                  "UNION ALL SELECT  projects.id, projects.name, 0 AS tot, settings.menuOn, settings.menuPos, settings.help FROM projects, settings "
                   "WHERE projects.id = " id " AND NOT EXISTS (SELECT * FROM costs WHERE projects.id = costs.pid )"
                   " ;")
              "SELECT * FROM projects;")]
@@ -107,7 +129,6 @@
                 "WHERE buddies.pid = " pid " "
                 "AND NOT EXISTS (SELECT * FROM relcbp, costs WHERE buddies.id = relcbp.bid AND buddies.pid = relcbp.pid AND relcbp.cid = costs.id AND costs.pid = buddies.pid)"
                 " ;")]
-    ;(lol)
     (do-select f rq)))
 
 (defn nuke-db []
