@@ -1,8 +1,8 @@
 (ns fb.vis
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only  [do-proj do-settings do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init update-settings]]
-        [fb.misc :only [mk-settings]]
+        [fb.sql :only [do-proj do-settings do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init update-settings]]
+        [fb.misc :only [mk-settings add-data]]
         ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -28,19 +28,20 @@
       (.text name))))
 
 (defn add-menu [pid settings]
-  (let [place (if (= :top (:menuPos settings)) 
-                ($ "#newpage div.top") 
+  (let [place (if (= :top (:menuPos settings))
+                ($ "#newpage div.top")
                 ($ "#newpage div.bottom"))
         menu  (.clone ($ "div.hidden div.menu"))]
-    (.append place (if (:menuOn settings) 
+    (.append place (if (:menuOn settings)
                      (.show menu)
                      (.hide menu))))  ;; FIXME get show/hide from settings
   (let [ulr ($ "#newpage div.menu div.right ul")
         ull ($ "#newpage div.menu div.left ul")
         li  ($ "<li></li>")
         a   ($ "<a></a>")
+        data {"settings" [["anim" "flipright"]]}
         ll  [["Costs" "proj"]
-             ["Buddies" "buddies"] ]
+             ["Buddies" "buddies"]]
         lr  [["Total" "total"]
              ["Settings" "settings"]]
         add #(doseq [[t l] %1]
@@ -50,7 +51,8 @@
                                         (.clone)
                                         (.data "pid" pid)
                                         (.attr "href" l)
-                                        (.text t))))))]
+                                        (.text t)
+                                        (add-data l data))))))]
     (add ll ull)
     (add lr ulr)))
 
@@ -65,7 +67,7 @@
                      settings (mk-settings r)
                      a        (.addClass ($ "<a></a>") "button")]
                  (-> ($ "#newpage div.top")
-                   (.data "pid" pid) 
+                   (.data "pid" pid)
                    (.append (-> ($ "<div class=\"toolbar\"></div>")
                               (.append (-> ($ "<h1></h1>")
                                          (.append (str n ": "))
@@ -80,16 +82,15 @@
                                          (.attr "href" "menu")
                                          (.text "Menu")
                                          (.bind "click touchend"
-                                                #(do 
-                                                   (do-settings (fn [settings]
-                                                                  (let [menu     ($ "#content div.menu")
-                                                                        settings (into settings {:menuOn (not (:menuOn settings))})
-                                                                        on       (:menuOn settings)]
-                                                                    (update-settings settings (fn [settings]
-                                                                                                (if on 
-                                                                                                  (.show menu)
-                                                                                                  (.hide menu))))))) 
-                                                   false)))))))
+                                                (fn []
+                                                  (do-settings (fn [settings]
+                                                                 (let [menu     ($ "#content div.menu")
+                                                                       settings (into settings {:menuOn (not (:menuOn settings))})
+                                                                       on       (:menuOn settings)]
+                                                                   (update-settings settings #(if on
+                                                                                                (.show menu)
+                                                                                                (.hide menu))))))
+                                                  false)))))))
                  (add-menu pid settings)
                  (f id n tot tx)))]
     (do-proj sett pid)))
@@ -111,7 +112,7 @@
         nw  (int (* w (/ amount tot)))
         cvs (canvas-rect w h nw) ]
     (-> elt
-      (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") ")")) 
+      (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
       (.css "background-size" "100%")))  )
 
 (defn canvas-rect-take [w-tot h-tot wpaid avg max]
@@ -151,5 +152,5 @@
         na  (int (* w (/ avg max)))
         cvs ((if (> np na) canvas-rect-take canvas-rect-give) w h np na)]
     (-> elt
-      (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") ")")) 
-      (.css "background-size" "100%")))  )
+      (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
+      (.css "background-size" "100%"))))

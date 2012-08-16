@@ -1,6 +1,6 @@
 (ns fb.sql
   (:use [jayq.core :only [$ inner delegate]]
-        [jayq.util :only [clj->js]]  
+        [jayq.util :only [clj->js]]
         [fb.misc :only [mk-settings]]
         ))
 
@@ -22,25 +22,25 @@
     (.executeSql t "SELECT * FROM settings;"
                  (clj->js [])
                  #(if (zero? (.-length (.-rows %2)))
-                    (.executeSql %1 "INSERT INTO settings (menuPos, menuOn, help) VALUES (1, 1, 1)"))))
+                    (.executeSql %1 "INSERT INTO settings (menuPos, menuOn, help) VALUES (1, 1, 1);"))))
 
 (defn add-db! [name schema & [f]]
   (let [n (apply str (next (str name)))]
     (.transaction db
                   (fn [t]
                     (let [rq (str "CREATE TABLE IF NOT EXISTS " n " ( " schema " );")]
-                      (if f 
-                        (.executeSql t rq (clj->js []) f)      
+                      (if f
+                        (.executeSql t rq (clj->js []) f)
                         (.executeSql t rq)))))))
 
 (defn db-init []
-  (def db (js/openDatabase "projs" "1.0" "projs" 65536)) 
+  (def db (js/openDatabase "projs" "1.0" "projs" 65536))
   (add-db! :projects (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
-                          " name TEXT NOT NULL")) 
+                          " name TEXT NOT NULL"))
   (add-db! :buddies  (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                           " pid  INTEGER NOT NULL,"
                           " name TEXT NOT NULL,"
-                          " img  TEXT NOT NULL")) 
+                          " img  TEXT NOT NULL"))
   (add-db! :costs    (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                           " pid  INTEGER NOT NULL,"
                           " name TEXT NOT NULL,"
@@ -49,32 +49,32 @@
                           " menuPos INTEGER NOT NULL,"
                           " menuOn INTEGER NOT NULL,"
                           " help INTEGER NOT NULL")
-           init-settings) 
+           init-settings)
   (add-db! :relcbp   (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                           " pid  INTEGER NOT NULL,"
                           " bid  INTEGER NOT NULL,"
                           " cid  INTEGER NOT NULL,"
-                          " tot  NUMERIC NOT NULL"))) 
+                          " tot  NUMERIC NOT NULL")))
 
 (defn update-settings [settings f]
     (.transaction db
      (fn [t]
-       (.executeSql t "UPDATE settings SET menuPos = ?, menuOn = ?, help = ? WHERE id = 1;"       
+       (.executeSql t "UPDATE settings SET menuPos = ?, menuOn = ?, help = ? WHERE id = 1;"
                     (clj->js [(if (= :top (:menuPos settings)) 1 0)
-                              (if (:menuOn settings) 1 0)  
+                              (if (:menuOn settings) 1 0)
                               (if (:help settings) 1 0)])
                     f))))
 
 (defn do-settings [f]
   (let [rq (str "SELECT settings.menuOn, settings.menuPos, settings.help FROM settings "
-                " ;") ]
+                " ;")]
     (do-select #(f (mk-settings %2)) rq)))
 
 
 (defn add-proj [name f]
   (.transaction db
                 (fn [t]
-                  (.executeSql t "INSERT INTO projects (name) VALUES (?);" (clj->js [name]) 
+                  (.executeSql t "INSERT INTO projects (name) VALUES (?);" (clj->js [name])
                                f))))
 (defn add-buddy [proj name img f]
   (.transaction db
@@ -95,7 +95,7 @@
                                                 ; #(js/alert (str "relcpb fuck. " (.-message %2)))
                                                 ; #(js/alert (str :done [proj b (.-insertId r) 3] ))
                                                 ; #(js/alert (str :failed [proj b (.-insertId r) 3] ))
-                                                ))) 
+                                                )))
                                ;#(js/alert "costs failed. " (.-message %2))
                                )))
   (f)) ; FIXME; this is the only function where user fun called potentially before finishing transaction. important?
@@ -113,7 +113,7 @@
 
 (defn do-costs [f id]
   (let [rq (str "SELECT * FROM costs WHERE costs.pid = " id ";" )]
-    (do-select f rq)))  
+    (do-select f rq)))
 
 (defn do-cost [f id]
   (let [rq (str "SELECT costs.name AS cname, buddies.name AS bname, costs.tot AS ctot, relcbp.tot AS btot, relcbp.id, relcbp.bid, relcbp.cid "
@@ -155,4 +155,4 @@
                                                       #(js/alert (str "fuck. " (.-message %2)))
                                                       ))
                                #(js/alert (str "fuck. " (.-message %2)))
-                               )))) 
+                               ))))

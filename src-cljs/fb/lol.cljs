@@ -3,7 +3,7 @@
         [jayq.util :only [clj->js]]
         [fb.sql :only [nuke-db do-proj do-buddies do-row row-seq do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
-        [fb.misc :only [mk-settings]]
+        [fb.misc :only [mk-settings add-data]]
         ; FIXME get :use to import everything.
         ))
 
@@ -35,9 +35,9 @@
 (defn swap-page [e a]
   (let [newp (.show ($ "#newpage"))
         cont ($ "#content")
-        back? (if a (= "back" (.data a "anim")) false)]
-    (if back? ; condp on animation
-      (.goTo jQT "#newpage" "slideright")
+        anim (.data a "anim")]
+    (if anim ; condp on animation
+      (.goTo jQT "#newpage" anim)
       (.goTo jQT "#newpage" "slideleft"))
     (.attr newp "id" "content")
     (.attr cont "id" "old")))
@@ -48,8 +48,8 @@
 
 (defn load-dyn-page [name e a]
   (when (not= name "back")
-    (def back-pages (cons [name (doall (cons ["anim" "back"]
-                                             (map #(vector % (.data a %)) ["pid" "bid" "cid"])))]
+    (def back-pages (cons [name {name (doall (cons ["anim" "slideright"]
+                                                   (map #(vector % (.data a %)) ["pid" "bid" "cid"])))}]
                           (take 15 back-pages))))
   (if-let [f (page-dyn-inits name)]
     (f e a)
@@ -232,7 +232,8 @@
   (-> ($ "<a></a>")
     (.hide)
     (.attr "href" href)
-    (#(reduce (fn [a [k v]] (.data a k v)) %1 data))
+    (add-data href data)
+    ;(#(reduce (fn [a [k v]] (.data a k v)) %1 data))
     (.appendTo ($ "#content"))
     (.click)))
 
@@ -242,7 +243,7 @@
 (defn add-page-project []
   (let [name (.val ($ "#content div.new form [name=\"name\"]"))
         addp (fn [tx r]
-               (trigger-new-page "proj" [["pid" (.-insertId r)]]))]
+               (trigger-new-page "proj" {"proj" [["pid" (.-insertId r)]]}))]
     ; FIXME make contracts
     (if (<= (count name) 0)
       (js/alert "Invalid name")
@@ -316,7 +317,7 @@
         alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
         total (reduce + (for [i alli]
                           (int (.val ($ i)))))
-        done  #(trigger-new-page "proj" [["pid" pid]])]
+        done  #(trigger-new-page "proj" {"proj" [["pid" pid]]})]
     (if (<= (count name) 0)
       (js/alert "Invalid name")
       (if (<= total 0)
