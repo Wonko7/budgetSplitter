@@ -1,7 +1,8 @@
 (ns fb.vis
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only  [do-proj do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init update-settings]]
+        [fb.sql :only  [do-proj do-settings do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init update-settings]]
+        [fb.misc :only [mk-settings]]
         ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -53,18 +54,16 @@
     (add ll ull)
     (add lr ulr)))
 
-; sets the template's page title then executes a user fn
-; with the following prototype: fn [pid projname totalcost sqltx]
+;; sets the template's page title then executes a user fn
+;; with the following prototype: fn [pid projname totalcost sqltx]
 (defn set-title-project [f pid]
   (let [sett (fn [tx r]
-               (let [i   (.item (.-rows r) 0)
-                     n   (.-name i)
-                     id  (.-id i)
-                     tot (.-tot i)
-                     settings {:menuOn  (= 1 (.-menuOn i))
-                               :help    (= 1 (.-help i)) 
-                               :menuPos (if (= 1 (.-menuPos i)) :top :bottom)}
-                     a   (.addClass ($ "<a></a>") "button")]
+               (let [i        (.item (.-rows r) 0)
+                     n        (.-name i)
+                     id       (.-id i)
+                     tot      (.-tot i)
+                     settings (mk-settings r)
+                     a        (.addClass ($ "<a></a>") "button")]
                  (-> ($ "#newpage div.top")
                    (.data "pid" pid) 
                    (.append (-> ($ "<div class=\"toolbar\"></div>")
@@ -80,14 +79,17 @@
                                          (.clone)
                                          (.attr "href" "menu")
                                          (.text "Menu")
-                                         (.bind "click touchend" #(do
-                                                                    (update-settings (into settings (if (:menuOn settings)
-                                                                                                      {:menuOn false}
-                                                                                                      {:menuOn true}))) 
-                                                                    ;; FIXME settings needs to be reset/def on each modification
-                                                                    ((fn []
-                                                                       (.toggle ($ "#content div.menu") 300)))
-                                                                    false)))))))
+                                         (.bind "click touchend"
+                                                #(do 
+                                                   (do-settings (fn [settings]
+                                                                  (let [menu     ($ "#content div.menu")
+                                                                        settings (into settings {:menuOn (not (:menuOn settings))})
+                                                                        on       (:menuOn settings)]
+                                                                    (update-settings settings (fn [settings]
+                                                                                                (if on 
+                                                                                                  (.show menu)
+                                                                                                  (.hide menu))))))) 
+                                                   false)))))))
                  (add-menu pid settings)
                  (f id n tot tx)))]
     (do-proj sett pid)))

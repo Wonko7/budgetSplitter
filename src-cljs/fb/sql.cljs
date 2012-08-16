@@ -1,12 +1,22 @@
 (ns fb.sql
   (:use [jayq.core :only [$ inner delegate]]
-        [jayq.util :only [clj->js]]))
+        [jayq.util :only [clj->js]]  
+        [fb.misc :only [mk-settings]]
+        ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; sql storage
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def db)
+
+(defn do-select [f rq]
+  (.transaction db
+                (fn [t]
+                  (.executeSql t rq (clj->js [])
+                               f
+                               #(js/alert (str "fuck. " (.-message %2)))
+                               ))))
 
 (defn init-settings [t r]
     (.executeSql t "SELECT * FROM settings;"
@@ -46,13 +56,20 @@
                           " cid  INTEGER NOT NULL,"
                           " tot  NUMERIC NOT NULL"))) 
 
-(defn update-settings [settings & [f]]
+(defn update-settings [settings f]
     (.transaction db
      (fn [t]
        (.executeSql t "UPDATE settings SET menuPos = ?, menuOn = ?, help = ? WHERE id = 1;"       
                     (clj->js [(if (= :top (:menuPos settings)) 1 0)
                               (if (:menuOn settings) 1 0)  
-                              (if (:help settings) 1 0)])))))
+                              (if (:help settings) 1 0)])
+                    f))))
+
+(defn do-settings [f]
+  (let [rq (str "SELECT settings.menuOn, settings.menuPos, settings.help FROM settings "
+                " ;") ]
+    (do-select #(f (mk-settings %2)) rq)))
+
 
 (defn add-proj [name f]
   (.transaction db
@@ -82,14 +99,6 @@
                                ;#(js/alert "costs failed. " (.-message %2))
                                )))
   (f)) ; FIXME; this is the only function where user fun called potentially before finishing transaction. important?
-
-(defn do-select [f rq]
-  (.transaction db
-                (fn [t]
-                  (.executeSql t rq (clj->js [])
-                               f
-                               #(js/alert (str "fuck. " (.-message %2)))
-                               ))))
 
 (defn do-proj [f & [id]]
   (let [rq (if id

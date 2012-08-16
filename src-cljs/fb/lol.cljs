@@ -3,6 +3,7 @@
         [jayq.util :only [clj->js]]
         [fb.sql :only [nuke-db do-proj do-buddies do-row row-seq do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
+        [fb.misc :only [mk-settings]]
         ; FIXME get :use to import everything.
         ))
 
@@ -393,10 +394,10 @@
 (add-init! "newcost" show-new-cost)
 (add-init! "back" go-back)
 
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; jqt
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 ($
   ;#(def jQT (.jQTouch js/jQuery (clj->js {:icon "img/icon.png"}))) ; FIXME get this working with $
@@ -407,6 +408,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; init
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 
 ($ #(do
       (db-init)
