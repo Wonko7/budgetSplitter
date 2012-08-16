@@ -123,8 +123,19 @@
                                                         ;(.addClass "arrow")
                                                         (set-rect-back tot (.-tot %)))]
                                                (.append ul li))
-                                            r))
+                                            r)
+                                    (.append ul (-> li
+                                                  (.clone)
+                                                  (.addClass "rmli")
+                                                  (.append (-> a 
+                                                             (.clone)
+                                                             (.text "Delete Project")
+                                                             (.data "pid" pid)
+                                                             (.attr "href" "rm")
+                                                             (.bind "touchend click"
+                                                                    #(do (js/alert (str "Remove " name "?")) false))))))) 
                                   pid)
+
                         (swap-page e origa))]
     (set-title-project set-proj-data pid)))
 
