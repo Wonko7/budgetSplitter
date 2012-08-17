@@ -1,7 +1,8 @@
 (ns fb.lol
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy
+        [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy do-settings
+                       update-settings
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
@@ -96,7 +97,7 @@
                (swap-page e a)))))
 
 ;; show a project and its costs
-;; FIXME:;(.addClass "arrow") 
+;; FIXME:;(.addClass "arrow")
 (defn show-proj [e origa]
   (load-template "proj")
   (let [pid     (.data origa "pid")
@@ -119,7 +120,7 @@
                                       (doseq [[cid name tot] costs]
                                         (.append ul (-> li
                                                       (.clone)
-                                                      (set-rect-back maxpaid tot)   
+                                                      (set-rect-back maxpaid tot)
                                                       (.append (-> a
                                                                  (.clone)
                                                                  (.text (str name ": " ))
@@ -163,7 +164,7 @@
                                      (doseq [[name btot ctot] buds]
                                        (.append ul (-> li
                                                      (.clone)
-                                                     (set-rect-back maxpaid btot)   
+                                                     (set-rect-back maxpaid btot)
                                                      (.append (-> a
                                                                 (.clone)
                                                                 (.append (buddy name))
@@ -193,7 +194,6 @@
   (let [pid           (.data origa "pid")
         ul            ($ "#newpage div.total div ul")
         li            ($ "<li></li>")
-        ;a             ($ "<a></a>")
         set-total-data (fn [id name tot tx]
                         (do-buddies (fn [tx r]
                                       (let [nbb     (.-length (.-rows r))
@@ -238,9 +238,9 @@
                                                         (.append " owes ")
                                                         (.append (money tot))
                                                         (.append " to ")
-                                                        (.append (buddy tn))))))
-                                      (swap-page e origa))
-                                    pid))]
+                                                        (.append (buddy tn)))))))
+                                    pid)
+                         (swap-page e origa))]
     (set-title-project set-total-data pid)))
 
 (defn show-buddy [e origa]
@@ -264,16 +264,16 @@
                                           (.append (.clone bname))
                                           (.append "'s total contribution: ")
                                           (.append (money tot)))
-                                        (when (> 0 tot)
+                                        (when (< 0 tot)
                                           (doseq [[cname ctot btot] costs]
                                             (.append ul (-> li
                                                           (.clone)
                                                           (.append cname)
                                                           (.append ": ")
                                                           (.append (.clone bname))
-                                                          (.append " paid: ")
+                                                          (.append " paid ")
                                                           (.append (money btot))
-                                                          (.append " of: ")
+                                                          (.append " of ")
                                                           (.append (money ctot))
                                                           (set-rect-back maxpaid btot)))))
                                         (.append ul (-> li
@@ -579,8 +579,7 @@
                                                  (.data "pid" (.-id i))
                                                  (.bind "touchend click"
                                                         rm-proj-page)))))))
-                       (swap-page e origa))
-        ]
+                       (swap-page e origa))]
     (.append menu (-> a
                     (.clone)
                     (.addClass "button")
@@ -588,9 +587,36 @@
                     (.attr "href" "back")
                     (.text "Cancel")))
     (condp = rmtype
-      "cost"  (do-cost set-rm-cost cid)
+      "cost"  (do-cost  set-rm-cost cid)
       "buddy" (do-buddy set-rm-budd bid)
-      "proj"  (do-proj set-rm-proj pid))))
+      "proj"  (do-proj  set-rm-proj pid))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; settings;
+
+(defn show-settings [e origa]
+  (load-template "settings")
+  (let [pid     (.data origa "pid")
+        menu    ($ "#newpage div.settings toolbar")
+        ul      ($ "#newpage div.settings ul")
+        li      ($ "<li></li>")
+        a       ($ "<a></a>")
+        update  (fn [e]
+                  (update-settings {}))
+        set-settings (fn [settings]
+                       (-> ul
+                         (.append (-> li
+                                    (.clone)
+                                    (.text "Menu Placement:")
+                                    (.append ))))
+                       (let []
+                         ))]
+    (.append menu (-> a
+                    (.clone)
+                    (.addClass "back")
+                    (.attr "href" "back")
+                    (.text "Back")))
+    (do-settings set-settings)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; inits;
