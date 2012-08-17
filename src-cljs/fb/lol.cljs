@@ -112,20 +112,23 @@
         set-proj-data (fn [id name tot tx]
                         (.data ($ "#newpage div.proj div.menu a") "pid" pid)
                         (do-costs (fn [tx r]
-                                    (do-row #(let [a  (-> a
-                                                        (.clone)
-                                                        (.text (str (.-name %) ": " ))
-                                                        (.append (money (.-tot %)))
-                                                        (.data "cid" (.-id %))
-                                                        (.data "pid" pid)
-                                                        (.attr "href" "cost"))
-                                                   li (-> li
-                                                        (.clone)
-                                                        (.append a)
-                                                        ;(.addClass "arrow")
-                                                        (set-rect-back tot (.-tot %)))]
-                                               (.append ul li))
-                                            r)
+                                    (let [costs (for [c (row-seq r)]
+                                                  [(.-id c) (.-name c) (.-tot c)])
+                                          maxpaid (apply max (map #(nth % 2) costs))]
+                                      (doseq [[cid name tot] costs
+                                              :let [a  (-> a
+                                                         (.clone)
+                                                         (.text (str name ": " ))
+                                                         (.append (money tot))
+                                                         (.data "cid" cid)
+                                                         (.data "pid" pid)
+                                                         (.attr "href" "cost"))
+                                                    li (-> li
+                                                         (.clone)
+                                                         (.append a)
+                                                         ;(.addClass "arrow")
+                                                         (set-rect-back maxpaid tot))]]
+                                        (.append ul li)))
                                     (.append ul (-> li
                                                   (.clone)
                                                   (.addClass "rmli")
