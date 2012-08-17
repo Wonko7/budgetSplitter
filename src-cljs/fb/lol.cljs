@@ -311,6 +311,7 @@
                      inp     ($ "#content div.buddies form [name=\"name\"]")]
                  (.val inp "")
                  (append-buddy ul li pid (.-insertId r) name 100 0)))]
+    (.hide ($ "#content div.buddies form ul li.addli a"))
     (if (<= (count name) 0)
       (js/alert "Invalid name")
       (add-buddy pid name "img" addb)))
@@ -323,10 +324,20 @@
         ul      ($ "#newpage div.buddies form div.list ul")
         add     ($ "#newpage div.buddies form ul li.addli a")
         li      ($ "<li></li>")
+        validate        (fn [e]
+                          (let [inp   ($ (.-currentTarget e))
+                                addb  ($ "#content div.buddies form ul li.addli a") ]
+                            (if (zero? (count (.val inp)))
+                              (.hide addb)   
+                              (.show addb))))
         set-buddy-data  (fn [id name tot tx]
-                          (.data inp "pid" pid)
+                          (-> inp
+                            (.keyup validate)
+                            (.data "pid" pid))
                           (.submit ($ "#newpage div.buddies form") add-page-buddy)
-                          (.bind add "touchend click" add-page-buddy)
+                          (-> add
+                            (.hide)
+                            (.bind "touchend click" add-page-buddy))
                           (do-buddies (fn [tx r]
                                         (do-row #(append-buddy ul li pid (.-id %) (.-name %) (.-ptot %) (.-btot %))
                                                 r))
