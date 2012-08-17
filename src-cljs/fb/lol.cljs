@@ -96,6 +96,7 @@
                (swap-page e a)))))
 
 ;; show a project and its costs
+;; FIXME:;(.addClass "arrow") 
 (defn show-proj [e origa]
   (load-template "proj")
   (let [pid     (.data origa "pid")
@@ -112,33 +113,30 @@
         set-proj-data (fn [id name tot tx]
                         (.data ($ "#newpage div.proj div.menu a") "pid" pid)
                         (do-costs (fn [tx r]
-                                    (let [costs (for [c (row-seq r)]
-                                                  [(.-id c) (.-name c) (.-tot c)])
+                                    (let [costs   (for [c (row-seq r)]
+                                                    [(.-id c) (.-name c) (.-tot c)])
                                           maxpaid (apply max (map #(nth % 2) costs))]
-                                      (doseq [[cid name tot] costs
-                                              :let [a  (-> a
-                                                         (.clone)
-                                                         (.text (str name ": " ))
-                                                         (.append (money tot))
-                                                         (.data "cid" cid)
-                                                         (.data "pid" pid)
-                                                         (.attr "href" "cost"))
-                                                    li (-> li
-                                                         (.clone)
-                                                         (.append a)
-                                                         ;(.addClass "arrow")
-                                                         (set-rect-back maxpaid tot))]]
-                                        (.append ul li)))
-                                    (.append ul (-> li
-                                                  (.clone)
-                                                  (.addClass "rmli")
-                                                  (.append (-> a
-                                                             (.clone)
-                                                             (.text "Delete Project")
-                                                             (.data "pid" pid)
-                                                             (.data "rm" "proj")
-                                                             (.data "anim" "pop")
-                                                             (.attr "href" "rm"))))))
+                                      (doseq [[cid name tot] costs]
+                                        (.append ul (-> li
+                                                      (.clone)
+                                                      (set-rect-back maxpaid tot)   
+                                                      (.append (-> a
+                                                                 (.clone)
+                                                                 (.text (str name ": " ))
+                                                                 (.append (money tot))
+                                                                 (.data "cid" cid)
+                                                                 (.data "pid" pid)
+                                                                 (.attr "href" "cost"))))))
+                                      (.append ul (-> li
+                                                    (.clone)
+                                                    (.addClass "rmli")
+                                                    (.append (-> a
+                                                               (.clone)
+                                                               (.text "Delete Project")
+                                                               (.data "pid" pid)
+                                                               (.data "rm" "proj")
+                                                               (.data "anim" "pop")
+                                                               (.attr "href" "rm")))))))
                                   pid)
                         (swap-page e origa))]
     (set-title-project set-proj-data pid)))
@@ -155,36 +153,38 @@
         set-cost-data (fn [id name tot tx]
                         ;; FIXME should other buddies be shown? $0?
                         (do-cost (fn [tx r]
-                                   (let [i (.item (.-rows r) 0)]
+                                   (let [i        (.item (.-rows r) 0)
+                                         buds     (for [b (row-seq r)]
+                                                    [(.-bname b) (.-btot b) (.-ctot b)])
+                                          maxpaid (apply max (map #(nth % 1) buds))]
                                      (-> ti
                                        (.append (str (.-cname i) ": "))
-                                       (.append (money (.-ctot i)))))
-                                   (do-row #(let [a   (-> a
-                                                        (.clone)
-                                                        (.append (buddy (.-bname %)))
-                                                        (.append ": ")
-                                                        (.append (money (.-btot %)))
-                                                        (.data "cid" cid)
-                                                        (.data "pid" pid))
-                                                  li  (-> li
-                                                        (.clone)
-                                                        (.append a)
-                                                        (set-rect-back (.-ctot %) (.-btot %)))]
-                                              (.append ul li))
-                                           r)
-                                   (.append ul (-> li
-                                                 (.clone)
-                                                 (.addClass "rmli")
-                                                 (.append (-> a
-                                                            (.clone)
-                                                            (.text "Delete Cost")
-                                                            (.data "pid" pid)
-                                                            (.data "cid" cid)
-                                                            (.data "rm" "cost")
-                                                            (.data "anim" "pop")
-                                                            (.attr "href" "rm")))))
-                                   (swap-page e origa))
-                                 cid))]
+                                       (.append (money (.-ctot i))))
+                                     (doseq [[name btot ctot] buds]
+                                       (.append ul (-> li
+                                                     (.clone)
+                                                     (set-rect-back maxpaid btot)   
+                                                     (.append (-> a
+                                                                (.clone)
+                                                                (.append (buddy name))
+                                                                (.append ": ")
+                                                                (.append (money btot))
+                                                                (.data "cid" cid)
+                                                                (.data "pid" pid))))))
+
+                                     (.append ul (-> li
+                                                   (.clone)
+                                                   (.addClass "rmli")
+                                                   (.append (-> a
+                                                              (.clone)
+                                                              (.text "Delete Cost")
+                                                              (.data "pid" pid)
+                                                              (.data "cid" cid)
+                                                              (.data "rm" "cost")
+                                                              (.data "anim" "pop")
+                                                              (.attr "href" "rm")))))))
+                                 cid)
+                        (swap-page e origa))]
     (set-title-project set-cost-data pid)))
 
 ;; show total
