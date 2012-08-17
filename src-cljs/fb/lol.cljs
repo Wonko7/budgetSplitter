@@ -276,7 +276,7 @@
 
 (defn show-new-form [e origa]
   (load-template "new")
-  (let [addb ($ "#newpage div.new form [type=\"submit\"]")
+  (let [addb ($ "#newpage div.new form ul li a")
         inp  ($ "#newpage div.new form [name=\"name\"]")
         validate #(let [z? (zero? (count (.val inp)))]
                     (if z?
@@ -285,6 +285,7 @@
     (.hide addb)
     (.keyup inp validate)
     (.submit ($ "#newpage div.new form") add-page-project)
+    (.bind addb "click touchend" add-page-project)
     (swap-page e origa)))
 
 
@@ -320,10 +321,12 @@
   (let [pid     (.data origa "pid")
         inp     ($ "#newpage div.buddies form [name=\"name\"]")
         ul      ($ "#newpage div.buddies form div.list ul")
+        add     ($ "#newpage div.buddies form ul li.addli a")
         li      ($ "<li></li>")
         set-buddy-data  (fn [id name tot tx]
                           (.data inp "pid" pid)
                           (.submit ($ "#newpage div.buddies form") add-page-buddy)
+                          (.bind add "touchend click" add-page-buddy)
                           (do-buddies (fn [tx r]
                                         (do-row #(append-buddy ul li pid (.-id %) (.-name %) (.-ptot %) (.-btot %))
                                                 r))
