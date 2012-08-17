@@ -122,6 +122,13 @@
                 "WHERE costs.id = " id " AND relcbp.cid = costs.id AND relcbp.bid = buddies.id;")]
     (do-select f rq)))
 
+(defn do-buddy [f id]
+  (let [rq (str "SELECT costs.name AS cname, buddies.name AS bname, costs.tot AS ctot, relcbp.tot AS btot "
+                "FROM costs, relcbp, buddies "
+                "WHERE relcbp.bid = " id " AND relcbp.cid = costs.id AND relcbp.bid = buddies.id "
+                "GROUP BY costs.name; ")]
+    (do-select f rq)))
+
 (defn do-row [f r]
   (doseq [i (range (.-length (.-rows r)))]
     (f (.item (.-rows r) i))))

@@ -1,7 +1,7 @@
 (ns fb.lol
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs
+        [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
@@ -129,14 +129,13 @@
                                     (.append ul (-> li
                                                   (.clone)
                                                   (.addClass "rmli")
-                                                  (.append (-> a 
+                                                  (.append (-> a
                                                              (.clone)
                                                              (.text "Delete Project")
                                                              (.data "pid" pid)
                                                              (.data "rm" "proj")
                                                              (.data "anim" "pop")
-                                                             (.attr "href" "rm")
-                                                             ))))) 
+                                                             (.attr "href" "rm"))))))
                                   pid)
                         (swap-page e origa))]
     (set-title-project set-proj-data pid)))
@@ -173,7 +172,7 @@
                                    (.append ul (-> li
                                                  (.clone)
                                                  (.addClass "rmli")
-                                                 (.append (-> a 
+                                                 (.append (-> a
                                                             (.clone)
                                                             (.text "Delete Cost")
                                                             (.data "pid" pid)
@@ -241,10 +240,48 @@
                                     pid))]
     (set-title-project set-total-data pid)))
 
+(defn show-buddy [e origa]
+  (load-template "buddy")
+  (let [pid           (.data origa "pid")
+        bid           (.data origa "bid")
+        ul            ($ "#newpage div.buddy div ul")
+        title         ($ "#newpage div.buddy h2 div.title")
+        li            ($ "<li></li>")
+        a             ($ "<a></a>")
+        set-budd-data (fn [id name tot tx]
+                        (do-buddy (fn [tx r]
+                                      (let [i       (.item (.-rows r) 0)
+                                            nbc     (.-length (.-rows r))
+                                            costs   (for [c (row-seq r)]
+                                                      [(.-cname c) (.-ctot c) (.-btot c)])
+                                            tot     (reduce + (map #(nth % 2) costs))
+                                            maxpaid (apply max (map #(nth % 2) costs))
+                                            bname   (buddy (.-bname i))]
+                                        (-> title
+                                          (.append (.clone bname))
+                                          (.append "'s total contribution: ")
+                                          (.append (money tot)))
+                                        (doseq [[cname ctot btot] costs]
+                                          (.append ul (-> li
+                                                        (.clone)
+                                                        (.append cname)
+                                                        (.append ": ")
+                                                        (.append (.clone bname))
+                                                        (.append " paid: ")
+                                                        (.append (money btot))
+                                                        (.append " of: ")
+                                                        (.append (money ctot))
+                                                        (set-rect-back maxpaid btot)))))
+                                    (swap-page e origa))
+                                  bid))]
+    (set-title-project set-budd-data pid)))
+
+
 (add-init! "projects" show-projects)
 (add-init! "proj" show-proj)
 (add-init! "cost" show-cost)
 (add-init! "total" show-total)
+(add-init! "buddy" show-buddy)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -294,11 +331,13 @@
 (defn append-buddy [ul li pid bid name ptot btot]
   (.append ul (-> li
                 (.clone)
-                (.append (buddy name))
-                (.append ": ")
-                (.append (money btot))
-                (.data "bid" bid)
-                (.data "pid" pid)
+                (.append (-> ($ "<a></a>")
+                           (.append (buddy name))
+                           (.append ": ")
+                           (.append (money btot))
+                           (.attr "href" "buddy")
+                           (.data "bid" bid)
+                           (.data "pid" pid)))
                 (set-rect-back ptot btot))))
 
 (defn add-page-buddy []
@@ -328,7 +367,7 @@
                           (let [inp   ($ (.-currentTarget e))
                                 addb  ($ "#content div.buddies form ul li.addli a") ]
                             (if (zero? (count (.val inp)))
-                              (.hide addb)   
+                              (.hide addb)
                               (.show addb))))
         set-buddy-data  (fn [id name tot tx]
                           (-> inp
@@ -386,15 +425,15 @@
                               (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1")))
                             (.html total (money tot))
                             (if (or (<= tot 0) (<= (count name) 0))
-                              (.hide addb)   
+                              (.hide addb)
                               (.show addb))))
         set-buddy-data  (fn [id name tot tx]
-                          (-> inp 
+                          (-> inp
                             (.keyup validate)
                             (.data "pid" pid))
                           (do-buddies (fn [tx r]
                                         (if (> (.-length (.-rows r)) 0)
-                                          (do 
+                                          (do
                                             (do-row #(-> ul
                                                        (.append (-> li
                                                                   (.clone)
@@ -471,7 +510,7 @@
                                       (.append (str "Delete cost " (.-cname i) "?"))))
                            (.append (-> li
                                       (.clone)
-                                      (.append (str "Total: ")) 
+                                      (.append (str "Total: "))
                                       (.append (money (.-ctot i)))))
                            (.append (-> li
                                       (.clone)
@@ -502,15 +541,15 @@
                                                         rm-proj-page)))))))
                        (swap-page e origa))
         ]
-    (.append menu (-> a 
+    (.append menu (-> a
                     (.clone)
-                    (.addClass "button") 
-                    (.addClass "back") 
+                    (.addClass "button")
+                    (.addClass "back")
                     (.attr "href" "back")
                     (.text "Cancel")))
     (condp = rmtype
-      "cost"  (do-cost set-rm-cost cid) 
-      "buddy" (do-cost set-rm-cost cid) 
+      "cost"  (do-cost set-rm-cost cid)
+      "buddy" (do-cost set-rm-cost cid)
       "proj"  (do-proj set-rm-proj pid))))
 
 
