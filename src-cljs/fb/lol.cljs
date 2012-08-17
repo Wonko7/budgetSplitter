@@ -345,10 +345,10 @@
         total (reduce + (for [i alli]
                           (int (.val ($ i)))))
         done  #(trigger-new-page "proj" {"proj" [["pid" pid]]})]
-    (if (<= (count name) 0)
+    (if (<= (count name) 0) ;; FIXME with contracts, also better notifs.
       (js/alert "Invalid name")
       (if (<= total 0)
-        (js/alert "No cost")
+        (js/alert "No money")
         (add-cost name (for [i alli :let [e ($ i)] :when (> (count (.val e)) 0)]
                          [(int (.data e "bid")) (int (.val e))])
                   pid total done)))
@@ -363,15 +363,24 @@
         li      ($ "<li></li>")
         binput  ($ "<input type=\"text\" class=\"numbers\" name=\"tot\" />")
         validate        (fn [e]
-                          (let [inp  ($ (.-currentTarget e))
+                          (let [inp   ($ (.-currentTarget e))
                                 v     (.val inp)
                                 total ($ "#content div.newcost .costtotal")
-                                alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")]
-                            (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1"))
-                            (.html total (money (reduce + (for [i alli]
-                                                            (int (.val ($ i)))))))))
+                                alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
+                                name  (.val ($ "#content div.newcost form [name=\"name\"]"))
+                                addb  ($ "#content div.newcost form div.buddieslist ul li.addli a")
+                                tot   (reduce + (for [i alli]
+                                                  (int (.val ($ i)))))]
+                            (if (.data inp "bid")
+                              (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1")))
+                            (.html total (money tot))
+                            (if (or (<= tot 0) (<= (count name) 0))
+                              (.hide addb)   
+                              (.show addb))))
         set-buddy-data  (fn [id name tot tx]
-                          (.data inp "pid" pid)
+                          (-> inp 
+                            (.keyup validate)
+                            (.data "pid" pid))
                           (do-buddies (fn [tx r]
                                         (if (> (.-length (.-rows r)) 0)
                                           (do 
@@ -398,6 +407,7 @@
                                                           (.clone)
                                                           (.addClass "addli")
                                                           (.append (-> ($ "<a></a>")
+                                                                     (.hide)
                                                                      (.text "Add")
                                                                      (.attr "href" "null")
                                                                      (.bind "click touchend" add-page-cost))))))
