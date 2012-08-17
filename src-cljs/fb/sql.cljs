@@ -126,7 +126,11 @@
   (let [rq (str "SELECT costs.name AS cname, buddies.name AS bname, costs.tot AS ctot, relcbp.tot AS btot "
                 "FROM costs, relcbp, buddies "
                 "WHERE relcbp.bid = " id " AND relcbp.cid = costs.id AND relcbp.bid = buddies.id "
-                "GROUP BY costs.name; ")]
+                "GROUP BY costs.name "
+                "UNION ALL SELECT 0 AS cname, buddies.name AS bname, 0 AS ctot, 0 AS btot FROM buddies "
+                "WHERE buddies.id = " id " "
+                "AND NOT EXISTS (SELECT * FROM relcbp WHERE relcbp.bid = " id " );"
+                )]
     (do-select f rq)))
 
 (defn do-row [f r]
@@ -174,6 +178,12 @@
 (defn rm-cost [f cid]
   (let [rq-c (str "DELETE FROM costs WHERE costs.id = " cid " ;")
         rq-r (str "DELETE FROM relcbp WHERE relcbp.cid = " cid " ;")]
+    (.transaction db (rm rq-c
+                         (rm rq-r f)))))
+
+(defn rm-buddy [f bid]
+  (let [rq-c (str "DELETE FROM buddies WHERE buddies.id = " bid " ;")
+        rq-r (str "DELETE FROM relcbp WHERE relcbp.bid = " bid " ;")]
     (.transaction db (rm rq-c
                          (rm rq-r f)))))
 

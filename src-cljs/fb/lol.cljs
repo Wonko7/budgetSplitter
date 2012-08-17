@@ -3,7 +3,7 @@
         [jayq.util :only [clj->js]]
         [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy
                        db-init add-cost add-buddy add-proj
-                       nuke-db rm-proj rm-cost]]
+                       nuke-db rm-proj rm-cost rm-buddy]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
         [fb.misc :only [mk-settings add-data]]
         ; FIXME get :use to import everything.
@@ -261,17 +261,29 @@
                                           (.append (.clone bname))
                                           (.append "'s total contribution: ")
                                           (.append (money tot)))
-                                        (doseq [[cname ctot btot] costs]
-                                          (.append ul (-> li
-                                                        (.clone)
-                                                        (.append cname)
-                                                        (.append ": ")
-                                                        (.append (.clone bname))
-                                                        (.append " paid: ")
-                                                        (.append (money btot))
-                                                        (.append " of: ")
-                                                        (.append (money ctot))
-                                                        (set-rect-back maxpaid btot)))))
+                                        (when (> 0 tot)
+                                          (doseq [[cname ctot btot] costs]
+                                            (.append ul (-> li
+                                                          (.clone)
+                                                          (.append cname)
+                                                          (.append ": ")
+                                                          (.append (.clone bname))
+                                                          (.append " paid: ")
+                                                          (.append (money btot))
+                                                          (.append " of: ")
+                                                          (.append (money ctot))
+                                                          (set-rect-back maxpaid btot)))))
+                                        (.append ul (-> li
+                                                      (.clone)
+                                                      (.addClass "rmli")
+                                                      (.append (-> a
+                                                                 (.clone)
+                                                                 (.text "Delete Buddy")
+                                                                 (.data "pid" pid)
+                                                                 (.data "bid" bid)
+                                                                 (.data "rm" "buddy")
+                                                                 (.data "anim" "pop")
+                                                                 (.attr "href" "rm"))))))
                                     (swap-page e origa))
                                   bid))]
     (set-title-project set-budd-data pid)))
@@ -502,6 +514,31 @@
         rm-cost-page (fn [e]
                        (rm-cost #(trigger-new-page "proj" {"proj" [["pid" pid] ["anim" "pop"]]}) cid)
                        false)
+        rm-budd-page (fn [e]
+                       (rm-buddy #(trigger-new-page "proj" {"proj" [["pid" pid] ["anim" "pop"]]}) bid)
+                       false)
+        set-rm-budd  (fn [t r]
+                       (let [i   (.item (.-rows r) 0)
+                             tot     (reduce + (map #(.-btot %) (row-seq r)))]
+                         (-> ul
+                           (.append (-> li
+                                      (.clone)
+                                      (.append (str "Delete buddy " (.-bname i) "?"))))
+                           (.append (-> li
+                                      (.clone)
+                                      (.append (str "Total contribution: "))
+                                      (.append (money tot))))
+                           (.append (-> li
+                                      (.clone)
+                                      (.addClass "rmli")
+                                      (.append (-> a
+                                                 (.clone)
+                                                 (.text "Delete")
+                                                 (.attr "href" "null")
+                                                 (.data "bid" bid)
+                                                 (.bind "touchend click"
+                                                        rm-budd-page)))))))
+                       (swap-page e origa))
         set-rm-cost  (fn [t r]
                        (let [i (.item (.-rows r) 0)]
                          (-> ul
@@ -549,7 +586,7 @@
                     (.text "Cancel")))
     (condp = rmtype
       "cost"  (do-cost set-rm-cost cid)
-      "buddy" (do-cost set-rm-cost cid)
+      "buddy" (do-buddy set-rm-budd bid)
       "proj"  (do-proj set-rm-proj pid))))
 
 
