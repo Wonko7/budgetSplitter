@@ -369,30 +369,37 @@
                                                             (int (.val ($ i)))))))))
         set-buddy-data  (fn [id name tot tx]
                           (.data inp "pid" pid)
-                          (.submit ($ "#newpage div.newcost form") add-page-cost)
                           (do-buddies (fn [tx r]
                                         (if (> (.-length (.-rows r)) 0)
-                                          (do-row #(-> ul
-                                                     (.append (-> li
-                                                                (.clone)
-                                                                (.append (-> label
-                                                                           (.clone)
-                                                                           (.append (buddy (.-name %)))
-                                                                           (.append ":")))
-                                                                (.append (-> binput
-                                                                           (.clone)
-                                                                           (.data "pid" pid)
-                                                                           (.data "bid" (.-id %))
-                                                                           (.attr "placeholder" (str (.-name %) " paid..."))
-                                                                           (.keyup validate)))
-                                                                (.bind "focus click touchend"
-                                                                       (fn [e]
-                                                                         (.trigger (.children ($ (.-currentTarget e))
-                                                                                              "input")
-                                                                                   "focus"))))))
-                                                  r)
+                                          (do 
+                                            (do-row #(-> ul
+                                                       (.append (-> li
+                                                                  (.clone)
+                                                                  (.append (-> label
+                                                                             (.clone)
+                                                                             (.append (buddy (.-name %)))
+                                                                             (.append ":")))
+                                                                  (.append (-> binput
+                                                                             (.clone)
+                                                                             (.data "pid" pid)
+                                                                             (.data "bid" (.-id %))
+                                                                             (.attr "placeholder" (str (.-name %) " paid..."))
+                                                                             (.keyup validate)))
+                                                                  (.bind "focus click touchend"
+                                                                         (fn [e]
+                                                                           (.trigger (.children ($ (.-currentTarget e))
+                                                                                                "input")
+                                                                                     "focus"))))))
+                                                    r)
+                                            (.append ul (-> li
+                                                          (.clone)
+                                                          (.addClass "addli")
+                                                          (.append (-> ($ "<a></a>")
+                                                                     (.text "Add")
+                                                                     (.attr "href" "null")
+                                                                     (.bind "click touchend" add-page-cost))))))
                                           (do
-                                            (.remove ($ "#content div.newcost form input[type=\"submit\"]"))
+                                            ;(.remove ($ "#content div.newcost form input[type=\"submit\"]"))
                                             (.append ul (-> li
                                                           (.clone)
                                                           (.append (-> ($ "<a></a>")
@@ -400,6 +407,7 @@
                                                                      (.data "pid" pid)
                                                                      (.text "Add buddies first!"))))))))
                                       pid)
+                          (.submit ($ "#newpage div.newcost form") add-page-cost)
                           (swap-page e origa))]
     (set-title-project set-buddy-data pid)))
 

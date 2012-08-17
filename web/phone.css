@@ -66,7 +66,12 @@ a:active {
 	background-image: ;
 }
 #jqt li.rmli {
-	background-color: #822;
+	text-align: center;
+	background-color: #866;
+}
+#jqt li.addli {
+	text-align: center;
+	background-color: #668;
 }
 .menu {
 	background-color: #333;
@@ -116,4 +121,5 @@ a:active {
 	color: #8F8;
 }
 .addbutton {
+	color: none;
 }

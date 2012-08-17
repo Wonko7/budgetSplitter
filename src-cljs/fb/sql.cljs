@@ -166,7 +166,7 @@
 
 (defn rm-cost [f cid]
   (let [rq-c (str "DELETE FROM costs WHERE costs.id = " cid " ;")
-        rq-r (str "DELETE FROM relcbp WHERE relcbp.cid = " cid " ;") ]
+        rq-r (str "DELETE FROM relcbp WHERE relcbp.cid = " cid " ;")]
     (.transaction db (rm rq-c
                          (rm rq-r f)))))
 
