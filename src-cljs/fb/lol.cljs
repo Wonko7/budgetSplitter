@@ -1,7 +1,9 @@
 (ns fb.lol
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only [nuke-db do-proj do-buddies do-row row-seq do-cost do-costs add-cost add-buddy add-proj add-db! db-init rm-proj]]
+        [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs
+                       db-init add-cost add-buddy add-proj
+                       nuke-db rm-proj rm-cost]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
         [fb.misc :only [mk-settings add-data]]
         ; FIXME get :use to import everything.
@@ -134,7 +136,6 @@
                                                              (.data "rm" "proj")
                                                              (.data "anim" "pop")
                                                              (.attr "href" "rm")
-                                                             ;(.bind "touchend click" #(do (js/alert (str "Remove " name "?")) false))
                                                              ))))) 
                                   pid)
                         (swap-page e origa))]
@@ -169,6 +170,17 @@
                                                         (set-rect-back (.-ctot %) (.-btot %)))]
                                               (.append ul li))
                                            r)
+                                   (.append ul (-> li
+                                                 (.clone)
+                                                 (.addClass "rmli")
+                                                 (.append (-> a 
+                                                            (.clone)
+                                                            (.text "Delete Cost")
+                                                            (.data "pid" pid)
+                                                            (.data "cid" cid)
+                                                            (.data "rm" "cost")
+                                                            (.data "anim" "pop")
+                                                            (.attr "href" "rm")))))
                                    (swap-page e origa))
                                  cid))]
     (set-title-project set-cost-data pid)))
@@ -405,6 +417,8 @@
 (defn show-rm [e origa]
   (load-template "rm")
   (let [pid     (.data origa "pid")
+        cid     (.data origa "cid")
+        bid     (.data origa "bid")
         rmtype  (.data origa "rm")
         title   ($ "#newpage div.rm div.toolbar h1")
         menu    ($ "#newpage div.rm div.toolbar")
@@ -414,33 +428,58 @@
         rm-proj-page (fn [e]
                        (rm-proj #(trigger-new-page "projects" {"projects" [["anim" "pop"]]}) pid)
                        false)
+        rm-cost-page (fn [e]
+                       (rm-cost #(trigger-new-page "proj" {"proj" [["pid" pid] ["anim" "pop"]]}) cid)
+                       false)
+        set-rm-cost  (fn [t r]
+                       (let [i (.item (.-rows r) 0)]
+                         (-> ul
+                           (.append (-> li
+                                      (.clone)
+                                      (.append (str "Delete cost " (.-cname i) "?"))))
+                           (.append (-> li
+                                      (.clone)
+                                      (.append (str "Total: ")) 
+                                      (.append (money (.-ctot i)))))
+                           (.append (-> li
+                                      (.clone)
+                                      (.addClass "rmli")
+                                      (.append (-> a
+                                                 (.clone)
+                                                 (.text "Delete")
+                                                 (.attr "href" "null")
+                                                 (.data "cid" (.-id i))
+                                                 (.bind "touchend click"
+                                                        rm-cost-page)))))))
+                       (swap-page e origa))
         set-rm-proj  (fn [t r]
-                       (.append menu (-> a 
-                                       (.clone)
-                                       (.addClass "button") 
-                                       (.addClass "back") 
-                                       (.attr "href" "back")
-                                       (.text "Cancel")))
-                       (do-row (fn [i]
-                                 (-> ul
-                                   (.append (-> li
-                                              (.clone)
-                                              (.text (str "Delete project " (.-name i) "?"))))
-                                   (.append (-> li
-                                              (.clone)
-                                              (.addClass "rmli")
-                                              (.append (-> a
-                                                         (.clone)
-                                                         (.text "Delete")
-                                                         (.attr "href" "null")
-                                                         (.data "pid" (.-id i))
-                                                         (.bind "touchend click"
-                                                                rm-proj-page)))))))
-                               r)
+                       (let [i (.item (.-rows r) 0)]
+                         (-> ul
+                           (.append (-> li
+                                      (.clone)
+                                      (.text (str "Delete project " (.-name i) "?"))))
+                           (.append (-> li
+                                      (.clone)
+                                      (.addClass "rmli")
+                                      (.append (-> a
+                                                 (.clone)
+                                                 (.text "Delete")
+                                                 (.attr "href" "null")
+                                                 (.data "pid" (.-id i))
+                                                 (.bind "touchend click"
+                                                        rm-proj-page)))))))
                        (swap-page e origa))
         ]
-    ;; condp
-    (do-proj set-rm-proj pid)))
+    (.append menu (-> a 
+                    (.clone)
+                    (.addClass "button") 
+                    (.addClass "back") 
+                    (.attr "href" "back")
+                    (.text "Cancel")))
+    (condp = rmtype
+      "cost"  (do-cost set-rm-cost cid) 
+      "buddy" (do-cost set-rm-cost cid) 
+      "proj"  (do-proj set-rm-proj pid))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; inits;

@@ -76,6 +76,7 @@
                 (fn [t]
                   (.executeSql t "INSERT INTO projects (name) VALUES (?);" (clj->js [name])
                                f))))
+
 (defn add-buddy [proj name img f]
   (.transaction db
                 (fn [t]
@@ -140,12 +141,14 @@
                 " ;")]
     (do-select f rq)))
 
+(defn rm [rq & [f]]
+  (fn [t r]
+    (if f
+      (.executeSql t rq (clj->js []) f   #(js/alert (str "rm fuck. " (.-message %2)))) 
+      (.executeSql t rq (clj->js []) nil #(js/alert (str "rm fuck. " (.-message %2))))))) 
+
 (defn rm-proj [f pid]
-  (let [rm (fn [rq & [f]]
-             (fn [t r]
-               (if f
-                 (.executeSql t rq (clj->js []) f   #(js/alert (str "rm fuck. " (.-message %2)))) 
-                 (.executeSql t rq (clj->js []) nil #(js/alert (str "rm fuck. " (.-message %2)))))))
+  (let [
         rq-p (str "DELETE FROM projects WHERE projects.id = " pid " ;")
         rq-b (str "DELETE FROM buddies WHERE buddies.pid = " pid " ;")
         rq-c (str "DELETE FROM costs WHERE costs.pid = " pid " ;")
@@ -160,6 +163,12 @@
     (.transaction db (rm rq-p (rm rq-b (rm rq-c (rm rq-r f)))))
     ;(.transaction db (fn [t r] (.executeSql t rq (clj->js []) f   #(js/alert (str "rm fuck. " (.-message %2))))))
     ))
+
+(defn rm-cost [f cid]
+  (let [rq-c (str "DELETE FROM costs WHERE costs.id = " cid " ;")
+        rq-r (str "DELETE FROM relcbp WHERE relcbp.cid = " cid " ;") ]
+    (.transaction db (rm rq-c
+                         (rm rq-r f)))))
 
 (defn nuke-db []
   (.transaction db
