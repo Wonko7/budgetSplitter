@@ -140,6 +140,27 @@
                 " ;")]
     (do-select f rq)))
 
+(defn rm-proj [f pid]
+  (let [rm (fn [rq & [f]]
+             (fn [t r]
+               (if f
+                 (.executeSql t rq (clj->js []) f   #(js/alert (str "rm fuck. " (.-message %2)))) 
+                 (.executeSql t rq (clj->js []) nil #(js/alert (str "rm fuck. " (.-message %2)))))))
+        rq-p (str "DELETE FROM projects WHERE projects.id = " pid " ;")
+        rq-b (str "DELETE FROM buddies WHERE buddies.pid = " pid " ;")
+        rq-c (str "DELETE FROM costs WHERE costs.pid = " pid " ;")
+        rq-r (str "DELETE FROM relcbp WHERE relcbp.pid = " pid " ;")
+        ;rq (str "BEGIN; "
+        ;        "DELETE FROM projects WHERE projects.id = " pid " ;"
+        ;        "DELETE FROM buddies WHERE buddies.pid = " pid " ; "
+        ;        "DELETE FROM costs WHERE costs.pid = " pid " ; "
+        ;        "DELETE FROM relcbp WHERE relcbp.pid = " pid " ; "
+        ;        "COMMIT;")
+        ]
+    (.transaction db (rm rq-p (rm rq-b (rm rq-c (rm rq-r f)))))
+    ;(.transaction db (fn [t r] (.executeSql t rq (clj->js []) f   #(js/alert (str "rm fuck. " (.-message %2))))))
+    ))
+
 (defn nuke-db []
   (.transaction db
                 (fn [t]

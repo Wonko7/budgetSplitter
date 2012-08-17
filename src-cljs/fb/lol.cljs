@@ -1,7 +1,7 @@
 (ns fb.lol
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only [nuke-db do-proj do-buddies do-row row-seq do-cost do-costs add-cost add-buddy add-proj add-db! db-init]]
+        [fb.sql :only [nuke-db do-proj do-buddies do-row row-seq do-cost do-costs add-cost add-buddy add-proj add-db! db-init rm-proj]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
         [fb.misc :only [mk-settings add-data]]
         ; FIXME get :use to import everything.
@@ -131,11 +131,12 @@
                                                              (.clone)
                                                              (.text "Delete Project")
                                                              (.data "pid" pid)
+                                                             (.data "rm" "proj")
+                                                             (.data "anim" "pop")
                                                              (.attr "href" "rm")
-                                                             (.bind "touchend click"
-                                                                    #(do (js/alert (str "Remove " name "?")) false))))))) 
+                                                             ;(.bind "touchend click" #(do (js/alert (str "Remove " name "?")) false))
+                                                             ))))) 
                                   pid)
-
                         (swap-page e origa))]
     (set-title-project set-proj-data pid)))
 
@@ -399,11 +400,55 @@
     (trigger-new-page name d)))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; rm;
+
+(defn show-rm [e origa]
+  (load-template "rm")
+  (let [pid     (.data origa "pid")
+        rmtype  (.data origa "rm")
+        title   ($ "#newpage div.rm div.toolbar h1")
+        menu    ($ "#newpage div.rm div.toolbar")
+        ul      ($ "#newpage div.rm ul")
+        li      ($ "<li></li>")
+        a       ($ "<a></a>")
+        rm-proj-page (fn [e]
+                       (rm-proj #(trigger-new-page "projects" {"projects" [["anim" "pop"]]}) pid)
+                       false)
+        set-rm-proj  (fn [t r]
+                       (.append menu (-> a 
+                                       (.clone)
+                                       (.addClass "button") 
+                                       (.addClass "back") 
+                                       (.attr "href" "back")
+                                       (.text "Cancel")))
+                       (do-row (fn [i]
+                                 (-> ul
+                                   (.append (-> li
+                                              (.clone)
+                                              (.text (str "Delete project " (.-name i) "?"))))
+                                   (.append (-> li
+                                              (.clone)
+                                              (.addClass "rmli")
+                                              (.append (-> a
+                                                         (.clone)
+                                                         (.text "Delete")
+                                                         (.attr "href" "null")
+                                                         (.data "pid" (.-id i))
+                                                         (.bind "touchend click"
+                                                                rm-proj-page)))))))
+                               r)
+                       (swap-page e origa))
+        ]
+    ;; condp
+    (do-proj set-rm-proj pid)))
+
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; inits;
 
 (add-init! "buddies" show-buddies)
 (add-init! "new" show-new-form)
 (add-init! "newcost" show-new-cost)
+(add-init! "rm" show-rm)
 (add-init! "back" go-back)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
