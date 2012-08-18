@@ -73,8 +73,10 @@ a:active {
 	text-align: center;
 	background-color: #668;
 }
-.menu {
-	background-color: #333;
+
+div.menu, ul.menu, li.menu {
+	padding: 0;
+	margin: 0;
 }
 .menu .right {
 	width: 50%;
@@ -91,11 +93,6 @@ a:active {
 
 .biginput {
 	width: 100%;
-	position: center;
-	background-color: #333;
-	font-family: Helvetica;
-	font-size: 20px;
-	font-color: #FFF;
 }
 .inputbox {
 	width: 70%;

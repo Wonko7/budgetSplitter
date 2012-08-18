@@ -65,8 +65,11 @@
               (fn [e]
                 (let [a    ($ (first ($ (.-currentTarget e))))
                       link (.attr a "href")]
-                  (load-dyn-page link e a)
-                  false))))
+                  (if (= "mailto" (apply str (take 6 link)))
+                    true
+                    (do
+                      (load-dyn-page link e a)
+                      false))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -436,6 +439,7 @@
                                 addb  ($ "#content div.newcost form div.buddieslist ul li.addli a")
                                 tot   (reduce + (for [i alli]
                                                   (int (.val ($ i)))))]
+                            (js/console.log tot)
                             (if (.data inp "bid")
                               (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1")))
                             (.html total (money tot))
@@ -598,19 +602,34 @@
   (load-template "settings")
   (let [pid     (.data origa "pid")
         menu    ($ "#newpage div.settings toolbar")
-        ul      ($ "#newpage div.settings ul")
+        ulPos   ($ "#newpage div.settings ul.menuPos")
+        ulHelp  ($ "#newpage div.settings ul.help")
         li      ($ "<li></li>")
         a       ($ "<a></a>")
+        inp     ($ "<input />")
+        add-inp (fn [li type title grp check? data]
+                  (.append (-> li
+                             (.clone)
+                             (.append (-> inp
+                                        (.clone)
+                                        (add-data "inp" data)
+                                        (.attr "checked" check?)
+                                        (.attr "title" title)
+                                        (.attr "value" title)
+                                        (.attr "type" type)     
+                                        (.attr "name" grp))))))
         update  (fn [e]
                   (update-settings {}))
         set-settings (fn [settings]
-                       (-> ul
+                       (-> ulPos
                          (.append (-> li
                                     (.clone)
-                                    (.text "Menu Placement:")
-                                    (.append ))))
-                       (let []
-                         ))]
+                                    (.text "Menu Placement:")))
+                         (.append (add-inp li "radio" "Top"    "menuPos" (= :top (:menuPos settings))    {"inp" [["type" "top"]]})) 
+                         (.append (add-inp li "radio" "Bottom" "menuPos" (= :bottom (:menuPos settings)) {"inp" [["type" "bottom"]]})))
+                       (-> ulHelp
+                         (.append (add-inp li "checkbox" "Display Help" "help" (:help settings) {"inp" [["type" "help"]]})) )
+                       (swap-page e origa))]
     (.append menu (-> a
                     (.clone)
                     (.addClass "back")
@@ -626,6 +645,8 @@
 (add-init! "newcost" show-new-cost)
 (add-init! "rm" show-rm)
 (add-init! "back" go-back)
+(add-init! "settings" show-settings)
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; jqt
