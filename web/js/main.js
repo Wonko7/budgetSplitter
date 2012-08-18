@@ -21317,48 +21317,48 @@ goog.require("fb.misc");
 goog.require("fb.sql");
 goog.require("jayq.util");
 goog.require("jayq.core");
-var sp__915136 = jayq.core.$.call(null, "<span></span>").addClass("money");
+var sp__2640755 = jayq.core.$.call(null, "<span></span>").addClass("money");
 fb.vis.money = function money(amount) {
-  return sp__915136.clone().text([cljs.core.str(amount)].join("").replace(/^([0-9]*\.?[0-9]{0,2})?.*$/, "$$$1"))
+  return sp__2640755.clone().text([cljs.core.str(amount)].join("").replace(/^([0-9]*\.?[0-9]{0,2})?.*$/, "$$$1"))
 };
-var sp__915139 = jayq.core.$.call(null, "<span></span>").addClass("buddy");
+var sp__2640758 = jayq.core.$.call(null, "<span></span>").addClass("buddy");
 fb.vis.buddy = function buddy(name) {
-  return sp__915139.clone().text(name)
+  return sp__2640758.clone().text(name)
 };
 fb.vis.add_menu = function add_menu(pid, settings) {
-  var place__915169 = cljs.core._EQ_.call(null, "\ufdd0'top", (new cljs.core.Keyword("\ufdd0'menuPos")).call(null, settings)) ? jayq.core.$.call(null, "#newpage div.top") : jayq.core.$.call(null, "#newpage div.bottom");
-  var menu__915170 = jayq.core.$.call(null, "div.hidden div.menu").clone();
-  place__915169.append(cljs.core.truth_((new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings)) ? menu__915170.show() : menu__915170.hide());
-  var ulr__915171 = jayq.core.$.call(null, "#newpage div.menu div.right ul");
-  var ull__915172 = jayq.core.$.call(null, "#newpage div.menu div.left ul");
-  var li__915173 = jayq.core.$.call(null, "<li></li>");
-  var a__915174 = jayq.core.$.call(null, "<a></a>");
-  var data__915175 = cljs.core.ObjMap.fromObject(["settings"], {"settings":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["anim", "flipright"], true)], true)});
-  var ll__915176 = cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["Costs", "proj"], true), cljs.core.PersistentVector.fromArray(["Buddies", "buddies"], true)], true);
-  var lr__915177 = cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["Total", "total"], true), cljs.core.PersistentVector.fromArray(["Settings", "settings"], true)], true);
-  var add__915197 = function(p1__915137_SHARP_, p2__915138_SHARP_) {
-    var G__915178__915179 = cljs.core.seq.call(null, p1__915137_SHARP_);
-    if(G__915178__915179) {
-      var G__915181__915183 = cljs.core.first.call(null, G__915178__915179);
-      var vec__915182__915184 = G__915181__915183;
-      var t__915185 = cljs.core.nth.call(null, vec__915182__915184, 0, null);
-      var l__915186 = cljs.core.nth.call(null, vec__915182__915184, 1, null);
-      var G__915178__915187 = G__915178__915179;
-      var G__915181__915188 = G__915181__915183;
-      var G__915178__915189 = G__915178__915187;
+  var place__2640788 = cljs.core._EQ_.call(null, "\ufdd0'top", (new cljs.core.Keyword("\ufdd0'menuPos")).call(null, settings)) ? jayq.core.$.call(null, "#newpage div.top") : jayq.core.$.call(null, "#newpage div.bottom");
+  var menu__2640789 = jayq.core.$.call(null, "div.hidden div.menu").clone();
+  place__2640788.append(cljs.core.truth_((new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings)) ? menu__2640789.show() : menu__2640789.hide());
+  var ulr__2640790 = jayq.core.$.call(null, "#newpage div.menu div.right ul");
+  var ull__2640791 = jayq.core.$.call(null, "#newpage div.menu div.left ul");
+  var li__2640792 = jayq.core.$.call(null, "<li></li>");
+  var a__2640793 = jayq.core.$.call(null, "<a></a>");
+  var data__2640794 = cljs.core.ObjMap.fromObject(["settings"], {"settings":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["anim", "flipright"], true)], true)});
+  var ll__2640795 = cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["Costs", "proj"], true), cljs.core.PersistentVector.fromArray(["Buddies", "buddies"], true)], true);
+  var lr__2640796 = cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["Total", "total"], true), cljs.core.PersistentVector.fromArray(["Settings", "settings"], true)], true);
+  var add__2640816 = function(p1__2640756_SHARP_, p2__2640757_SHARP_) {
+    var G__2640797__2640798 = cljs.core.seq.call(null, p1__2640756_SHARP_);
+    if(G__2640797__2640798) {
+      var G__2640800__2640802 = cljs.core.first.call(null, G__2640797__2640798);
+      var vec__2640801__2640803 = G__2640800__2640802;
+      var t__2640804 = cljs.core.nth.call(null, vec__2640801__2640803, 0, null);
+      var l__2640805 = cljs.core.nth.call(null, vec__2640801__2640803, 1, null);
+      var G__2640797__2640806 = G__2640797__2640798;
+      var G__2640800__2640807 = G__2640800__2640802;
+      var G__2640797__2640808 = G__2640797__2640806;
       while(true) {
-        var vec__915190__915191 = G__915181__915188;
-        var t__915192 = cljs.core.nth.call(null, vec__915190__915191, 0, null);
-        var l__915193 = cljs.core.nth.call(null, vec__915190__915191, 1, null);
-        var G__915178__915194 = G__915178__915189;
-        p2__915138_SHARP_.append(li__915173.clone().append(fb.misc.add_data.call(null, a__915174.clone().data("pid", pid).attr("href", l__915193).text(t__915192), l__915193, data__915175)));
-        var temp__3974__auto____915195 = cljs.core.next.call(null, G__915178__915194);
-        if(temp__3974__auto____915195) {
-          var G__915178__915196 = temp__3974__auto____915195;
-          var G__915198 = cljs.core.first.call(null, G__915178__915196);
-          var G__915199 = G__915178__915196;
-          G__915181__915188 = G__915198;
-          G__915178__915189 = G__915199;
+        var vec__2640809__2640810 = G__2640800__2640807;
+        var t__2640811 = cljs.core.nth.call(null, vec__2640809__2640810, 0, null);
+        var l__2640812 = cljs.core.nth.call(null, vec__2640809__2640810, 1, null);
+        var G__2640797__2640813 = G__2640797__2640808;
+        p2__2640757_SHARP_.append(li__2640792.clone().append(fb.misc.add_data.call(null, a__2640793.clone().data("pid", pid).attr("href", l__2640812).text(t__2640811), l__2640812, data__2640794)));
+        var temp__3974__auto____2640814 = cljs.core.next.call(null, G__2640797__2640813);
+        if(temp__3974__auto____2640814) {
+          var G__2640797__2640815 = temp__3974__auto____2640814;
+          var G__2640817 = cljs.core.first.call(null, G__2640797__2640815);
+          var G__2640818 = G__2640797__2640815;
+          G__2640800__2640807 = G__2640817;
+          G__2640797__2640808 = G__2640818;
           continue
         }else {
           return null
@@ -21369,92 +21369,92 @@ fb.vis.add_menu = function add_menu(pid, settings) {
       return null
     }
   };
-  add__915197.call(null, ll__915176, ull__915172);
-  return add__915197.call(null, lr__915177, ulr__915171)
+  add__2640816.call(null, ll__2640795, ull__2640791);
+  return add__2640816.call(null, lr__2640796, ulr__2640790)
 };
 fb.vis.set_title_project = function set_title_project(f, pid) {
-  var sett__915219 = function(tx, r) {
-    var i__915210 = r.rows.item(0);
-    var n__915211 = i__915210.name;
-    var id__915212 = i__915210.id;
-    var tot__915213 = i__915210.tot;
-    var settings__915214 = fb.misc.mk_settings.call(null, r);
-    var a__915215 = jayq.core.$.call(null, "<a></a>").addClass("button");
-    jayq.core.$.call(null, "#newpage div.top").data("pid", pid).append(jayq.core.$.call(null, '<div class="toolbar"></div>').append(jayq.core.$.call(null, "<h1></h1>").append([cljs.core.str(n__915211), cljs.core.str(": ")].join("")).append(fb.vis.money.call(null, tot__915213))).append(a__915215.clone().addClass("back").attr("href", "back").text("Back")).append(a__915215.clone().attr("href", "menu").text("Menu").bind("click touchend", function() {
+  var sett__2640838 = function(tx, r) {
+    var i__2640829 = r.rows.item(0);
+    var n__2640830 = i__2640829.name;
+    var id__2640831 = i__2640829.id;
+    var tot__2640832 = i__2640829.tot;
+    var settings__2640833 = fb.misc.mk_settings.call(null, r);
+    var a__2640834 = jayq.core.$.call(null, "<a></a>").addClass("button");
+    jayq.core.$.call(null, "#newpage div.top").data("pid", pid).append(jayq.core.$.call(null, '<div class="toolbar"></div>').append(jayq.core.$.call(null, "<h1></h1>").append([cljs.core.str(n__2640830), cljs.core.str(": ")].join("")).append(fb.vis.money.call(null, tot__2640832))).append(a__2640834.clone().addClass("back").attr("href", "back").text("Back")).append(a__2640834.clone().attr("href", "menu").text("Menu").bind("click touchend", function() {
       fb.sql.do_settings.call(null, function(settings) {
-        var menu__915216 = jayq.core.$.call(null, "#content div.menu");
-        var settings__915217 = cljs.core.into.call(null, settings, cljs.core.ObjMap.fromObject(["\ufdd0'menuOn"], {"\ufdd0'menuOn":cljs.core.not.call(null, (new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings))}));
-        var on__915218 = (new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings__915217);
-        return fb.sql.update_settings.call(null, settings__915217, function() {
-          if(cljs.core.truth_(on__915218)) {
-            return menu__915216.show()
+        var menu__2640835 = jayq.core.$.call(null, "#content div.menu");
+        var settings__2640836 = cljs.core.into.call(null, settings, cljs.core.ObjMap.fromObject(["\ufdd0'menuOn"], {"\ufdd0'menuOn":cljs.core.not.call(null, (new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings))}));
+        var on__2640837 = (new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings__2640836);
+        return fb.sql.update_settings.call(null, settings__2640836, function() {
+          if(cljs.core.truth_(on__2640837)) {
+            return menu__2640835.show()
           }else {
-            return menu__915216.hide()
+            return menu__2640835.hide()
           }
         })
       });
       return false
     })));
-    fb.vis.add_menu.call(null, pid, settings__915214);
-    return f.call(null, id__915212, n__915211, tot__915213, tx)
+    fb.vis.add_menu.call(null, pid, settings__2640833);
+    return f.call(null, id__2640831, n__2640830, tot__2640832, tx)
   };
-  return fb.sql.do_proj.call(null, sett__915219, pid)
+  return fb.sql.do_proj.call(null, sett__2640838, pid)
 };
 fb.vis.canvas_rect = function canvas_rect(w_tot, h_tot, w) {
-  var c__915222 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
-  var ctx__915223 = c__915222.getContext("2d", w_tot, h_tot);
-  c__915222.width = w_tot;
-  c__915222.height = h_tot;
-  ctx__915223.fillStyle = "#121";
-  ctx__915223.fillRect(0, 0, w_tot, h_tot);
-  ctx__915223.fillStyle = "#131";
-  ctx__915223.fillRect(0, 0, w, h_tot);
-  return ctx__915223
+  var c__2640841 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
+  var ctx__2640842 = c__2640841.getContext("2d", w_tot, h_tot);
+  c__2640841.width = w_tot;
+  c__2640841.height = h_tot;
+  ctx__2640842.fillStyle = "#121";
+  ctx__2640842.fillRect(0, 0, w_tot, h_tot);
+  ctx__2640842.fillStyle = "#131";
+  ctx__2640842.fillRect(0, 0, w, h_tot);
+  return ctx__2640842
 };
 fb.vis.set_rect_back = function set_rect_back(elt, tot, amount) {
-  var w__915228 = jayq.core.$.call(null, "body").width();
-  var h__915229 = 50;
-  var nw__915230 = cljs.core.int$.call(null, w__915228 * (amount / tot));
-  var cvs__915231 = fb.vis.canvas_rect.call(null, w__915228, h__915229, nw__915230);
-  return elt.css("background-image", [cljs.core.str("url("), cljs.core.str(cvs__915231.canvas.toDataURL("image/png")), cljs.core.str(")")].join("")).css("background-size", "100%")
+  var w__2640847 = jayq.core.$.call(null, "body").width();
+  var h__2640848 = 50;
+  var nw__2640849 = cljs.core.int$.call(null, w__2640847 * (amount / tot));
+  var cvs__2640850 = fb.vis.canvas_rect.call(null, w__2640847, h__2640848, nw__2640849);
+  return elt.css("background-image", [cljs.core.str("url("), cljs.core.str(cvs__2640850.canvas.toDataURL("image/png")), cljs.core.str(")")].join("")).css("background-size", "100%")
 };
 fb.vis.canvas_rect_take = function canvas_rect_take(w_tot, h_tot, wpaid, avg, max) {
-  var c__915234 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
-  var ctx__915235 = c__915234.getContext("2d", w_tot, h_tot);
-  c__915234.width = w_tot;
-  c__915234.height = h_tot;
-  ctx__915235.fillStyle = "#121";
-  ctx__915235.fillRect(0, 0, w_tot, h_tot);
-  ctx__915235.fillStyle = "#131";
-  ctx__915235.fillRect(0, 0, avg, h_tot);
-  ctx__915235.fillStyle = "#252";
-  ctx__915235.fillRect(avg, 0, wpaid - avg, h_tot);
-  ctx__915235.fillStyle = "#33F";
-  ctx__915235.fillRect(avg, 0, 2, h_tot);
-  return ctx__915235
+  var c__2640853 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
+  var ctx__2640854 = c__2640853.getContext("2d", w_tot, h_tot);
+  c__2640853.width = w_tot;
+  c__2640853.height = h_tot;
+  ctx__2640854.fillStyle = "#121";
+  ctx__2640854.fillRect(0, 0, w_tot, h_tot);
+  ctx__2640854.fillStyle = "#131";
+  ctx__2640854.fillRect(0, 0, avg, h_tot);
+  ctx__2640854.fillStyle = "#252";
+  ctx__2640854.fillRect(avg, 0, wpaid - avg, h_tot);
+  ctx__2640854.fillStyle = "#33F";
+  ctx__2640854.fillRect(avg, 0, 2, h_tot);
+  return ctx__2640854
 };
 fb.vis.canvas_rect_give = function canvas_rect_give(w_tot, h_tot, wpaid, avg) {
-  var c__915238 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
-  var ctx__915239 = c__915238.getContext("2d", w_tot, h_tot);
-  c__915238.width = w_tot;
-  c__915238.height = h_tot;
-  ctx__915239.fillStyle = "#121";
-  ctx__915239.fillRect(0, 0, w_tot, h_tot);
-  ctx__915239.fillStyle = "#131";
-  ctx__915239.fillRect(0, 0, wpaid, h_tot);
-  ctx__915239.fillStyle = "#822";
-  ctx__915239.fillRect(wpaid, 0, avg - wpaid, h_tot);
-  ctx__915239.fillStyle = "#33F";
-  ctx__915239.fillRect(avg, 0, 2, h_tot);
-  return ctx__915239
+  var c__2640857 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
+  var ctx__2640858 = c__2640857.getContext("2d", w_tot, h_tot);
+  c__2640857.width = w_tot;
+  c__2640857.height = h_tot;
+  ctx__2640858.fillStyle = "#121";
+  ctx__2640858.fillRect(0, 0, w_tot, h_tot);
+  ctx__2640858.fillStyle = "#131";
+  ctx__2640858.fillRect(0, 0, wpaid, h_tot);
+  ctx__2640858.fillStyle = "#822";
+  ctx__2640858.fillRect(wpaid, 0, avg - wpaid, h_tot);
+  ctx__2640858.fillStyle = "#33F";
+  ctx__2640858.fillRect(avg, 0, 2, h_tot);
+  return ctx__2640858
 };
 fb.vis.set_tot_rect_back = function set_tot_rect_back(elt, max, avg, amount) {
-  var w__915245 = jayq.core.$.call(null, "body").width();
-  var h__915246 = 50;
-  var np__915247 = cljs.core.int$.call(null, w__915245 * (amount / max));
-  var na__915248 = cljs.core.int$.call(null, w__915245 * (avg / max));
-  var cvs__915249 = (np__915247 > na__915248 ? fb.vis.canvas_rect_take : fb.vis.canvas_rect_give).call(null, w__915245, h__915246, np__915247, na__915248);
-  return elt.css("background-image", [cljs.core.str("url("), cljs.core.str(cvs__915249.canvas.toDataURL("image/png")), cljs.core.str(")")].join("")).css("background-size", "100%")
+  var w__2640864 = jayq.core.$.call(null, "body").width();
+  var h__2640865 = 50;
+  var np__2640866 = cljs.core.int$.call(null, w__2640864 * (amount / max));
+  var na__2640867 = cljs.core.int$.call(null, w__2640864 * (avg / max));
+  var cvs__2640868 = (np__2640866 > na__2640867 ? fb.vis.canvas_rect_take : fb.vis.canvas_rect_give).call(null, w__2640864, h__2640865, np__2640866, na__2640867);
+  return elt.css("background-image", [cljs.core.str("url("), cljs.core.str(cvs__2640868.canvas.toDataURL("image/png")), cljs.core.str(")")].join("")).css("background-size", "100%")
 };
 goog.provide("fb.lol");
 goog.require("cljs.core");

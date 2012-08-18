@@ -1,7 +1,7 @@
 (ns fb.vis
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only [do-proj do-settings do-buddies do-row do-cost do-costs add-cost add-buddy add-proj add-db! db-init update-settings]]
+        [fb.sql :only [do-proj do-settings update-settings]]
         [fb.misc :only [mk-settings add-data]]
         ))
 
