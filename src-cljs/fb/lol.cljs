@@ -39,7 +39,8 @@
   (let [newp (.show ($ "#newpage"))
         cont ($ "#content")
         anim (.data a "anim")]
-    (if anim ; condp on animation
+    (js/console.log anim)
+    (if anim
       (.goTo jQT "#newpage" anim)
       (.goTo jQT "#newpage" "slideleft"))
     (.attr newp "id" "content")
@@ -51,7 +52,9 @@
 
 (defn load-dyn-page [name e a]
   (when (not= name "back")
-    (def back-pages (cons [name {name (doall (cons ["anim" "slideright"]
+    (def back-pages (cons [name {name (doall (cons ["anim" (if-let [anim (.data a "anim")]
+                                                              anim
+                                                              "slideright")]
                                                    (map #(vector % (.data a %)) ["pid" "bid" "cid"])))}]
                           (take 15 back-pages))))
   (if-let [f (page-dyn-inits name)]
@@ -601,9 +604,10 @@
 (defn show-settings [e origa]
   (load-template "settings")
   (let [pid     (.data origa "pid")
-        menu    ($ "#newpage div.settings toolbar")
+        menu    ($ "#newpage div.settings .toolbar")
         ulPos   ($ "#newpage div.settings ul.menuPos")
         ulHelp  ($ "#newpage div.settings ul.help")
+        liApply ($ "#newpage div.settings ul.apply li")
         li      ($ "<li></li>")
         a       ($ "<a></a>")
         inp     ($ "<input />")
@@ -619,7 +623,18 @@
                                         (.attr "type" type)     
                                         (.attr "name" grp))))))
         update  (fn [e]
-                  (update-settings {}))
+                  (do-settings (fn [settings]
+                                 (let [menuPos (condp = (.val ($ "#content input[name=\"menuPos\"]:checked"))
+                                                 "Top"    :top
+                                                 "Bottom" :bottom)
+                                       help    (.attr ($ "#content input[name=\"help\"]") "checked")]
+                                   (update-settings {:menuOn  (:menuOn settings)
+                                                     :menuPos menuPos
+                                                     :help    help}
+                                                    #(do
+                                                       (trigger-new-page "back" {"back" [["anim" "flipright"]]})
+                                                       false))))) 
+                  false)
         set-settings (fn [settings]
                        (-> ulPos
                          (.append (-> li
@@ -628,11 +643,21 @@
                          (.append (add-inp li "radio" "Top"    "menuPos" (= :top (:menuPos settings))    {"inp" [["type" "top"]]})) 
                          (.append (add-inp li "radio" "Bottom" "menuPos" (= :bottom (:menuPos settings)) {"inp" [["type" "bottom"]]})))
                        (-> ulHelp
-                         (.append (add-inp li "checkbox" "Display Help" "help" (:help settings) {"inp" [["type" "help"]]})) )
+                         (.append (add-inp li "checkbox" "Display Help" "help" (:help settings) {"inp" [["type" "help"]]})))
+                       (-> liApply
+                         (.addClass "addli")
+                         (.append (-> a
+                                    (.clone)
+                                    (.data "anim" "flipright")
+                                    (.attr "href" "back")
+                                    (.text "Apply")
+                                    (.bind "click touchend" update))))
+                       (.submit ($ "#newpage div.settings form") update)
                        (swap-page e origa))]
     (.append menu (-> a
                     (.clone)
                     (.addClass "back")
+                    (.data "anim" "flipright")
                     (.attr "href" "back")
                     (.text "Back")))
     (do-settings set-settings)))
