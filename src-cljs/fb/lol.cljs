@@ -634,7 +634,7 @@
                                                      :menuPos menuPos
                                                      :help    help}
                                                     #(do
-                                                       (trigger-new-page "back" {"back" [["anim" "flipleft"]]})
+                                                       (trigger-new-page "back" nil)
                                                        false)))))
                   false)
         set-settings (fn [settings]
