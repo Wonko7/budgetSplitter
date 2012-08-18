@@ -6,7 +6,7 @@
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
-        [fb.misc :only [mk-settings add-data]]
+        [fb.misc :only [mk-settings add-data trim]]
         ; FIXME get :use to import everything.
         ))
 
@@ -372,7 +372,7 @@
                      li      ($ "<li></li>")
                      inp     ($ "#content div.buddies form [name=\"name\"]")]
                  (.val inp "")
-                 (append-buddy ul li pid (.-insertId r) name 100 0)))]
+                 (append-buddy ul li pid (.-insertId r) (trim name) 100 0)))]
     (.hide ($ "#content div.buddies form ul li.addli a"))
     (if (<= (count name) 0)
       (js/alert "Invalid name")
@@ -527,7 +527,7 @@
                        (rm-cost #(trigger-new-page "proj" {"proj" [["pid" pid] ["anim" "pop"]]}) cid)
                        false)
         rm-budd-page (fn [e]
-                       (rm-buddy #(trigger-new-page "proj" {"proj" [["pid" pid] ["anim" "pop"]]}) bid)
+                       (rm-buddy #(trigger-new-page "buddies" {"buddies" [["bid" bid] ["pid" pid] ["anim" "pop"]]}) bid)
                        false)
         set-rm-budd  (fn [t r]
                        (let [i   (.item (.-rows r) 0)

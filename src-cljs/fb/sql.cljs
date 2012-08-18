@@ -1,7 +1,7 @@
 (ns fb.sql
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.misc :only [mk-settings]]
+        [fb.misc :only [mk-settings trim]]
         ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -74,13 +74,13 @@
 (defn add-proj [name f]
   (.transaction db
                 (fn [t]
-                  (.executeSql t "INSERT INTO projects (name) VALUES (?);" (clj->js [name])
+                  (.executeSql t "INSERT INTO projects (name) VALUES (?);" (clj->js [(trim name)])
                                f))))
 
 (defn add-buddy [proj name img f]
   (.transaction db
                 (fn [t]
-                  (.executeSql t "INSERT INTO buddies (name, pid, img) VALUES (?, ?, ?);" (clj->js [name proj img])
+                  (.executeSql t "INSERT INTO buddies (name, pid, img) VALUES (?, ?, ?);" (clj->js [(trim name) proj img])
                                f
                                #(js/alert (str "fuck. " (.-message %2)))
                                ))))
@@ -88,7 +88,7 @@
 (defn add-cost [name buddies proj amount f]
   (.transaction db
                 (fn [t]
-                  (.executeSql t "INSERT INTO costs (name, pid, tot) VALUES (?, ?, ?);" (clj->js [name proj amount])
+                  (.executeSql t "INSERT INTO costs (name, pid, tot) VALUES (?, ?, ?);" (clj->js [(trim name) proj amount])
                                (fn [t r]
                                  (doseq [[b c] buddies]
                                    (.executeSql t "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"

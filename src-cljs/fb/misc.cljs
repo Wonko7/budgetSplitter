@@ -20,3 +20,6 @@
     (reduce (fn [e [k v]]
               (.data e k v)) elt d)
     elt))
+
+(defn trim [s]
+  (.replace s #"^(.*\S)\s*$" "$1"))
