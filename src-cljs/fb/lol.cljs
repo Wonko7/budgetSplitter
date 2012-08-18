@@ -2,7 +2,7 @@
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
         [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy do-settings
-                       update-settings
+                       update-settings up-cost
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
@@ -169,6 +169,15 @@
                                      (-> ti
                                        (.append (str (.-cname i) ": "))
                                        (.append (money (.-ctot i))))
+                                     (.append ul (-> li
+                                                   (.clone)
+                                                   (.addClass "addli")
+                                                   (.append (-> a
+                                                              (.clone)
+                                                              (.text "Edit")
+                                                              (.data "pid" pid)
+                                                              (.data "cid" cid)
+                                                              (.attr "href" "newcost")))))
                                      (doseq [[name btot ctot] buds]
                                        (.append ul (-> li
                                                      (.clone)
@@ -180,7 +189,6 @@
                                                                 (.append (money btot))
                                                                 (.data "cid" cid)
                                                                 (.data "pid" pid))))))
-
                                      (.append ul (-> li
                                                    (.clone)
                                                    (.addClass "rmli")
@@ -414,6 +422,7 @@
   (let [i     ($ "#content div.newcost form [name=\"name\"]")
         name  (.val i)
         pid   (.data i "pid")
+        cid   (.data i "cid")
         alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
         total (reduce + (for [i alli]
                           (int (.val ($ i)))))
@@ -422,14 +431,22 @@
       (js/alert "Invalid name")
       (if (<= total 0)
         (js/alert "No money")
-        (add-cost name (for [i alli :let [e ($ i)] :when (> (count (.val e)) 0)]
-                         [(int (.data e "bid")) (int (.val e))])
-                  pid total done)))
+        (if cid
+          (up-cost cid name
+                   (for [i alli :let [e ($ i)] :when (> (count (.val e)) 0)]
+                              [(int (.data e "bid")) (int (.val e))])
+                   (for [i alli :let [e ($ i)] :when (zero? (count (.val e)))]
+                     [(int (.data e "bid"))])
+                   pid total done)
+          (add-cost name (for [i alli :let [e ($ i)] :when (> (count (.val e)) 0)]
+                           [(int (.data e "bid")) (int (.val e))])
+                    pid total done))))
     false))
 
 (defn show-new-cost [e origa]
   (load-template "newcost")
   (let [pid     (.data origa "pid")
+        cid     (.data origa "cid")
         inp     ($ "#newpage div.newcost form [name=\"name\"]")
         ul      ($ "#newpage div.newcost form div.buddieslist ul")
         label   ($ "<label></label>")
@@ -444,7 +461,6 @@
                                 addb  ($ "#content div.newcost form div.buddieslist ul li.addli a")
                                 tot   (reduce + (for [i alli]
                                                   (int (.val ($ i)))))]
-                            (js/console.log tot)
                             (if (.data inp "bid")
                               (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1")))
                             (.html total (money tot))
@@ -454,29 +470,38 @@
         set-buddy-data  (fn [id name tot tx]
                           (-> inp
                             (.keyup validate)
+                            (.data "cid" cid) 
                             (.data "pid" pid))
                           (do-buddies (fn [tx r]
                                         (if (> (.-length (.-rows r)) 0)
-                                          (do
-                                            (do-row #(-> ul
-                                                       (.append (-> li
-                                                                  (.clone)
-                                                                  (.append (-> label
-                                                                             (.clone)
-                                                                             (.append (buddy (.-name %)))
-                                                                             (.append ":")))
-                                                                  (.append (-> binput
-                                                                             (.clone)
-                                                                             (.data "pid" pid)
-                                                                             (.data "bid" (.-id %))
-                                                                             (.attr "placeholder" (str (.-name %) " paid..."))
-                                                                             (.keyup validate)))
-                                                                  (.bind "focus click touchend"
-                                                                         (fn [e]
-                                                                           (.trigger (.children ($ (.-currentTarget e))
-                                                                                                "input")
-                                                                                     "focus"))))))
-                                                    r)
+                                          (let [buds (if cid 
+                                                       (for [b (row-seq r)]
+                                                         [(.-bname b) (.-id b) (.-btot b)])
+                                                       (for [b (row-seq r)]
+                                                         [(.-bname b) (.-id b) 0]))]
+                                            (doseq [[bname bid btot] buds]
+                                              (-> ul
+                                                (.append (-> li
+                                                           (.clone)
+                                                           (.append (-> label
+                                                                      (.clone)
+                                                                      (.append (buddy bname))
+                                                                      (.append ":")))
+                                                           (.append (-> binput
+                                                                      (.clone)
+                                                                      (.data "pid" pid)
+                                                                      (.data "bid" bid)
+                                                                      (#(if (zero? btot)
+                                                                          (.attr % "placeholder" (str (.-name %) " paid..."))  
+                                                                          (.val % btot)))
+                                                                      (.keyup validate)))
+                                                           (.bind "focus click touchend"
+                                                                  (fn [e]
+                                                                    (.trigger (.children ($ (.-currentTarget e))
+                                                                                         "input")
+                                                                              "focus")))))))
+                                            (when cid 
+                                              (.val inp (.-cname (.item (.-rows r) 0))))
                                             (.append ul (-> li
                                                           (.clone)
                                                           (.addClass "addli")
@@ -485,16 +510,15 @@
                                                                      (.text "Add")
                                                                      (.attr "href" "null")
                                                                      (.bind "click touchend" add-page-cost))))))
-                                          (do
-                                            ;(.remove ($ "#content div.newcost form input[type=\"submit\"]"))
-                                            (.append ul (-> li
-                                                          (.clone)
-                                                          (.append (-> ($ "<a></a>")
-                                                                     (.attr "href" "buddies")
-                                                                     (.data "pid" pid)
-                                                                     (.text "Add buddies first!"))))))))
-                                      pid)
+                                          (.append ul (-> li
+                                                        (.clone)
+                                                        (.append (-> ($ "<a></a>")
+                                                                   (.attr "href" "buddies")
+                                                                   (.data "pid" pid)
+                                                                   (.text "Add buddies first!")))))))
+                                      pid cid)
                           (.submit ($ "#newpage div.newcost form") add-page-cost)
+                          (.bind ($ "#newpage") "pageAnimationEnd" #(.trigger inp "keyup"))
                           (swap-page e origa))]
     (set-title-project set-buddy-data pid)))
 

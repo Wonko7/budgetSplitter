@@ -85,6 +85,9 @@
                                #(js/alert (str "fuck. " (.-message %2)))
                                ))))
 
+(defn up-cost [cid name buddies budds-none proj amount f]
+  (js/console.log (str "not paying:" budds-none)) 
+  (js/console.log (str "paying:" buddies)))
 (defn add-cost [name buddies proj amount f]
   (.transaction db
                 (fn [t]
@@ -141,15 +144,25 @@
   (for [i (range (.-length (.-rows r)))]
     (.item (.-rows r) i)))
 
-(defn do-buddies [f pid]
-  (let [rq (str "SELECT buddies.name, buddies.id, buddies.img, SUM(relcbp.tot) AS btot, SUM(costs.tot) AS ptot "
-                "FROM buddies, relcbp, costs "
-                "WHERE buddies.id = relcbp.bid AND buddies.pid = " pid " and relcbp.pid = " pid " AND costs.pid = " pid " AND relcbp.cid = costs.id "
-                "GROUP BY buddies.id "
-                "UNION ALL SELECT buddies.name, buddies.id, buddies.img, 0 AS btot, 100 AS ptot FROM buddies "
-                "WHERE buddies.pid = " pid " "
-                "AND NOT EXISTS (SELECT * FROM relcbp, costs WHERE buddies.id = relcbp.bid AND buddies.pid = relcbp.pid AND relcbp.cid = costs.id AND costs.pid = buddies.pid)"
-                " ;")]
+(defn do-buddies [f pid & [cid]]
+  (let [rq (if cid
+             (str "SELECT buddies.name AS bname, buddies.id, buddies.img, relcbp.tot AS btot, SUM(costs.tot) AS ptot, costs.name AS cname "
+                  "FROM buddies, relcbp, costs "
+                  "WHERE buddies.id = relcbp.bid AND buddies.pid = " pid " and relcbp.pid = " pid " AND costs.pid = " pid " AND relcbp.cid = costs.id "
+                  "AND relcbp.cid = " cid " "
+                  "GROUP BY buddies.id "
+                  "UNION ALL SELECT buddies.name, buddies.id, buddies.img, 0 AS btot, 0 AS ptot, 0 AS cname FROM buddies "
+                  "WHERE buddies.pid = " pid " "
+                  "AND NOT EXISTS (SELECT * FROM relcbp WHERE buddies.id = relcbp.bid AND relcbp.cid = " cid " ) "
+                  " ;")
+             (str "SELECT buddies.name AS bname, buddies.id, buddies.img, SUM(relcbp.tot) AS btot, SUM(costs.tot) AS ptot "
+                  "FROM buddies, relcbp, costs "
+                  "WHERE buddies.id = relcbp.bid AND buddies.pid = " pid " and relcbp.pid = " pid " AND costs.pid = " pid " AND relcbp.cid = costs.id "
+                  "GROUP BY buddies.id "
+                  "UNION ALL SELECT buddies.name, buddies.id, buddies.img, 0 AS btot, 100 AS ptot FROM buddies "
+                  "WHERE buddies.pid = " pid " "
+                  "AND NOT EXISTS (SELECT * FROM relcbp, costs WHERE buddies.id = relcbp.bid AND buddies.pid = relcbp.pid AND relcbp.cid = costs.id AND costs.pid = buddies.pid)"
+                  " ;"))]
     (do-select f rq)))
 
 (defn rm [rq & [f]]

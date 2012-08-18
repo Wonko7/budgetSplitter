@@ -35,6 +35,7 @@ body {
 	display: inline;
 }
 
+/*
 a:link {
 	color:#00FF00;
 }
@@ -47,6 +48,7 @@ a:hover {
 a:active {
 	color:#00FF00;
 }
+*/
 
 .cleft {
 	padding:1px 0;
@@ -120,3 +122,15 @@ div.menu, ul.menu, li.menu {
 .addbutton {
 	color: none;
 }
+
+.toolbar h1 a {
+	font-weight: none;
+	font-size: 20px;
+	font-weight: bold;
+	line-height: 1.3em;
+	text-align: center;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+	color: white;
+	text-shadow: #161717 0 -1px 0;
+} 

@@ -65,20 +65,26 @@
                      id       (.-id i)
                      tot      (.-tot i)
                      settings (mk-settings r)
-                     a        (.addClass ($ "<a></a>") "button")]
+                     a        ($ "<a></a>")]
                  (-> ($ "#newpage div.top")
                    (.data "pid" pid)
                    (.append (-> ($ "<div class=\"toolbar\"></div>")
                               (.append (-> ($ "<h1></h1>")
-                                         (.append (str n ": "))
-                                         (.append (money tot))))
+                                         (.append (-> a
+                                                    (.clone)
+                                                    (.attr "href" "proj")
+                                                    (.data "pid" pid)
+                                                    (.append (str n ": "))
+                                                    (.append (money tot))))))
                               (.append (-> a
                                          (.clone)
                                          (.addClass "back")
+                                         (.addClass "button")
                                          (.attr "href" "back")
                                          (.text "Back")))
                               (.append (-> a
                                          (.clone)
+                                         (.addClass "button")
                                          (.attr "href" "menu")
                                          (.text "Menu")
                                          (.bind "click touchend"
