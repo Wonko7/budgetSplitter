@@ -7,149 +7,13 @@
                        nuke-db rm-proj rm-cost rm-buddy]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
         [fb.misc :only [mk-settings add-data trim num]]
+        [fb.pages :only [add-page-init! load-template swap-page trigger-new-page]]
         ; FIXME get :use to import everything.
         ))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;; page loading
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(def page-dyn-inits {})
-(def back-pages nil)
-(def jQT nil)
-
-(defn add-init! [name func]
-  (def page-dyn-inits (into page-dyn-inits {name func})))
-
-(defn load-template [name]
-  (let [temp ($ (str "div.hidden div." name))
-        temp (if (zero? (.-length temp)) ($ "div.hidden div.404") temp)
-        body ($ "body")
-        newp (.hide ($ "<div id=\"newpage\"></div>"))]
-    (.append body
-             (-> newp
-               (.append ($ "<div class=\"top\"></div>"))
-               (.append (.append ($ "<div class=\"middle\"></div>")
-                                 (.clone temp)))
-               (.append ($ "<div class=\"bottom\"></div>"))
-               (.append )))))
-
-(defn swap-page [e a]
-  (let [newp (.show ($ "#newpage"))
-        cont ($ "#content")
-        anim (.data a "anim")]
-    (if anim
-      (.goTo jQT "#newpage" anim)
-      (.goTo jQT "#newpage" "slideleft"))
-    (.attr newp "id" "content")
-    (.attr cont "id" "old")))
-
-; FIXME add this to an init function
-($ #(.bind ($ "body") "pageAnimationEnd" (fn [e info]
-                                           (.remove ($ "#old")))))
-
-(defn load-dyn-page [name e a]
-  (when (= name "settings")
-    (let [[[name data] & back-end] back-pages]
-      (def back-pages
-        (cons [name {name (replace {["anim" "slideright"] ["anim" "flipleft"]} (name data))}]
-              back-end))))
-  (when (not= name "back")
-    (def back-pages (cons [name {name (doall (cons ["anim" "slideright"]
-                                                   (map #(vector % (.data a %)) ["pid" "bid" "cid"])))}]
-                          (take 15 back-pages))))
-  (if-let [f (page-dyn-inits name)]
-    (f e a)
-    (do
-      (load-template name)
-      (swap-page e a))))
-
-; FIXME add this to an init function
-($ #(delegate ($ "body") "a" "click touchend"
-              (fn [e]
-                (let [a    ($ (first ($ (.-currentTarget e))))
-                      link (.attr a "href")]
-                  (if (= "mailto" (apply str (take 6 link)))
-                    true
-                    (do
-                      (load-dyn-page link e a)
-                      false))))))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; pages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; show all projects
-(defn show-projects [e a]
-  (load-template "projects")
-  (let [li ($ "<li></li>")
-        ul (.append ($ "#newpage div ul")
-                    (-> li
-                      (.clone)
-                      (.addClass "addli")
-                      (.append (-> ($ "<a></a>")
-                                 (.text "New Project")
-                                 (.attr "href" "new")))))]
-    (do-proj (fn [t r]
-               (do-row (fn [i]
-                         (.append ul (-> li
-                                       (.clone)
-                                       ;(.addClass "arrow")
-                                       (.append (-> ($ "<a></a>")
-                                                  (.text (.-name i))
-                                                  (.attr "href" "proj")
-                                                  (.data "pid" (.-id i)))))))
-                       r)
-               (swap-page e a)))))
-
-;; show a project and its costs
-;; FIXME:;(.addClass "arrow")
-(defn show-proj [e origa]
-  (load-template "proj")
-  (let [pid     (.data origa "pid")
-        li      ($ "<li></li>")
-        a       ($ "<a></a>")
-        ul      (.append ($ "#newpage div.proj ul")
-                         (-> li
-                           (.clone)
-                           (.addClass "addli")
-                           (.append (-> ($ "<a></a>")
-                                      (.text "Add Expense")
-                                      (.data "pid" pid)
-                                      (.attr "href" "newcost")))))
-        set-proj-data (fn [id name tot tx]
-                        (.data ($ "#newpage div.proj div.menu a") "pid" pid)
-                        (do-costs (fn [tx r]
-                                    (let [costs   (for [c (row-seq r)]
-                                                    [(.-id c) (.-name c) (.-tot c)])
-                                          maxpaid (apply max (map #(nth % 2) costs))]
-                                      (doseq [[cid name tot] costs]
-                                        (.append ul (-> li
-                                                      (.clone)
-                                                      (set-rect-back maxpaid tot)
-                                                      (.append (-> a
-                                                                 (.clone)
-                                                                 (.text (str name ": " ))
-                                                                 (.append (money tot))
-                                                                 (.data "cid" cid)
-                                                                 (.data "pid" pid)
-                                                                 (.attr "href" "cost"))))))
-                                      (.append ul (-> li
-                                                    (.clone)
-                                                    (.addClass "rmli")
-                                                    (.append (-> a
-                                                               (.clone)
-                                                               (.text "Delete Project")
-                                                               (.data "pid" pid)
-                                                               (.data "rm" "proj")
-                                                               (.data "anim" "pop")
-                                                               (.attr "href" "rm")))))))
-                                  pid)
-                        (swap-page e origa))]
-    (set-title-project set-proj-data pid)))
-
 ;; show a cost detail: buddies
 (defn show-cost [e origa]
   (load-template "cost")
@@ -259,125 +123,14 @@
                          (swap-page e origa))]
     (set-title-project set-total-data pid)))
 
-(defn show-buddy [e origa]
-  (load-template "indivbuddy")
-  (let [pid           (.data origa "pid")
-        bid           (.data origa "bid")
-        ul            ($ "#newpage div.indivbuddy div.list ul")
-        title         ($ "#newpage div.indivbuddy h2 div.title")
-        li            ($ "<li></li>")
-        a             ($ "<a></a>")
-        ;; name edition:
-        validate      #(let [addb ($ "#content div.indivbuddy div.editname a")]
-                         (if (zero? (count (.val ($ "#content div.indivbuddy div.editname input"))))
-                           (.hide addb)
-                           (.show addb)))
-        update-name   (fn [e]
-                       (let [v    (.val ($ "#content div.indivbuddy div.editname input"))
-                             done (fn [e]
-                                    (do-buddy #(do 
-                                                 (.text ($ "#content div.indivbuddy h2 div.title span.buddy")
-                                                        (.-bname (.item (.-rows %2) 0)))
-                                                 (.trigger ($ "#content div.indivbuddy div.list li.addli a") "click"))
-                                              bid))]
-                         (if (zero? (count v))
-                           (js/alert "Empty name")
-                           (up-buddy bid v "img" done)))
-                        false)
-        edit-name     (fn [e]
-                        (let [a       ($ (first ($ (.-currentTarget e))))
-                              editdiv ($ "#content div.indivbuddy div.editname")
-                              editbut ($ "#content div.indivbuddy div.list li.addli a")]
-                        (if (.is editdiv ":visible")
-                          (do
-                            (.text a "Edit Name")
-                            (.hide editdiv))
-                          (do
-                            (.show editdiv)
-                            (.text a "Cancel Edit Name")
-                            (.hide ($ "#content div.indivbuddy div.editname a")))))
-                        false)
-        set-edit      (fn [bname]
-                        (let [div  (.hide ($ "#newpage div.indivbuddy div.editname"))
-                              inp  (.val ($ "#newpage div.indivbuddy div.editname input") bname)]
-                          (.hide ($ "#newpage div.indivbuddy div.editname"))
-                          (.bind ($ "#newpage div.indivbuddy div.editname li.addli a") "click touchend" update-name)  
-                          (.submit ($ "#newpage div.indivbuddy div.editname form") update-name)  
-                          (.keyup inp validate)
-                          (.append ul (-> li
-                                        (.clone)
-                                        (.addClass "addli")
-                                        (.append (-> a
-                                                   (.clone)
-                                                   (.text "Edit name")
-                                                   (.data "pid" pid)
-                                                   (.data "bid" bid)
-                                                   (.attr "href" "null")
-                                                   (.bind "click touchend" edit-name)))))
-                          ))
-        ;; set page data:
-        set-budd-data (fn [id name tot tx]
-                        (do-buddy (fn [tx r]
-                                    (let [i       (.item (.-rows r) 0)
-                                          nbc     (.-length (.-rows r))
-                                          costs   (for [c (row-seq r)]
-                                                    [(.-cname c) (.-ctot c) (.-btot c)])
-                                          tot     (reduce + (map #(nth % 2) costs))
-                                          maxpaid (apply max (map #(nth % 2) costs))
-                                          bname   (buddy (.-bname i))]
-                                      (-> title
-                                        (.append (.clone bname))
-                                        (.append "'s total contribution: ")
-                                        (.append (money tot)))
-                                      (set-edit (.-bname i))
-                                      (when (< 0 tot)
-                                        (doseq [[cname ctot btot] costs]
-                                          (.append ul (-> li
-                                                        (.clone)
-                                                        (.append cname)
-                                                        (.append ": ")
-                                                        (.append (.clone bname))
-                                                        (.append " paid ")
-                                                        (.append (money btot))
-                                                        (.append " of ")
-                                                        (.append (money ctot))
-                                                        (set-rect-back maxpaid btot)))))
-                                      (.append ul (-> li
-                                                    (.clone)
-                                                    (.addClass "rmli")
-                                                    (.append (-> a
-                                                               (.clone)
-                                                               (.text "Delete Buddy")
-                                                               (.data "pid" pid)
-                                                               (.data "bid" bid)
-                                                               (.data "rm" "buddy")
-                                                               (.data "anim" "pop")
-                                                               (.attr "href" "rm"))))))
-                                    (swap-page e origa))
-                                  bid))]
-    (set-title-project set-budd-data pid)))
 
-
-(add-init! "projects" show-projects)
-(add-init! "proj" show-proj)
-(add-init! "cost" show-cost)
-(add-init! "total" show-total)
-(add-init! "indivbuddy" show-buddy)
+(add-page-init! "cost" show-cost)
+(add-page-init! "total" show-total)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; forms
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; trigger a click to load new page
-(defn trigger-new-page [href data]
-  (-> ($ "<a></a>")
-    (.hide)
-    (.attr "href" href)
-    (add-data href data)
-    ;(#(reduce (fn [a [k v]] (.data a k v)) %1 data))
-    (.appendTo ($ "#content"))
-    (.click)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; create new project:
@@ -406,64 +159,6 @@
     (.bind addb "click touchend" add-page-project)
     (swap-page e origa)))
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; show buddies & add form
-
-(defn append-buddy [ul li pid bid name ptot btot]
-  (.append ul (-> li
-                (.clone)
-                (.append (-> ($ "<a></a>")
-                           (.append (buddy name))
-                           (.append ": ")
-                           (.append (money btot))
-                           (.attr "href" "indivbuddy")
-                           (.data "bid" bid)
-                           (.data "pid" pid)))
-                (set-rect-back ptot btot))))
-
-(defn add-page-buddy []
-  (let [i    ($ "#content div.buddies form [name=\"name\"]")
-        name (.val i)
-        pid  (.data i "pid")
-        addb (fn [tx r]
-               (let [ul      ($ "#content div.buddies form div.list ul")
-                     li      ($ "<li></li>")
-                     inp     ($ "#content div.buddies form [name=\"name\"]")]
-                 (.val inp "")
-                 (append-buddy ul li pid (.-insertId r) (trim name) 100 0)))]
-    (.hide ($ "#content div.buddies form ul li.addli a"))
-    (if (<= (count name) 0)
-      (js/alert "Invalid name")
-      (add-buddy pid name "img" addb)))
-  false)
-
-(defn show-buddies [e origa]
-  (load-template "buddies")
-  (let [pid     (.data origa "pid")
-        inp     ($ "#newpage div.buddies form [name=\"name\"]")
-        ul      ($ "#newpage div.buddies form div.list ul")
-        add     ($ "#newpage div.buddies form ul li.addli a")
-        li      ($ "<li></li>")
-        validate        (fn [e]
-                          (let [inp   ($ (.-currentTarget e))
-                                addb  ($ "#content div.buddies form ul li.addli a") ]
-                            (if (zero? (count (.val inp)))
-                              (.hide addb)
-                              (.show addb))))
-        set-buddy-data  (fn [id name tot tx]
-                          (-> inp
-                            (.keyup validate)
-                            (.data "pid" pid))
-                          (.submit ($ "#newpage div.buddies form") add-page-buddy)
-                          (-> add
-                            (.hide)
-                            (.bind "touchend click" add-page-buddy))
-                          (do-buddies (fn [tx r]
-                                        (do-row #(append-buddy ul li pid (.-id %) (.-bname %) (.-ptot %) (.-btot %))
-                                                r))
-                                      pid)
-                          (swap-page e origa))]
-    (set-title-project set-buddy-data pid)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; new-cost
@@ -574,14 +269,6 @@
                           (.bind ($ "#newpage") "pageAnimationEnd" #(.trigger inp "keyup"))
                           (swap-page e origa))]
     (set-title-project set-buddy-data pid)))
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; back;
-
-(defn go-back [e]
-  (let [[x [name d] & bs] back-pages]
-    (def back-pages bs)
-    (trigger-new-page name d)))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; rm;
@@ -742,12 +429,10 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; inits;
 
-(add-init! "buddies" show-buddies)
-(add-init! "new" show-new-form)
-(add-init! "newcost" show-new-cost)
-(add-init! "rm" show-rm)
-(add-init! "back" go-back)
-(add-init! "settings" show-settings)
+(add-page-init! "new" show-new-form)
+(add-page-init! "newcost" show-new-cost)
+(add-page-init! "rm" show-rm)
+(add-page-init! "settings" show-settings)
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
