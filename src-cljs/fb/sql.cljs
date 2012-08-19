@@ -85,6 +85,13 @@
                                #(js/alert (str "fuck. " (.-message %2)))
                                ))))
 
+(defn up-buddy [bid name img f]
+  (.transaction db
+                (fn [t]
+                  (.executeSql t
+                               (str "UPDATE buddies SET name = ?, img = ? WHERE id = " bid "; ")
+                               (clj->js [(trim name) img])
+                               f))))
 
 (defn up-cost [cid name buddies-add buddies-up buddies-rm proj amount f]
   (let [do-cbud (fn [f rq vals]
