@@ -120,17 +120,21 @@
 
 (defn do-proj [f & [id]]
   (let [rq (if id
-             (str "SELECT projects.id, projects.name, SUM(costs.tot) AS tot, settings.menuOn, settings.menuPos, settings.help FROM projects, costs, settings "
-                  "WHERE projects.id = " id " AND costs.pid = projects.id "
+             (str "SELECT projects.id, projects.name, SUM(relcbp.tot) AS tot, settings.menuOn, settings.menuPos, settings.help FROM projects, relcbp, settings "
+                  "WHERE projects.id = " id " AND relcbp.pid = projects.id "
                   "GROUP BY projects.id "
                   "UNION ALL SELECT  projects.id, projects.name, 0 AS tot, settings.menuOn, settings.menuPos, settings.help FROM projects, settings "
-                  "WHERE projects.id = " id " AND NOT EXISTS (SELECT * FROM costs WHERE projects.id = costs.pid )"
+                  "WHERE projects.id = " id " AND NOT EXISTS (SELECT * FROM relcbp WHERE projects.id = relcbp.pid )"
                   " ;")
              "SELECT * FROM projects;")]
     (do-select f rq)))
 
 (defn do-costs [f id]
-  (let [rq (str "SELECT * FROM costs WHERE costs.pid = " id ";" )]
+  (let [rq (str "SELECT costs.name, costs.id, SUM(relcbp.tot) AS tot FROM costs, relcbp "
+                "WHERE costs.pid = " id " "
+                "AND relcbp.cid = costs.id "
+                "GROUP BY costs.id "
+                ";" )]
     (do-select f rq)))
 
 (defn do-cost [f id]
@@ -143,7 +147,7 @@
   (let [rq (str "SELECT costs.name AS cname, buddies.name AS bname, costs.tot AS ctot, relcbp.tot AS btot "
                 "FROM costs, relcbp, buddies "
                 "WHERE relcbp.bid = " id " AND relcbp.cid = costs.id AND relcbp.bid = buddies.id "
-                "GROUP BY costs.name "
+                "GROUP BY costs.id "
                 "UNION ALL SELECT 0 AS cname, buddies.name AS bname, 0 AS ctot, 0 AS btot FROM buddies "
                 "WHERE buddies.id = " id " "
                 "AND NOT EXISTS (SELECT * FROM relcbp WHERE relcbp.bid = " id " );"
