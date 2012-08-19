@@ -216,7 +216,7 @@
                                             av      (/ tot nbb)
                                             abs     #(if (< 0 %) % (- %))
                                             buds    (for [b (row-seq r)]
-                                                      [(abs (- av (.-btot b))) (.-btot b) (.-name b)])
+                                                      [(abs (- av (.-btot b))) (.-btot b) (.-bname b)])
                                             divbuds (group-by #(> av (second %)) buds)
                                             maxpaid (apply max (map #(second %) buds))
                                             cmp     #(< (.-btot %1) (.-btot %2))
@@ -409,7 +409,7 @@
                             (.hide)
                             (.bind "touchend click" add-page-buddy))
                           (do-buddies (fn [tx r]
-                                        (do-row #(append-buddy ul li pid (.-id %) (.-name %) (.-ptot %) (.-btot %))
+                                        (do-row #(append-buddy ul li pid (.-id %) (.-bname %) (.-ptot %) (.-btot %))
                                                 r))
                                       pid)
                           (swap-page e origa))]
@@ -442,7 +442,7 @@
                    pid total done)
           (add-cost name
                     (for [i alli :let [e ($ i)] :when (> (.val e) 0)]
-                           [(int (.data e "bid")) (int (.val e))])
+                      [(int (.data e "bid")) (int (.val e))])
                     pid total done))))
     false))
 
