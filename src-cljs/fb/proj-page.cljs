@@ -11,7 +11,36 @@
         ; FIXME get :use to import everything.
         ))
 
+
+;; new project page:
+
+(defn add-page-project []
+  (let [name (.val ($ "#content div.new form [name=\"name\"]"))
+        addp (fn [tx r]
+               (trigger-new-page "proj" {"proj" [["pid" (.-insertId r)]]}))]
+    ; FIXME make contracts
+    (if (<= (count name) 0)
+      (js/alert "Invalid name")
+      (add-proj name addp)))
+  false)
+
+(defn show-new-form [e origa]
+  (load-template "new")
+  (let [addb ($ "#newpage div.new form ul li a")
+        inp  ($ "#newpage div.new form [name=\"name\"]")
+        validate #(let [z? (zero? (count (.val inp)))]
+                    (if z?
+                      (.hide addb)
+                      (.show addb)))]
+    (.hide addb)
+    (.keyup inp validate)
+    (.submit ($ "#newpage div.new form") add-page-project)
+    (.bind addb "click touchend" add-page-project)
+    (swap-page e origa)))
+
+
 ;; show all projects
+
 (defn show-projects [e a]
   (load-template "projects")
   (let [li ($ "<li></li>")
@@ -34,7 +63,9 @@
                        r)
                (swap-page e a)))))
 
+
 ;; show a project and its costs
+
 ;; FIXME:;(.addClass "arrow")
 (defn show-proj [e origa]
   (load-template "proj")
@@ -81,4 +112,5 @@
     (set-title-project set-proj-data pid)))
 
 (add-page-init! "projects" show-projects)
+(add-page-init! "new" show-new-form)
 (add-page-init! "proj" show-proj)

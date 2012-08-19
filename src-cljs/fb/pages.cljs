@@ -47,6 +47,10 @@
 ; FIXME add this to an init function
 ($ #(.bind ($ "body") "pageAnimationEnd" (fn [e info]
                                            (.remove ($ "#old")))))
+($
+  ;#(def jQT (.jQTouch js/jQuery (clj->js {:icon "img/icon.png"}))) ; FIXME get this working with $
+  #(def jQT (.jQTouch js/jQuery (js-obj "icon" "img/icon.png"))) ; FIXME get this working with $
+ )
 
 (defn load-dyn-page [name e a]
   (when (= name "settings")
@@ -84,7 +88,6 @@
     ;(#(reduce (fn [a [k v]] (.data a k v)) %1 data))
     (.appendTo ($ "#content"))
     (.click)))
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; back;
