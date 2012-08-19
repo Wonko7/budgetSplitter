@@ -23,3 +23,6 @@
 
 (defn trim [s]
   (.replace s #"^(.*\S)\s*$" "$1"))
+
+(defn num [n]
+  (js/Number n))

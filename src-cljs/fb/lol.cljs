@@ -6,7 +6,7 @@
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
-        [fb.misc :only [mk-settings add-data trim]]
+        [fb.misc :only [mk-settings add-data trim num]]
         ; FIXME get :use to import everything.
         ))
 
@@ -425,7 +425,7 @@
         cid   (.data i "cid")
         alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
         total (reduce + (for [i alli]
-                          (int (.val ($ i)))))
+                          (num (.val ($ i)))))
         done  #(trigger-new-page "proj" {"proj" [["pid" pid]]})]
     (if (<= (count name) 0) ;; FIXME with contracts, also better notifs.
       (js/alert "Invalid name")
@@ -434,15 +434,15 @@
         (if cid
           (up-cost cid name
                    (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (zero? rid) (> (.val e) 0))]             ; New relation
-                     [(.data e "bid") (int (.val e))])
+                     [(.data e "bid") (num (.val e))])
                    (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (> (.val e) 0))]               ; Update rel
-                     [(.data e "rid") (int (.val e))])
-                   (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (zero? (int (.val e))))]       ; rm rel
+                     [(.data e "rid") (num (.val e))])
+                   (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (zero? (num (.val e))))]       ; rm rel
                      [(.data e "bid") (.data e "rid")])
                    pid total done)
           (add-cost name
                     (for [i alli :let [e ($ i)] :when (> (.val e) 0)]
-                      [(int (.data e "bid")) (int (.val e))])
+                      [(num (.data e "bid")) (num (.val e))])
                     pid total done))))
     false))
 
@@ -454,7 +454,7 @@
         ul      ($ "#newpage div.newcost form div.buddieslist ul")
         label   ($ "<label></label>")
         li      ($ "<li></li>")
-        binput  ($ "<input type=\"text\" class=\"numbers\" name=\"tot\" />")
+        binput  ($ "<input type=\"number\" step=\"any\" min=\"0\" class=\"numbers\" name=\"tot\" />")
         validate        (fn [e]
                           (let [inp   ($ (.-currentTarget e))
                                 v     (.val inp)
@@ -462,10 +462,10 @@
                                 alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
                                 name  (.val ($ "#content div.newcost form [name=\"name\"]"))
                                 addb  ($ "#content div.newcost form div.buddieslist ul li.addli a")
-                                tot   (reduce + (for [i alli]
-                                                  (int (.val ($ i)))))]
-                            (if (.data inp "bid")
-                              (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*)?.*$" "$1")))
+                                tot   (reduce + 0 (for [i alli]
+                                                    (num (.val ($ i)))))]
+                            ;(if (.data inp "bid")
+                            ;  (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*).*$" "$1")))
                             (.html total (money tot))
                             (if (or (<= tot 0) (<= (count name) 0))
                               (.hide addb)
