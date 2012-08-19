@@ -84,12 +84,13 @@
                                f
                                #(js/alert (str "fuck. " (.-message %2)))
                                ))))
-(defn do-cbud [f rq vals]
-  (fn [t r]
-    (.executeSql t rq (clj->js vals) f #(js/alert (str "rm fuck. " (.-message %2))))))
+
 
 (defn up-cost [cid name buddies-add buddies-up buddies-rm proj amount f]
-  (let [addrq "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
+  (let [do-cbud (fn [f rq vals]
+                  (fn [t r]
+                    (.executeSql t rq (clj->js vals) f #(js/alert (str "fuck. " (.-message %2))))))
+        addrq "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
         uprq   #(str "UPDATE relcbp SET tot = ? WHERE id = " % ";")
         rmrq   #(str "DELETE FROM relcbp WHERE id = " % ";")
         fns    (reduce #(do-cbud %1 addrq [proj (first %2) cid (second %2)]) f   buddies-add)
@@ -103,20 +104,19 @@
                                  fns)))))
 
 (defn add-cost [name buddies proj amount f]
-  (.transaction db
-                (fn [t]
-                  (.executeSql t "INSERT INTO costs (name, pid, tot) VALUES (?, ?, ?);" (clj->js [(trim name) proj amount])
-                               (fn [t r]
-                                 (doseq [[b c] buddies]
-                                   (.executeSql t "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
-                                                (clj->js [proj b (.-insertId r) c])
-                                                ; #(js/alert (str "relcpb fuck. " (.-message %2)))
-                                                ; #(js/alert (str :done [proj b (.-insertId r) 3] ))
-                                                ; #(js/alert (str :failed [proj b (.-insertId r) 3] ))
-                                                )))
-                               ;#(js/alert "costs failed. " (.-message %2))
-                               )))
-  (f)) ; FIXME; this is the only function where user fun called potentially before finishing transaction. important?
+  (let [do-cbud (fn [f vals]
+                  (fn [t r]
+                    (.executeSql t
+                                 "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
+                                 (clj->js vals)
+                                 f #(js/alert (str "fuck. " (.-message %2))))))]
+    (.transaction db
+                  (fn [t]
+                    (.executeSql t
+                                 "INSERT INTO costs (name, pid, tot) VALUES (?, ?, ?);"
+                                 (clj->js [(trim name) proj amount])
+                                 (fn [t r]
+                                  ((reduce #(do-cbud %1 [proj (first %2) (.-insertId r) (second %2)]) f buddies) t r)))))))
 
 (defn do-proj [f & [id]]
   (let [rq (if id

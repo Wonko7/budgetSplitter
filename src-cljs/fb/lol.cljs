@@ -440,7 +440,8 @@
                    (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (zero? (int (.val e))))]       ; rm rel
                      [(.data e "bid") (.data e "rid")])
                    pid total done)
-          (add-cost name (for [i alli :let [e ($ i)] :when (> (.val e) 0)]
+          (add-cost name
+                    (for [i alli :let [e ($ i)] :when (> (.val e) 0)]
                            [(int (.data e "bid")) (int (.val e))])
                     pid total done))))
     false))
