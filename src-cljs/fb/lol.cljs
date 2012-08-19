@@ -116,7 +116,7 @@
                            (.clone)
                            (.addClass "addli")
                            (.append (-> ($ "<a></a>")
-                                      (.text "Add Cost")
+                                      (.text "Add Expense")
                                       (.data "pid" pid)
                                       (.attr "href" "newcost")))))
         set-proj-data (fn [id name tot tx]
@@ -194,7 +194,7 @@
                                                    (.addClass "rmli")
                                                    (.append (-> a
                                                               (.clone)
-                                                              (.text "Delete Cost")
+                                                              (.text "Delete Expense")
                                                               (.data "pid" pid)
                                                               (.data "cid" cid)
                                                               (.data "rm" "cost")
@@ -583,7 +583,7 @@
                          (-> ul
                            (.append (-> li
                                       (.clone)
-                                      (.append (str "Delete cost " (.-cname i) "?"))))
+                                      (.append (str "Delete Expense " (.-cname i) "?"))))
                            (.append (-> li
                                       (.clone)
                                       (.append (str "Total: "))

@@ -41,7 +41,7 @@
         li  ($ "<li></li>")
         a   ($ "<a></a>")
         data {"settings" [["anim" "flipright"]]}
-        ll  [["Costs" "proj"]
+        ll  [["Expenses" "proj"]
              ["Buddies" "buddies"]]
         lr  [["Total" "total"]
              ["Settings" "settings"]]

@@ -200,7 +200,7 @@
         ;        "DELETE FROM buddies WHERE buddies.pid = " pid " ; "
         ;        "DELETE FROM costs WHERE costs.pid = " pid " ; "
         ;        "DELETE FROM relcbp WHERE relcbp.pid = " pid " ; "
-        ;        "COMMIT;")
+        ;        "COMMIT;") ;; FIXME à faire marcher en une requete
         ]
     (.transaction db (rm rq-p (rm rq-b (rm rq-c (rm rq-r f)))))
     ;(.transaction db (fn [t r] (.executeSql t rq (clj->js []) f   #(js/alert (str "rm fuck. " (.-message %2))))))
