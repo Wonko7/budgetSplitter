@@ -433,12 +433,14 @@
         (js/alert "No money")
         (if cid
           (up-cost cid name
-                   (for [i alli :let [e ($ i)] :when (> (count (.val e)) 0)]
-                              [(int (.data e "bid")) (int (.val e))])
-                   (for [i alli :let [e ($ i)] :when (zero? (count (.val e)))]
-                     [(int (.data e "bid"))])
+                   (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (zero? rid) (> (.val e) 0))]             ; New relation
+                     [(.data e "bid") (int (.val e))])
+                   (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (> (.val e) 0))]               ; Update rel
+                     [(.data e "rid") (int (.val e))])
+                   (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (zero? (int (.val e))))]       ; rm rel
+                     [(.data e "bid") (.data e "rid")])
                    pid total done)
-          (add-cost name (for [i alli :let [e ($ i)] :when (> (count (.val e)) 0)]
+          (add-cost name (for [i alli :let [e ($ i)] :when (> (.val e) 0)]
                            [(int (.data e "bid")) (int (.val e))])
                     pid total done))))
     false))
@@ -470,16 +472,16 @@
         set-buddy-data  (fn [id name tot tx]
                           (-> inp
                             (.keyup validate)
-                            (.data "cid" cid) 
+                            (.data "cid" cid)
                             (.data "pid" pid))
                           (do-buddies (fn [tx r]
                                         (if (> (.-length (.-rows r)) 0)
-                                          (let [buds (if cid 
+                                          (let [buds (if cid
                                                        (for [b (row-seq r)]
-                                                         [(.-bname b) (.-id b) (.-btot b)])
+                                                         [(.-bname b) (.-id b) (.-btot b) (.-rid b)])
                                                        (for [b (row-seq r)]
-                                                         [(.-bname b) (.-id b) 0]))]
-                                            (doseq [[bname bid btot] buds]
+                                                         [(.-bname b) (.-id b) 0 nil]))]
+                                            (doseq [[bname bid btot rid] buds]
                                               (-> ul
                                                 (.append (-> li
                                                            (.clone)
@@ -491,16 +493,16 @@
                                                                       (.clone)
                                                                       (.data "pid" pid)
                                                                       (.data "bid" bid)
-                                                                      (#(if (zero? btot)
-                                                                          (.attr % "placeholder" (str (.-name %) " paid..."))  
-                                                                          (.val % btot)))
+                                                                      (.data "rid" rid)
+                                                                      (.attr "placeholder" (str bname " paid..."))
+                                                                      (#(if (zero? btot) % (.val % btot)))
                                                                       (.keyup validate)))
                                                            (.bind "focus click touchend"
                                                                   (fn [e]
                                                                     (.trigger (.children ($ (.-currentTarget e))
                                                                                          "input")
                                                                               "focus")))))))
-                                            (when cid 
+                                            (when cid
                                               (.val inp (.-cname (.item (.-rows r) 0))))
                                             (.append ul (-> li
                                                           (.clone)

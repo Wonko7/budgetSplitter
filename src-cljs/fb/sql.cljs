@@ -84,10 +84,24 @@
                                f
                                #(js/alert (str "fuck. " (.-message %2)))
                                ))))
+(defn do-cbud [f rq vals]
+  (fn [t r]
+    (.executeSql t rq (clj->js vals) f #(js/alert (str "rm fuck. " (.-message %2))))))
 
-(defn up-cost [cid name buddies budds-none proj amount f]
-  (js/console.log (str "not paying:" budds-none)) 
-  (js/console.log (str "paying:" buddies)))
+(defn up-cost [cid name buddies-add buddies-up buddies-rm proj amount f]
+  (let [addrq "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
+        uprq   #(str "UPDATE relcbp SET tot = ? WHERE id = " % ";")
+        rmrq   #(str "DELETE FROM relcbp WHERE id = " % ";")
+        fns    (reduce #(do-cbud %1 addrq [proj (first %2) cid (second %2)]) f   buddies-add)
+        fns    (reduce #(do-cbud %1 (uprq (first %2)) [(second %2)])         fns buddies-up)
+        fns    (reduce #(do-cbud %1 (rmrq (first %2)) [])                    fns buddies-rm)]
+    (.transaction db
+                  (fn [t]
+                    (.executeSql t
+                                 (str "UPDATE costs SET name = ?, pid = ?, tot = ? WHERE id = " cid "; ")
+                                 (clj->js [(trim name) proj amount])
+                                 fns)))))
+
 (defn add-cost [name buddies proj amount f]
   (.transaction db
                 (fn [t]
@@ -146,12 +160,12 @@
 
 (defn do-buddies [f pid & [cid]]
   (let [rq (if cid
-             (str "SELECT buddies.name AS bname, buddies.id, buddies.img, relcbp.tot AS btot, SUM(costs.tot) AS ptot, costs.name AS cname "
+             (str "SELECT buddies.name AS bname, buddies.id, buddies.img, relcbp.tot AS btot, SUM(costs.tot) AS ptot, costs.name AS cname, relcbp.id AS rid "
                   "FROM buddies, relcbp, costs "
                   "WHERE buddies.id = relcbp.bid AND buddies.pid = " pid " and relcbp.pid = " pid " AND costs.pid = " pid " AND relcbp.cid = costs.id "
                   "AND relcbp.cid = " cid " "
                   "GROUP BY buddies.id "
-                  "UNION ALL SELECT buddies.name, buddies.id, buddies.img, 0 AS btot, 0 AS ptot, 0 AS cname FROM buddies "
+                  "UNION ALL SELECT buddies.name, buddies.id, buddies.img, 0 AS btot, 0 AS ptot, 0 AS cname, 0 AS rid FROM buddies "
                   "WHERE buddies.pid = " pid " "
                   "AND NOT EXISTS (SELECT * FROM relcbp WHERE buddies.id = relcbp.bid AND relcbp.cid = " cid " ) "
                   " ;")
@@ -168,8 +182,8 @@
 (defn rm [rq & [f]]
   (fn [t r]
     (if f
-      (.executeSql t rq (clj->js []) f   #(js/alert (str "rm fuck. " (.-message %2)))) 
-      (.executeSql t rq (clj->js []) nil #(js/alert (str "rm fuck. " (.-message %2))))))) 
+      (.executeSql t rq (clj->js []) f   #(js/alert (str "rm fuck. " (.-message %2))))
+      (.executeSql t rq (clj->js []) nil #(js/alert (str "rm fuck. " (.-message %2)))))))
 
 (defn rm-proj [f pid]
   (let [
