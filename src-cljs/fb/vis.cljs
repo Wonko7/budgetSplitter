@@ -65,7 +65,11 @@
                      id       (.-id i)
                      tot      (.-tot i)
                      settings (mk-settings r)
-                     a        ($ "<a></a>")]
+                     a        ($ "<a></a>")
+                     help     ($ "#newpage div.info")]
+                 (if (:help settings)
+                   (.show help)
+                   (.hide help))
                  (-> ($ "#newpage div.top")
                    (.data "pid" pid)
                    (.append (-> ($ "<div class=\"toolbar\"></div>")

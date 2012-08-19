@@ -124,7 +124,7 @@ div.menu, ul.menu, li.menu {
 }
 
 .toolbar h1 a {
-	font-weight: none;
+	text-decoration: none;
 	font-size: 20px;
 	font-weight: bold;
 	line-height: 1.3em;
