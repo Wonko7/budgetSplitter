@@ -5,7 +5,7 @@
                        update-settings up-cost up-buddy
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
-        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
+        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy set-theme]]
         [fb.misc :only [mk-settings add-data trim num]]
         [fb.pages :only [add-page-init! load-template swap-page trigger-new-page]]
         ; FIXME get :use to import everything.
@@ -37,14 +37,17 @@
                                         (.attr "name" grp))))))
         update  (fn [e]
                   (do-settings (fn [settings]
-                                 (let [menuPos (condp = (.val ($ "#content input[name=\"menuPos\"]:checked"))
-                                                 "Top"    :top
-                                                 "Bottom" :bottom)
-                                       help    (.attr ($ "#content input[name=\"help\"]") "checked")]
-                                   (update-settings {:menuOn  (:menuOn settings)
+                                 (let [menuPos  (condp = (.val ($ "#content input[name=\"menuPos\"]:checked"))
+                                                  "Top"    :top
+                                                  "Bottom" :bottom)
+                                       help     (.attr ($ "#content input[name=\"help\"]") "checked")
+                                       settings {:menuOn  (:menuOn settings)
                                                      :menuPos menuPos
-                                                     :help    help}
+                                                     :help    help
+                                                     :theme   "red"}]
+                                   (update-settings settings
                                                     #(do
+                                                       (set-theme settings)
                                                        (trigger-new-page "back" nil)
                                                        false)))))
                   false)

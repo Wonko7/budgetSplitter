@@ -1,0 +1,1998 @@
+/**
+ * Background noise recipe
+ * 
+ * This recipe use a sass function to generate a .png file
+ * 
+ * Inspired by a jQuery plugin "Noisy" by Daniel Rapp @DanielRapp
+ * @link https://github.com/DanielRapp/Noisy
+ * 
+ * Converted using Sass by Aaron Russell @aaronrussell & Philipp Bosch @philippbosch
+ * @link https://gist.github.com/1021332
+ * 
+ * Ported to a sass gem by Antti Salonen @antsa
+ * @link https://github.com/antsa/sassy_noise
+ * 
+ * Mixin:        background-noise
+ * Function:     background_noise
+ * 
+ * @author Daniel Rapp @DanielRapp
+ * @author Aaron Russell @aaronrussell
+ * @author Philipp Bosch @philippbosch
+ * @author Antti Salonen @antsa
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ *
+ * @class Gradients
+ * @author David Kaneda http://www.davidkaneda.com/
+ *
+ */
+/**
+ * Adds a background gradient into a specified selector.
+ * 
+ *     @include background-gradient(#444, 'glossy');
+ * 
+ * You can also use color-stops if you want full control of the gradient:
+ * 
+ *     @include background-gradient(#444, color-stops(#333, #222, #111));
+ * 
+ * @param {color} $bg-color
+ * The base color of the gradient.
+ * 
+ * @param {string/list} $type
+ * The style of the gradient, one of five pre-defined options: matte, bevel, glossy, recessed, or linear:
+ *
+ *     @include background-gradient(red, 'glossy');
+ *
+ * It can also accept a list of color-stop values:;
+ * 
+ *     @include background-gradient(black, color-stops(#333, #111, #000));
+ * 
+ * @param {string} $direction
+ * The direction of the gradient.
+ */
+/**
+ * Blueprint grid background pattern
+ * 
+ * @link http://lea.verou.me/css3patterns/#blueprint-grid
+ *
+ * @author Lea Verou http://lea.verou.me/ for the original pattern
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx for the sass mixin
+ */
+/**
+ * Background overlay inspired by Google Chrome modal overlay
+ * 
+ * @author Maxime Thirouin @MoOx maxime.thirouin@gmail.com
+ */
+/**
+ * Striped background pattern
+ * 
+ * @link http://lea.verou.me/css3patterns/
+ *
+ * @author Lea Verou http://lea.verou.me/ for the original pattern
+ * @author David Kaneda http://www.davidkaneda.com @davidkaneda for the sass mixin
+ */
+/**
+ *
+ * Before compass 0.11.5, you need to add
+ * Compass::BrowserSupport.add_support("repeating-linear-gradient", "webkit", "moz", "o", "ms")
+ * To your configuration (config.rb)
+ * @see https://github.com/chriseppstein/compass/issues/401
+ *
+ * @link http://lea.verou.me/css3patterns/#tartan
+ *
+ * @author Marta Armada http://swwweet.com/ for the original pattern
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx for the sass mixin
+ */
+/**
+ * Carbon Fiber background pattern
+ *
+ * @author Lea Verou http://lea.verou.me/ for the original pattern
+ * @author David Kaneda http://www.davidkaneda.com/ for the Sass mixin
+ *
+ * @link http://lea.verou.me/css3patterns/
+ *
+ */
+/**
+ * Normalize.css
+ * Opposite approche from CSS reset
+ * 
+ * Based on normalize.css commit 9576d48fc234c5224b1fc4dccba2f5965243843d
+ *
+ * @link http://github.com/necolas/normalize.css
+ */
+/* normalize.css 2011-07-12T10:51 UTC · http://github.com/necolas/normalize.css */
+/* =============================================================================
+   HTML5 element display
+   ========================================================================== */
+/* =============================================================================
+   Base
+   ========================================================================== */
+/* =============================================================================
+   Links
+   ========================================================================== */
+/* =============================================================================
+   Typography
+   ========================================================================== */
+/* =============================================================================
+   Lists
+   ========================================================================== */
+/* =============================================================================
+   Embedded content
+   ========================================================================== */
+/* =============================================================================
+   Figures
+   ========================================================================== */
+/* =============================================================================
+   Forms
+   ========================================================================== */
+/* =============================================================================
+   Tables
+   ========================================================================== */
+/**
+ *
+ * @author David Kaneda - http://www.davidkaneda.com
+ *
+ */
+/**
+ * @class Color
+ */
+/**
+ * Returns the brightness (out of 100) of a specified color.
+ * @todo explain why this is useful
+ * @param {color} $color The color you want the brightness value of
+ * @return {measurement}
+ */
+/**
+ * Returns the luminosity for a specified color
+ * @todo explain why this is useful
+ * @param {color} The color to check
+ * @return {measurement}
+ */
+/**
+ * Glass effect
+ * Use this on image for better effect render
+ * 
+ * Inspired from Simurai's IMDB redisign
+ *
+ * @link http://lab.simurai.com/redesign/imdb
+ * @thanks Simurai @simurai
+ */
+/**
+ * Note IE7/6 doesn't understand pseudo element as ::before and ::after
+ * IE8 need to have :before and not ::before
+ * So use only : and not :: if you want to support IE8
+ * IE9 Webkit Firefox Opera understand ::
+ */
+/**
+ * Scotch tape effect with pure CSS
+ * 
+ * @thanks Nick La @nickla for original concept
+ * @link http://webdesignerwall.com/tutorials/css3-image-styles
+ * 
+ * @author David Kaneda http://www.davidkaneda.com
+ *
+ */
+/**
+ * Note IE7/6 doesn't understand pseudo element as ::before and ::after
+ * IE8 need to have :before and not ::before
+ * So use only : and not :: if you want to support IE8
+ * IE9 Webkit Firefox Opera understand ::
+ */
+/**
+ * Corner folded with pure CSS
+ * 
+ * Known support: Firefox 3.5+, Chrome 4+, Safari 4+, Opera 10+, IE 9+.
+ * IE8 is not supported because it not render properly box-shadow and
+ * pseudo element should be selected with ::element and not :element
+ * 
+ * @thanks Nicolas Gallagher @necolas
+ * @link http://nicolasgallagher.com/pure-css-folded-corner-effect/demo/
+ * @todo Nix in .4
+ */
+/**
+ * Note IE7/6 doesn't understand pseudo element as ::before and ::after
+ * IE8 need to have :before and not ::before
+ * So use only : and not :: if you want to support IE8
+ * IE9 Webkit Firefox Opera understand ::
+ */
+/**
+ * Corner folded with pure CSS
+ * 
+ * Known support: Firefox 3.5+, Chrome 4+, Safari 4+, Opera 10+, IE 9+.
+ * IE8 is not supported because it not render properly box-shadow and
+ * pseudo element should be selected with ::element and not :element
+ * 
+ * @thanks Nicolas Gallagher @necolas
+ * @link http://nicolasgallagher.com/pure-css-folded-corner-effect/demo/
+ */
+/**
+ * Note IE7/6 doesn't understand pseudo element as ::before and ::after
+ * IE8 need to have :before and not ::before
+ * So use only : and not :: if you want to support IE8
+ * IE9 Webkit Firefox Opera understand ::
+ */
+/**
+ * Form element inline mixin
+ * This mixin allow you to have a label inline with your input
+ * It's simply based on inline-block behavior
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Vertical alignement for page
+ * Inspired by http://css-tricks.com/snippets/css/center-div-with-dynamic-height/
+ * 
+ * Usage:
+ * 
+ * SCSS
+ * @include vertical-align-requirement;
+ * .v-align-container { @include vertical-align-container }
+ * .v-align-content-container { @include vertical-align-content-container }
+ * .v-align-content { @include vertical-align-content }
+ * 
+ * HTML
+ * <body>
+ *     <div class="v-align-container">
+ *         <div class="v-align-content-container">
+ *             <div class="v-align-content">
+ *             Your content !
+ *             </div>
+ *         </div> 
+ *     </div>
+ * </body>
+ *
+ * @thanks Chris Coyier @chriscoyier
+ * @autor Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Media Queries Mixins
+ * 
+ * @todo Do we have to take care of print ?
+ * 
+ * @require sass-3.2 (you need eventually to do "sudo gem install sass --pre")
+ * @author Maxime Thirouin <maxime.thirouin@gmail.com>
+ */
+/*
+$media-query-width-big: 1280px;
+$media-query-width-medium: 960px;
+$media-query-width-small: 480px;
+*/
+/**
+ * Drop shadow mixins from Nicolas Gallagher demo
+ * 
+ * @thanks Nicolas Gallagher @necolas, @simurai, @cameronmoll, @matthamm
+ * 
+ * @link http://nicolasgallagher.com/css-drop-shadows-without-images/demo/
+ */
+/**
+ * Drop shadow curled
+ *
+ * @thanks Nicolas Gallagher @necolas
+ * @link http://nicolasgallagher.com/css-drop-shadows-without-images/demo/
+ */
+/**
+ * Drop shadow curved
+ *
+ * @thanks Nicolas Gallagher @necolas
+ * @link http://nicolasgallagher.com/css-drop-shadows-without-images/demo/
+ */
+/**
+ * Drop shadow flying
+ *
+ * @thanks Geoffrey Crofte @geoffrey_crofte
+ * @link http://www.creativejuiz.fr/trytotry/css3-box-shadow-after-before/
+ */
+/**
+ * Drop shadow w/ lifted corners
+ *
+ * @thanks Nicolas Gallagher @necolas
+ * @link http://nicolasgallagher.com/css-drop-shadows-without-images/demo/
+ */
+/**
+ * Drop shadow w/ perspective
+ *
+ * @thanks Nicolas Gallagher @necolas
+ * @link http://nicolasgallagher.com/css-drop-shadows-without-images/demo/
+ */
+/**
+ * Drop shadow raised
+ *
+ * @thanks Nicolas Gallagher @necolas
+ * @link http://nicolasgallagher.com/css-drop-shadows-without-images/demo/
+ */
+/**
+ * Drop shadow rules required for transform on drop shadow
+ * 
+ * /!\ This is required if you want to apply some transform on the element using drop shadow
+ *
+ * @thanks Nicolas Gallagher @necolas
+ * @link http://nicolasgallagher.com/css-drop-shadows-without-images/demo/
+ */
+/**
+ * Shadow along the top edge of the browser viewport
+ * 
+ * @link http://playground.genelocklin.com/depth/
+ */
+/**
+* Shapes !
+* Polygons, ellipses and symbols
+* 
+* @thanks Chris Coyier @chriscoyier
+* @link http://css-tricks.com/examples/ShapesOfCSS/
+* @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+*/
+/**
+ * Shape/Ellipse
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon/Hexagon
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon/Octagon
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon/Parallelogram
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon/Pentagon
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon/Rectangle
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon/Rhombus
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon/Square
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon/Star
+ *
+ * @todo check if setting a z-index by default is a good thing
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon/Trapezoid
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon/Triangle
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Symbol
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Symbol/Diamond
+ *
+ * @todo add height support
+ * 
+ * @author Alexander Futekov
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Symbol/Egg
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Symbol/Heart
+ * 
+ * @author Nicolas Gallagher @necolas
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Symbol/Infinity
+ * 
+ * @author Nicolas Gallagher @necolas
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Symbol/Pacman
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Symbol/Yin-yang
+ *
+ * @author Alexander Futekov
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Micro clearfix hack
+ * 
+ * The clearfix hack is a popular way to clear floats without resorting to using presentational markup. This article presents an update to the clearfix method that further reduces the amount of CSS required.
+ * Known support: Firefox 2+, Safari 2+, Chrome, Opera 9.27+, IE 6+, IE Mac.
+ *
+ * @thanks Nicolas Gallagher @necolas
+ * @link http://nicolasgallagher.com/micro-clearfix-hack/
+ */
+/**
+ * Note IE7/6 doesn't understand pseudo element as ::before and ::after
+ * IE8 need to have :before and not ::before
+ * So use only : and not :: if you want to support IE8
+ * IE9 Webkit Firefox Opera understand ::
+ */
+/**
+ * UI convex effect from one color
+ *
+ * @todo merge with ui-button ?
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * UI Glossy helper
+ *
+ * @deprecated
+ * @todo Remove in 0.4
+ * @see background/gradients
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * UI simple gradient from one color
+ *
+ * @todo merge with ui-button ?
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Shape/Polygon/Triangle
+ *
+ * @author Maxime Thirouin maxime.thirouin@gmail.com @MoOx
+ */
+/**
+ * Keyboard key touch
+ * A simple stylesheet for rendering beautiful keyboard-style elements.
+
+ * @author Michael Hüneburg http://michaelhue.com/keyscss
+ * @link https://github.com/michaelhue/keyscss (commit 76bb603e921d0145362e0f60eabb79d4f69cbda0)
+ *
+ * @author Maxime Thirouin @MoOx maxime.thirouin@gmail.com
+*/
+/**
+ * Menu dropdown helper
+ *
+ * @author Maxime Thirouin @MoOx maxime.thirouin@gmail.com
+*/
+/**
+ * Ui background overlay inspired by Google Chrome modal overlay
+ * 
+ * @author Maxime Thirouin @MoOx maxime.thirouin@gmail.com
+ */
+/**
+ * Background overlay inspired by Google Chrome modal overlay
+ * 
+ * @author Maxime Thirouin @MoOx maxime.thirouin@gmail.com
+ */
+/**
+ * <hr /> separator style
+ *
+ * @author Chris Coyier @chriscoyier
+ * @link http://jsfiddle.net/chriscoyier/GaEzp/35/
+ *
+ * @author Maxime Thirouin @MoOx maxime.thirouin@gmail.com
+ */
+/**
+ * Micro clearfix hack
+ * 
+ * The clearfix hack is a popular way to clear floats without resorting to using presentational markup. This article presents an update to the clearfix method that further reduces the amount of CSS required.
+ * Known support: Firefox 2+, Safari 2+, Chrome, Opera 9.27+, IE 6+, IE Mac.
+ *
+ * @thanks Nicolas Gallagher @necolas
+ * @link http://nicolasgallagher.com/micro-clearfix-hack/
+ */
+/**
+ * Note IE7/6 doesn't understand pseudo element as ::before and ::after
+ * IE8 need to have :before and not ::before
+ * So use only : and not :: if you want to support IE8
+ * IE9 Webkit Firefox Opera understand ::
+ */
+/**
+ *
+ * @class Gradients
+ * @author David Kaneda http://www.davidkaneda.com/
+ *
+ */
+/**
+ * Adds a background gradient into a specified selector.
+ * 
+ *     @include background-gradient(#444, 'glossy');
+ * 
+ * You can also use color-stops if you want full control of the gradient:
+ * 
+ *     @include background-gradient(#444, color-stops(#333, #222, #111));
+ * 
+ * @param {color} $bg-color
+ * The base color of the gradient.
+ * 
+ * @param {string/list} $type
+ * The style of the gradient, one of five pre-defined options: matte, bevel, glossy, recessed, or linear:
+ *
+ *     @include background-gradient(red, 'glossy');
+ *
+ * It can also accept a list of color-stop values:;
+ * 
+ *     @include background-gradient(black, color-stops(#333, #111, #000));
+ * 
+ * @param {string} $direction
+ * The direction of the gradient.
+ */
+/**
+ * @class Webfont Icon
+ * Great to use with the [Pictos font](http://pictos.drewwilson.com/)
+ * 
+ */
+/**
+ * @cfg {color} $webfont-icon-base-color
+ * The default color of icons when using the {@link #webfont-icon} mixin.
+ * 
+ * Defaults to `white`.
+ */
+/**
+ * @cfg {color} $webfont-icon-default-stroke
+ * The default color to use on the border of icons, when using the {@link #webfont-icon} mixin.
+ * 
+ * Defaults to `null`.
+ */
+/**
+ * @cfg {string} $webfont-icon-default-gradient
+ * The default gradient to use when using the {@link #webfont-icon} mixin.
+ * 
+ * Defaults to `matte`.
+ */
+/* line 41, /home/wjc/work/games/poc/firstblood/web/themes/compass-recipes/stylesheets/recipes/_webfont-icon.scss */
+.webfont-icon-base {
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  position: absolute;
+  top: 0;
+  left: 0;
+  text-indent: 0;
+  text-shadow: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/**
+ * Includes a character into the specified selector, styled as an icon.
+ * 
+ *     @include webfont-icon('a');
+ * 
+ * @param {color} $color
+ * The color of the icon. Defaults to {@link #$webfont-icon-default-background $webfont-icon-default-background}.
+ * 
+ * @param {measurement} $size
+ * The size of the icon
+ * 
+ * @param {color} $stroke
+ * The color of the border. Defautls to {@link #$webfont-icon-default-border $webfont-icon-default-border}.
+ * 
+ * @param {boolean} $include-staes
+ * True to include states for hover and active. Defaults to `true`.
+ */
+/* line 1, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+* {
+  margin: 0;
+  padding: 0;
+}
+
+/* line 6, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+body {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-touch-callout: none;
+}
+
+/* line 11, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt {
+  -webkit-text-size-adjust: none;
+  -webkit-user-select: none;
+  user-select: none;
+  font-family: "Helvetica Neue", Helvetica;
+  position: absolute;
+  right: 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
+}
+/* line 21, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt a {
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-user-drag: none;
+}
+/* line 26, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt .selectable, #jqt input, #jqt textarea {
+  -webkit-user-select: auto;
+}
+/* line 30, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt.notransform {
+  -webkit-transform: none !important;
+}
+/* line 35, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt > * {
+  display: block;
+  left: 0;
+  top: 0;
+  min-height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  position: absolute;
+  z-index: 0;
+  display: -webkit-box;
+  display: box;
+  -webkit-box-orient: vertical;
+  box-orient: vertical;
+  -webkit-box-flex: 1;
+  box-flex: 1;
+}
+/* line 49, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt > .current {
+  z-index: 10;
+}
+/* line 53, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt > :not(.current) {
+  display: none;
+}
+/* line 57, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt.touchscroll:not(.animating3d) {
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+/* line 61, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt.touchscroll:not(.animating3d) > * {
+  height: 100%;
+}
+/* line 64, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt.touchscroll:not(.animating3d) .scroll {
+  position: relative;
+  -webkit-box-flex: 1;
+  box-flex: 1;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+/* line 72, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt .scroll {
+  -webkit-margin-collapse: separate;
+}
+/* line 76, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt .in, #jqt .out {
+  -webkit-animation-duration: 250ms;
+  -webkit-animation-fill-mode: both;
+  -webkit-animation-timing-function: ease-in-out;
+}
+/* line 82, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt .in {
+  z-index: 10;
+}
+/* line 85, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt .in:after {
+  content: "";
+  position: absolute;
+  display: block;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+}
+/* line 94, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt .out {
+  z-index: 0 !important;
+}
+/* line 98, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt.supports3d {
+  -webkit-perspective: 1000;
+}
+/* line 101, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_base.scss */
+#jqt.supports3d > * {
+  -webkit-transform: translate3d(0, 0, 0) rotate(0) scale(1);
+}
+
+/* Fade */
+/* line 3, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .fade.in {
+  -webkit-animation-name: fadeIn;
+}
+
+/* line 7, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .fade.out {
+  z-index: 10;
+  -webkit-animation-name: fadeOut;
+}
+
+@-webkit-keyframes fadeIn {
+  /* line 13, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 16, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes fadeOut {
+  /* line 22, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    opacity: 1;
+  }
+
+  /* line 25, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+/* Disolve */
+/* line 34, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .dissolve.in {
+  -webkit-animation-name: dissolveIn;
+}
+
+/* line 38, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .dissolve.out {
+  -webkit-animation-name: dissolveOut;
+}
+
+@-webkit-keyframes dissolveIn {
+  /* line 43, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    opacity: 0;
+  }
+
+  /* line 46, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes dissolveOut {
+  /* line 52, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    opacity: 1;
+  }
+
+  /* line 55, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    opacity: 0;
+  }
+}
+
+/* #Popin' */
+/* line 64, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .pop.in {
+  -webkit-animation-name: popIn;
+}
+
+/* line 68, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .pop.out {
+  -webkit-animation-name: popOut;
+}
+
+@-webkit-keyframes popIn {
+  /* line 73, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: scale(0.2);
+    opacity: 0;
+  }
+
+  /* line 77, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes popOut {
+  /* line 84, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: scale(1);
+    opacity: 1;
+  }
+
+  /* line 88, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: scale(0.2);
+    opacity: 0;
+  }
+}
+
+/* Slide Left */
+/* line 98, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .slideleft.in {
+  -webkit-animation-name: slideLeftIn;
+}
+
+/* line 102, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .slideleft.out {
+  -webkit-animation-name: slideLeftOut;
+}
+
+@-webkit-keyframes slideLeftIn {
+  /* line 107, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translateX(100%);
+  }
+
+  /* line 110, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: translateX(0);
+  }
+}
+
+@-webkit-keyframes slideLeftOut {
+  /* line 116, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translateX(0px);
+  }
+
+  /* line 119, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: translateX(-100%);
+  }
+}
+
+/* Slide Right */
+/* line 128, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .slideright.in {
+  -webkit-animation-name: slideRightIn;
+}
+
+/* line 132, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .slideright.out {
+  -webkit-animation-name: slideRightOut;
+}
+
+@-webkit-keyframes slideRightIn {
+  /* line 137, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translateX(-100%);
+  }
+
+  /* line 140, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: translateX(0);
+  }
+}
+
+@-webkit-keyframes slideRightOut {
+  /* line 146, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translateX(0);
+  }
+
+  /* line 149, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: translateX(100%);
+  }
+}
+
+/* Slide Up */
+/* line 158, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .slideup.in {
+  z-index: 10;
+  -webkit-animation-name: slideUpIn;
+}
+
+/* line 162, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .slideup.out {
+  z-index: 0;
+  -webkit-animation-name: slideUpOut;
+}
+
+@-webkit-keyframes slideUpIn {
+  /* line 168, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translateY(100%);
+  }
+
+  /* line 171, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: translateY(0);
+  }
+}
+
+@-webkit-keyframes slideUpOut {
+  /* line 177, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translateY(0);
+  }
+
+  /* line 180, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: translateY(0);
+  }
+}
+
+/* Slide Down */
+/* line 189, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .slidedown.in {
+  z-index: 0;
+  -webkit-animation-name: slideDownIn;
+}
+
+/* line 193, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .slidedown.out {
+  z-index: 10;
+  -webkit-animation-name: slideDownOut;
+}
+
+@-webkit-keyframes slideDownIn {
+  /* line 199, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translateY(0);
+  }
+
+  /* line 202, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: translateY(0);
+  }
+}
+
+@-webkit-keyframes slideDownOut {
+  /* line 208, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translateY(0);
+  }
+
+  /* line 211, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: translateY(100%);
+  }
+}
+
+/* Flip Left */
+/* line 220, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .flipleft {
+  -webkit-backface-visibility: hidden;
+}
+
+/* line 224, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .flipleft.in {
+  -webkit-animation-name: flipLeftIn;
+}
+
+/* line 228, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .flipleft.out {
+  -webkit-animation-name: flipLeftOut;
+}
+
+@-webkit-keyframes flipLeftIn {
+  /* line 233, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: rotateY(180deg) scale(0.8);
+  }
+
+  /* line 236, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: rotateY(0deg) scale(1);
+  }
+}
+
+@-webkit-keyframes flipLeftOut {
+  /* line 242, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: rotateY(0deg) scale(1);
+  }
+
+  /* line 245, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: rotateY(-180deg) scale(0.8);
+  }
+}
+
+/* Flip Right */
+/* line 254, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .flipright {
+  -webkit-backface-visibility: hidden;
+}
+
+/* line 258, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .flipright.in {
+  -webkit-animation-name: flipRightIn;
+}
+
+/* line 262, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .flipright.out {
+  -webkit-animation-name: flipRightOut;
+}
+
+@-webkit-keyframes flipRightIn {
+  /* line 267, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: rotateY(-180deg) scale(0.8);
+  }
+
+  /* line 270, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: rotateY(0deg) scale(1);
+  }
+}
+
+@-webkit-keyframes flipRightOut {
+  /* line 276, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: rotateY(0deg) scale(1);
+  }
+
+  /* line 279, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: rotateY(180deg) scale(0.8);
+  }
+}
+
+/* Swap Right */
+/* line 288, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .swapright {
+  -webkit-animation-duration: .7s;
+  -webkit-transform: perspective(800);
+  -webkit-animation-timing-function: ease-out;
+}
+
+/* line 293, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .swapright.in {
+  -webkit-animation-name: swapRightIn;
+}
+
+/* line 296, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .swapright.out {
+  -webkit-animation-name: swapRightOut;
+}
+
+@-webkit-keyframes swapRightIn {
+  /* line 301, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translate3d(0px, 0px, -800px) rotateY(70deg);
+    opacity: 0;
+  }
+
+  /* line 305, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  35% {
+    -webkit-transform: translate3d(-180px, 0px, -400px) rotateY(20deg);
+    opacity: 1;
+  }
+
+  /* line 309, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: translate3d(0px, 0px, 0px) rotateY(0deg);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes swapRightOut {
+  /* line 316, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translate3d(0px, 0px, 0px) rotateY(0deg);
+    opacity: 1;
+  }
+
+  /* line 320, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  35% {
+    -webkit-transform: translate3d(180px, 0px, -400px) rotateY(-20deg);
+    opacity: .5;
+  }
+
+  /* line 324, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: translate3d(0px, 0px, -800px) rotateY(-70deg);
+    opacity: 0;
+  }
+}
+
+/* Swap Left */
+/* line 332, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .swapleft {
+  -webkit-animation-duration: .7s;
+  -webkit-transform: perspective(800);
+  -webkit-animation-timing-function: ease-out;
+}
+
+/* line 337, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .swapleft.in {
+  -webkit-animation-name: swapLeftIn;
+}
+
+/* line 340, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .swapleft.out {
+  -webkit-animation-name: swapLeftOut;
+}
+
+@-webkit-keyframes swapLeftIn {
+  /* line 345, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translate3d(0px, 0px, -800px) rotateY(-70deg);
+    opacity: 0;
+  }
+
+  /* line 349, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  35% {
+    -webkit-transform: translate3d(180px, 0px, -400px) rotateY(-20deg);
+    opacity: 1;
+  }
+
+  /* line 353, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    opacity: 1;
+    -webkit-transform: translate3d(0px, 0px, 0px) rotateY(0deg);
+  }
+}
+
+@-webkit-keyframes swapLeftOut {
+  /* line 360, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: translate3d(0px, 0px, 0px) rotateY(0deg);
+    opacity: 1;
+  }
+
+  /* line 364, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  35% {
+    -webkit-transform: translate3d(-180px, 0px, -400px) rotateY(20deg);
+    opacity: .5;
+  }
+
+  /* line 368, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: translate3d(0px, 0px, -800px) rotateY(70deg);
+    opacity: 0;
+  }
+}
+
+/* Cube Left */
+/* line 382, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .cubeleft.in, #jqt .cubeleft.out, #jqt .cuberight.in, #jqt .cuberight.out {
+  -webkit-animation-duration: .6s;
+  -webkit-transform: perspective(800);
+}
+
+/* line 389, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .cubeleft.in {
+  -webkit-transform-origin: 0% 50%;
+  -webkit-animation-name: cubeLeftIn;
+}
+
+/* line 394, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .cubeleft.out {
+  -webkit-transform-origin: 100% 50%;
+  -webkit-animation-name: cubeLeftOut;
+}
+
+@-webkit-keyframes cubeLeftIn {
+  /* line 400, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: rotateY(90deg) translateZ(320px);
+    opacity: .5;
+  }
+
+  /* line 404, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: rotateY(0deg) translateZ(0) translateX(0);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes cubeLeftOut {
+  /* line 411, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: rotateY(0deg) translateZ(0) translateX(0);
+    opacity: 1;
+  }
+
+  /* line 415, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: rotateY(-90deg) translateZ(320px);
+    opacity: .5;
+  }
+}
+
+/* Cube Right */
+/* line 423, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .cuberight.in {
+  -webkit-transform-origin: 100% 50%;
+  -webkit-animation-name: cubeRightIn;
+}
+
+/* line 428, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+#jqt .cuberight.out {
+  -webkit-transform-origin: 0% 50%;
+  -webkit-animation-name: cubeRightOut;
+}
+
+@-webkit-keyframes cubeRightIn {
+  /* line 434, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: rotateY(-90deg) translateZ(320px);
+    opacity: .5;
+  }
+
+  /* line 438, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: rotateY(0deg) translateZ(0) translateX(0);
+    opacity: 1;
+  }
+}
+
+@-webkit-keyframes cubeRightOut {
+  /* line 445, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  0% {
+    -webkit-transform: rotateY(0deg) translateZ(0) translateX(0);
+    opacity: 1;
+  }
+
+  /* line 449, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_animations.scss */
+  100% {
+    -webkit-transform: rotateY(90deg) translateZ(320px);
+    opacity: .5;
+  }
+}
+
+/* line 5, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+body {
+  background: black;
+}
+
+/* line 9, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+.base-chevron, #jqt ul li.arrow:after, #jqt ul li.forward:after {
+  content: '›';
+  width: 22px;
+  height: 100%;
+  vertical-align: middle;
+  font-size: 30px;
+  line-height: 38px;
+  font-family: Futura, "Futura Condensed", Helvetica, Arial, sans-serif;
+  font-weight: bold;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=60);
+  opacity: 0.6;
+  position: absolute;
+  right: 0;
+  top: 0;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* line 26, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+.base-flatlists, #jqt ul.metal, #jqt ul.edgetoedge, #jqt ul.plastic {
+  margin: 0;
+  padding: 0;
+  border-width: 0 0 0 1px;
+  -webkit-border-radius: 0;
+  border-radius: 0;
+}
+
+/* line 35, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt h1, #jqt h2 {
+  font: bold 18px "Helvetica Neue", Helvetica;
+  margin: 10px 20px 6px;
+  color: #bebbbc;
+  text-shadow: #3e3c3d 0 -1px 0;
+}
+/* line 41, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .toolbar {
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0 1px 6px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0 1px 6px;
+  border-bottom: 1px solid black;
+  z-index: 10;
+  position: relative;
+  padding: 10px;
+  height: 44px;
+}
+/* line 52, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .toolbar > h1 {
+  position: absolute;
+  overflow: hidden;
+  left: 50%;
+  bottom: 9px;
+  margin: 1px 0 0 -75px;
+  width: 150px;
+  font-size: 20px;
+  font-weight: bold;
+  line-height: 1.3em;
+  text-align: center;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  color: white;
+  text-shadow: #2b0808 0 -1px 0;
+}
+/* line 71, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt.black-translucent .toolbar {
+  padding-top: 30px;
+  height: 64px;
+}
+/* line 75, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt.landscape .toolbar > h1 {
+  margin-left: -125px;
+  width: 250px;
+}
+/* line 80, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .button, #jqt .back, #jqt .cancel, #jqt .add {
+  position: absolute;
+  overflow: hidden;
+  width: auto;
+  height: 30px;
+  font-family: inherit;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 30px;
+  text-overflow: ellipsis;
+  text-decoration: none;
+  white-space: nowrap;
+  background: none;
+  bottom: 6px;
+  right: 10px;
+  margin: 0;
+  padding: 0 10px;
+  color: #f7d4d4;
+  text-shadow: black 0 -1px 0;
+  -webkit-box-shadow: rgba(255, 255, 255, 0.2) 0 1px 0, rgba(0, 0, 0, 0.2) 0 1px 2px inset;
+  box-shadow: rgba(255, 255, 255, 0.2) 0 1px 0, rgba(0, 0, 0, 0.2) 0 1px 2px inset;
+  border: 1px solid black;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  background-image: none;
+  background-color: #150404;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #551111), color-stop(50%, #2b0808), color-stop(51%, #150404), color-stop(100%, #000000));
+  background-image: -webkit-linear-gradient(top, #551111, #2b0808 50%, #150404 51%, #000000);
+  background-image: linear-gradient(top, #551111, #2b0808 50%, #150404 51%, #000000);
+}
+/* line 107, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .button.active, #jqt .back.active, #jqt .cancel.active, #jqt .add.active {
+  border-color: black;
+  background-image: none;
+  background-color: black;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #400d0d), color-stop(50%, #150404), color-stop(51%, #000000), color-stop(100%, #000000));
+  background-image: -webkit-linear-gradient(top, #400d0d, #150404 50%, #000000 51%, #000000);
+  background-image: linear-gradient(top, #400d0d, #150404 50%, #000000 51%, #000000);
+  color: #f2bfbf;
+  text-shadow: black 0 -1px 0;
+}
+/* line 114, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .back {
+  max-width: 60px;
+  margin-left: 15px;
+  overflow: visible;
+  padding-left: 5px;
+}
+/* line 121, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .back:after, #jqt .back:before {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 1px;
+  left: 1px;
+  -webkit-transform: rotate(45deg) translate3d(0.2px, 0, 0);
+  transform: rotate(45deg) translate3d(0.2px, 0, 0);
+  -webkit-transform-origin: 0 0;
+  transform-origin: 0 0;
+  background-image: none;
+  background-color: #150404;
+  background-image: -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0%, #551111), color-stop(50%, #2b0808), color-stop(51%, #150404), color-stop(100%, #000000));
+  background-image: -webkit-linear-gradient(top left, #551111, #2b0808 50%, #150404 51%, #000000);
+  background-image: linear-gradient(top left, #551111, #2b0808 50%, #150404 51%, #000000);
+  background-size: 100% 98%;
+  -webkit-border-radius: 0 0 0 2px;
+  border-radius: 0 0 0 2px;
+  -webkit-mask-image: -webkit-linear-gradient(45deg, black, black 15px, rgba(0, 0, 0, 0) 15px);
+  -webkit-mask-image: -webkit-gradient(linear, left bottom, right top, from(black), color-stop(50%, black), color-stop(50%, rgba(0, 0, 0, 0)), to(rgba(0, 0, 0, 0)));
+  -webkit-mask-clip: border-box;
+  -webkit-background-clip: content-box;
+}
+/* line 149, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .back:after {
+  -webkit-box-shadow: rgba(0, 0, 0, 0.2) 1px 0 0 inset, rgba(0, 0, 0, 0.2) 0 -1px 0 inset;
+  box-shadow: rgba(0, 0, 0, 0.2) 1px 0 0 inset, rgba(0, 0, 0, 0.2) 0 -1px 0 inset;
+}
+/* line 152, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .back:before {
+  margin-left: -1px;
+  background: black none;
+}
+/* line 157, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .back.active:after {
+  background-image: none;
+  background-color: black;
+  background-image: -webkit-gradient(linear, 0% 0%, 100% 100%, color-stop(0%, #400d0d), color-stop(50%, #150404), color-stop(51%, #000000), color-stop(100%, #000000));
+  background-image: -webkit-linear-gradient(left top, #400d0d, #150404 50%, #000000 51%, #000000);
+  background-image: linear-gradient(left top, #400d0d, #150404 50%, #000000 51%, #000000);
+}
+/* line 160, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .back.active:before {
+  background-color: black;
+}
+/* line 166, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .blueButton {
+  background-image: #2f7ce3, glossy;
+  color: white;
+  text-shadow: #1a63c5 0 -1px 0;
+}
+/* line 170, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .whiteButton, #jqt .grayButton, #jqt .redButton, #jqt .blueButton, #jqt .greenButton {
+  display: block;
+  font-size: 20px;
+  font-weight: bold;
+  margin: 10px 20px;
+  padding: 10px;
+  text-align: center;
+  text-decoration: inherit;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  -webkit-box-shadow: rgba(0, 0, 0, 0.4) 0 1px 3px, rgba(0, 0, 0, 0.4) 0 0 0 5px, rgba(255, 255, 255, 0.3) 0 1px 0 5px;
+  box-shadow: rgba(0, 0, 0, 0.4) 0 1px 3px, rgba(0, 0, 0, 0.4) 0 0 0 5px, rgba(255, 255, 255, 0.3) 0 1px 0 5px;
+}
+/* line 185, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .whiteButton.active, #jqt .whiteButton:active, #jqt .grayButton.active, #jqt .grayButton:active, #jqt .redButton.active, #jqt .redButton:active, #jqt .blueButton.active, #jqt .blueButton:active, #jqt .greenButton.active, #jqt .greenButton:active {
+  background-image: none;
+  background-color: #3c8101;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #5fcd01), color-stop(50%, #479b01), color-stop(51%, #3c8101), color-stop(100%, #306801));
+  background-image: -webkit-linear-gradient(top, #5fcd01, #479b01 50%, #3c8101 51%, #306801);
+  background-image: linear-gradient(top, #5fcd01, #479b01 50%, #3c8101 51%, #306801);
+  color: white;
+  text-shadow: #244f00 0 -1px 0;
+}
+/* line 191, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .whiteButton {
+  background-image: none;
+  background-color: #eeeeee;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(50%, #fbfbfb), color-stop(51%, #eeeeee), color-stop(100%, #e1e1e1));
+  background-image: -webkit-linear-gradient(top, #ffffff, #fbfbfb 50%, #eeeeee 51%, #e1e1e1);
+  background-image: linear-gradient(top, #ffffff, #fbfbfb 50%, #eeeeee 51%, #e1e1e1);
+  color: #151515;
+  text-shadow: white 0 1px 0;
+}
+/* line 195, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .grayButton {
+  background-image: none;
+  background-color: #444444;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #6a6a6a), color-stop(50%, #515151), color-stop(51%, #444444), color-stop(100%, #373737));
+  background-image: -webkit-linear-gradient(top, #6a6a6a, #515151 50%, #444444 51%, #373737);
+  background-image: linear-gradient(top, #6a6a6a, #515151 50%, #444444 51%, #373737);
+  color: white;
+  text-shadow: #2b2b2b 0 -1px 0;
+}
+/* line 200, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .redButton {
+  background-image: none;
+  background-color: #d83b38;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #e57a78), color-stop(50%, #dc504d), color-stop(51%, #d83b38), color-stop(100%, #ce2c28));
+  background-image: -webkit-linear-gradient(top, #e57a78, #dc504d 50%, #d83b38 51%, #ce2c28);
+  background-image: linear-gradient(top, #e57a78, #dc504d 50%, #d83b38 51%, #ce2c28);
+  color: white;
+  text-shadow: #b92724 0 -1px 0;
+}
+/* line 204, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .redButton.active, #jqt .redButton:active {
+  background-image: none;
+  background-color: #c12926;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #de5856), color-stop(50%, #d52e2b), color-stop(51%, #c12926), color-stop(100%, #ac2422));
+  background-image: -webkit-linear-gradient(top, #de5856, #d52e2b 50%, #c12926 51%, #ac2422);
+  background-image: linear-gradient(top, #de5856, #d52e2b 50%, #c12926 51%, #ac2422);
+  color: white;
+  text-shadow: #97201e 0 -1px 0;
+}
+/* line 211, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .greenButton {
+  background-image: none;
+  background-color: #53b401;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #76fe04), color-stop(50%, #5fcd01), color-stop(51%, #53b401), color-stop(100%, #479b01));
+  background-image: -webkit-linear-gradient(top, #76fe04, #5fcd01 50%, #53b401 51%, #479b01);
+  background-image: linear-gradient(top, #76fe04, #5fcd01 50%, #53b401 51%, #479b01);
+  color: white;
+  text-shadow: #3c8101 0 -1px 0;
+}
+/* line 216, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .leftButton, #jqt .cancel, #jqt .back {
+  left: 6px;
+  right: auto;
+}
+/* line 221, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .add {
+  font-size: 24px;
+  line-height: 24px;
+  font-weight: bold;
+}
+/* line 229, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul {
+  padding: 0;
+  margin: 5px 10px 10px 10px;
+  -webkit-margin-collapse: separate;
+}
+/* line 231, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul, #jqt ul.individual li {
+  background-color: #585556;
+  color: #d7d5d6;
+  text-shadow: #3e3c3d 0 -1px 0;
+  border: 1px solid #312f30;
+  font: bold 18px "Helvetica Neue", Helvetica;
+}
+/* line 240, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul:first-child {
+  margin-top: 15px;
+}
+/* line 246, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li {
+  border-top: 1px solid #4b4849;
+  list-style-type: none;
+  overflow: hidden;
+  padding: 10px;
+  -webkit-transform: translate3d(0, 0, 0);
+  /* expensive way to avoid flickr */
+}
+/* line 253, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li a {
+  text-decoration: none;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+  padding: 10px;
+  margin: -10px;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-transform: translateZ(0);
+  color: white;
+  text-shadow: #3e3c3d 0 -1px 0;
+}
+/* line 265, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li a.active {
+  background-image: none;
+  background-color: #53b401;
+  -webkit-box-shadow: #5cc801 0 1px 0px inset;
+  box-shadow: #5cc801 0 1px 0px inset;
+  color: white;
+  text-shadow: #3c8101 0 -1px 0;
+}
+/* line 270, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li a.active small {
+  color: #a0fe50;
+  text-shadow: black 0 -1px 0;
+}
+/* line 271, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li a.active small.counter {
+  background-color: #306801;
+}
+/* line 280, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li small {
+  color: #53b401;
+  font: 16px "Helvetica Neue", Helvetica;
+  text-align: right;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+  display: block;
+  width: 23%;
+  position: relative;
+  z-index: 20;
+  float: right;
+  line-height: 16px;
+  padding: 2px 8px 4px 8px;
+}
+/* line 295, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li small.counter {
+  background: #312f30;
+  color: #989496;
+  text-shadow: #0a0a0a 0 -1px 0;
+  z-index: 10;
+  font-size: 16px;
+  font-weight: bold;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  display: block;
+  width: auto;
+}
+/* line 311, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li ::-webkit-input-placeholder {
+  color: #989496;
+  text-shadow: #3e3c3d 0 -1px 0;
+}
+/* line 322, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li input[type="text"],
+#jqt ul li input[type="password"],
+#jqt ul li input[type="tel"],
+#jqt ul li input[type="number"],
+#jqt ul li input[type="search"],
+#jqt ul li input[type="email"],
+#jqt ul li input[type="url"],
+#jqt ul li textarea, #jqt ul li select {
+  color: white;
+  text-shadow: #3e3c3d 0 -1px 0;
+  background: transparent url("data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==");
+  border: 0;
+  font: normal 17px "Helvetica Neue", Helvetica;
+  padding: 0;
+  display: inline-block;
+  margin-left: 0px;
+  width: 100%;
+  -webkit-appearance: textarea;
+}
+/* line 333, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li textarea {
+  height: 120px;
+  padding: 0;
+  text-indent: -2px;
+}
+/* line 338, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li input[type="checkbox"], #jqt ul li input[type="radio"] {
+  margin: 0;
+  padding: 10px;
+}
+/* line 342, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li input[type="checkbox"]:after, #jqt ul li input[type="radio"]:after {
+  content: attr(title);
+  position: absolute;
+  display: block;
+  width: 0;
+  left: 21px;
+  top: 12px;
+  font-family: "Helvetica Neue", Helvetica;
+  font-size: 17px;
+  line-height: 21px;
+  width: 246px;
+  margin: 0 0 0 17px;
+  color: white;
+  text-shadow: #3e3c3d 0 -1px 0;
+}
+/* line 355, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li input[type='submit'] {
+  -webkit-border-radius: 4px;
+  border-radius: 4px;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eeeeee), to(#9c9ea0));
+  border: 1px outset #aaa;
+  display: block;
+  font-size: inherit;
+  font-weight: inherit;
+  padding: 10px;
+}
+/* line 368, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li.arrow small, #jqt ul li.forward small {
+  margin-right: 24px;
+}
+/* line 380, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li.forward:before {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 24px;
+  height: 24px;
+  top: 50%;
+  right: 6px;
+  margin-top: -12px;
+  width: 24px;
+  height: 24px;
+  -webkit-border-radius: 12px;
+  border-radius: 12px;
+  background-image: none;
+  background-color: #53b401;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #76fe04), color-stop(50%, #5fcd01), color-stop(51%, #53b401), color-stop(100%, #479b01));
+  background-image: -webkit-linear-gradient(top, #76fe04, #5fcd01 50%, #53b401 51%, #479b01);
+  background-image: linear-gradient(top, #76fe04, #5fcd01 50%, #53b401 51%, #479b01);
+  border: 2px solid #fff;
+  -webkit-box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  -webkit-box-sizing: border-box;
+  padding: 0;
+  z-index: 10;
+  line-height: 0;
+  pointer-events: none;
+}
+/* line 395, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul li.forward:after {
+  color: white;
+  text-shadow: #3c8101 0 -1px 0;
+  filter: progid:DXImageTransform.Microsoft.Alpha(Opacity=100);
+  opacity: 1;
+  font-size: 24px;
+}
+/* line 404, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.rounded, #jqt ul.individual li {
+  -webkit-box-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
+  box-shadow: rgba(255, 255, 255, 0.15) 0 1px 0;
+  border: 1px solid #312f30;
+}
+/* line 409, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.rounded {
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+}
+/* line 412, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.rounded li:first-child, #jqt ul.rounded li:first-child a {
+  border-top: 0;
+  -webkit-border-top-left-radius: 8px;
+  border-top-left-radius: 8px;
+  -webkit-border-top-right-radius: 8px;
+  border-top-right-radius: 8px;
+}
+/* line 416, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.rounded li:last-child, #jqt ul.rounded li:last-child a {
+  -webkit-border-bottom-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  -webkit-border-bottom-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+}
+/* line 422, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.form li {
+  padding: 7px 10px;
+}
+/* line 425, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.form li.error {
+  border: 2px solid red;
+}
+/* line 428, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.form li.error + #jqt ul.form li.error {
+  border-top: 0;
+}
+/* line 438, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.metal li {
+  background-image: none;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #666;
+  font-size: 26px;
+}
+/* line 445, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.metal li a {
+  line-height: 26px;
+  margin: 0;
+  padding: 13px 0;
+}
+/* line 451, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.metal li em {
+  display: block;
+  font-size: 14px;
+  font-style: normal;
+  width: 50%;
+  line-height: 14px;
+}
+/* line 459, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.metal li small {
+  float: right;
+  position: relative;
+  margin-top: 10px;
+  font-weight: bold;
+}
+/* line 473, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.edgetoedge li {
+  font-size: 20px;
+}
+/* line 476, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.edgetoedge li:first-child {
+  border-top: 0;
+}
+/* line 480, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.edgetoedge li.sep {
+  font-size: 16px;
+  padding: 2px 10px;
+}
+/* line 485, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.edgetoedge li em {
+  font-weight: normal;
+  font-style: normal;
+}
+/* line 494, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.plastic {
+  font-size: 18px;
+}
+/* line 498, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.plastic li {
+  border-width: 1px 0;
+  border-style: solid;
+  background-image: none;
+  background-color: #2c2a2b;
+  border-top-color: #312f30;
+  border-bottom-color: #242323;
+}
+/* line 506, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.plastic li:nth-child(odd) {
+  background-image: none;
+  background-color: #312f30;
+}
+/* line 510, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.plastic li a.active.loading {
+  background-image: url(img/loading.gif);
+  background-position: 95% center;
+  background-repeat: no-repeat;
+}
+/* line 515, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.plastic li small {
+  color: #989496;
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+}
+/* line 525, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.individual {
+  border: 0;
+  background: none;
+  clear: both;
+  overflow: hidden;
+}
+/* line 531, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.individual li {
+  font-size: 14px;
+  text-align: center;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  width: 48%;
+  float: left;
+  display: block;
+  padding: 11px 10px 14px 10px;
+}
+/* line 541, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.individual li + li {
+  float: right;
+}
+/* line 546, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt ul.individual a {
+  line-height: 16px;
+  margin: -11px -10px -14px -10px;
+  padding: 11px 10px 14px 10px;
+  -webkit-border-radius: 8px;
+  border-radius: 8px;
+}
+/* line 555, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .toggle {
+  width: 94px;
+  position: relative;
+  height: 27px;
+  display: block;
+  overflow: hidden;
+  float: right;
+}
+/* line 563, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .toggle input[type="checkbox"] {
+  margin: 0;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  height: 27px;
+  overflow: hidden;
+  width: 149px;
+  border: 0;
+  -webkit-transition: left 0.15s ease-in-out;
+  transition: left 0.15s ease-in-out;
+  position: absolute;
+  top: 0;
+  left: -55px;
+  -webkit-appearance: textarea;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+}
+/* line 577, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .toggle input[type="checkbox"]:checked {
+  left: 0px;
+}
+/* line 583, /home/wjc/work/games/poc/firstblood/web/themes/scss/include/_skeleton.scss */
+#jqt .info {
+  font-size: 12px;
+  line-height: 16px;
+  text-align: center;
+  color: #444;
+  padding: 15px;
+  font-weight: bold;
+}
+
+/* line 14, ../scss/jqtouch-edited.scss */
+#jqt {
+  /* Lists */
+}
+/* line 15, ../scss/jqtouch-edited.scss */
+#jqt > * {
+  background-image: url('data:image/png;base64,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'), -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #7b7b7b), color-stop(30%, #696969), color-stop(65%, #555555), color-stop(100%, #464646));
+  background-image: url('data:image/png;base64,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'), -webkit-linear-gradient(top, #7b7b7b, #696969 30%, #555555 65%, #464646);
+  background-image: url('data:image/png;base64,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'), linear-gradient(top, #7b7b7b, #696969 30%, #555555 65%, #464646);
+}
+/* line 23, ../scss/jqtouch-edited.scss */
+#jqt .toolbar {
+  background-image: -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 12.5, color-stop(12.5%, #2b0808), color-stop(12.5%, rgba(21, 4, 4, 0))), -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 12.5, color-stop(12.5%, #2b0808), color-stop(12.5%, rgba(21, 4, 4, 0))), -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 12.5, color-stop(12.5%, rgba(255, 255, 255, 0.1)), color-stop(12.5%, rgba(255, 255, 255, 0))), -webkit-gradient(radial, 50% 50%, 0, 50% 50%, 12.5, color-stop(12.5%, rgba(255, 255, 255, 0.1)), color-stop(12.5%, rgba(255, 255, 255, 0)));
+  background-image: -webkit-radial-gradient(#2b0808 12.5%, rgba(21, 4, 4, 0) 12.5%), -webkit-radial-gradient(#2b0808 12.5%, rgba(21, 4, 4, 0) 12.5%), -webkit-radial-gradient(rgba(255, 255, 255, 0.1) 12.5%, rgba(255, 255, 255, 0) 12.5%), -webkit-radial-gradient(rgba(255, 255, 255, 0.1) 12.5%, rgba(255, 255, 255, 0) 12.5%);
+  background-image: radial-gradient(#2b0808 12.5%, rgba(21, 4, 4, 0) 12.5%), radial-gradient(#2b0808 12.5%, rgba(21, 4, 4, 0) 12.5%), radial-gradient(rgba(255, 255, 255, 0.1) 12.5%, rgba(255, 255, 255, 0) 12.5%), radial-gradient(rgba(255, 255, 255, 0.1) 12.5%, rgba(255, 255, 255, 0) 12.5%);
+  background-repeat: repeat;
+  background-position: 0 0, 8px 8px, 0 1px, 8px 9px;
+  background-color: #551111;
+  background-size: 16px 16px;
+}
+/* line 32, ../scss/jqtouch-edited.scss */
+#jqt ul li {
+  border-top: 1px solid #4b4849;
+  background-image: none;
+  background-color: rgba(88, 85, 86, 0.2);
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(127, 123, 124, 0.2)), color-stop(3%, rgba(101, 98, 99, 0.2)), color-stop(100%, rgba(75, 72, 73, 0.2)));
+  background-image: -webkit-linear-gradient(top, rgba(127, 123, 124, 0.2), rgba(101, 98, 99, 0.2) 3%, rgba(75, 72, 73, 0.2));
+  background-image: linear-gradient(top, rgba(127, 123, 124, 0.2), rgba(101, 98, 99, 0.2) 3%, rgba(75, 72, 73, 0.2));
+}
+/* line 36, ../scss/jqtouch-edited.scss */
+#jqt ul li a {
+  color: white;
+  text-shadow: #3e3c3d 0 -1px 0;
+}
+/* line 40, ../scss/jqtouch-edited.scss */
+#jqt ul li .toggle input[type="checkbox"] {
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  background: white url(../img/jqt/on_off.png) 0 0 no-repeat;
+}
+/* line 45, ../scss/jqtouch-edited.scss */
+#jqt ul li input[type='submit'] {
+  background-image: none;
+  background-color: white;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #ffffff), color-stop(50%, #ffffff), color-stop(51%, #ffffff), color-stop(100%, #f2f2f2));
+  background-image: -webkit-linear-gradient(top, #ffffff, #ffffff 50%, #ffffff 51%, #f2f2f2);
+  background-image: linear-gradient(top, #ffffff, #ffffff 50%, #ffffff 51%, #f2f2f2);
+  border: 1px outset black;
+}
+/* line 50, ../scss/jqtouch-edited.scss */
+#jqt ul li small.counter {
+  -webkit-box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0;
+  box-shadow: rgba(255, 255, 255, 0.1) 0 1px 0;
+}
+/* line 57, ../scss/jqtouch-edited.scss */
+#jqt ul.metal li {
+  background-image: none;
+  border-top: 1px solid #fff;
+  border-bottom: 1px solid #666;
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#eeeeee), to(#9c9ea0));
+}
+/* line 63, ../scss/jqtouch-edited.scss */
+#jqt ul.metal li a {
+  text-shadow: #fff 0 1px 0;
+}
+/* line 65, ../scss/jqtouch-edited.scss */
+#jqt ul.metal li a.active {
+  color: #000;
+}
+/* line 68, ../scss/jqtouch-edited.scss */
+#jqt ul.metal li em {
+  color: #444;
+}
+/* line 74, ../scss/jqtouch-edited.scss */
+#jqt ul.edgetoedge li {
+  background-image: none;
+  background-color: #3e3c3d;
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, #292828), color-stop(100%, #312f30));
+  background-image: -webkit-linear-gradient(top, #292828, #312f30);
+  background-image: linear-gradient(top, #292828, #312f30);
+  border-bottom: 1px solid #1f1e1e;
+  border-top: 1px solid #363435;
+}
+/* line 79, ../scss/jqtouch-edited.scss */
+#jqt ul.edgetoedge li.sep {
+  background-image: none;
+  background-color: rgba(0, 0, 0, 0.3);
+  background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(0%, rgba(38, 38, 38, 0.3)), color-stop(30%, rgba(20, 20, 20, 0.3)), color-stop(65%, rgba(0, 0, 0, 0.3)), color-stop(100%, rgba(0, 0, 0, 0.3)));
+  background-image: -webkit-linear-gradient(top, rgba(38, 38, 38, 0.3), rgba(20, 20, 20, 0.3) 30%, rgba(0, 0, 0, 0.3) 65%, rgba(0, 0, 0, 0.3));
+  background-image: linear-gradient(top, rgba(38, 38, 38, 0.3), rgba(20, 20, 20, 0.3) 30%, rgba(0, 0, 0, 0.3) 65%, rgba(0, 0, 0, 0.3));
+  color: #989496;
+  text-shadow: black 0 -1px 0;
+}
+/* line 86, ../scss/jqtouch-edited.scss */
+#jqt .info {
+  background: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#cccccc), to(#aaaaaa), color-stop(0.6, #cccccc));
+  text-shadow: rgba(255, 255, 255, 0.8) 0 1px 0;
+  color: #444;
+  border-top: 1px solid rgba(255, 255, 255, 0.2);
+}

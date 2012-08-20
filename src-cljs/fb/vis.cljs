@@ -10,6 +10,9 @@
 ;;;;;; visualisation stuff
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(defn set-theme [settings]
+  (.attr ($ "#settheme") "href" (str "themes/css/" (:theme settings) ".css")))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ui elements;
 
 ;; round off value and return amount in a span

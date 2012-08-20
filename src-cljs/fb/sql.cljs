@@ -20,10 +20,11 @@
                                ))))
 
 (defn init-settings [t r]
-    (.executeSql t "SELECT * FROM settings;"
-                 (clj->js [])
-                 #(if (zero? (.-length (.-rows %2)))
-                    (.executeSql %1 "INSERT INTO settings (menuPos, menuOn, help) VALUES (1, 1, 1);"))))
+  (.executeSql t "SELECT * FROM settings;"
+               (clj->js [])
+               #(if (zero? (.-length (.-rows %2)))
+                  (.executeSql %1 "INSERT INTO settings (menuPos, menuOn, help, theme) VALUES (1, 1, 1, \"jqtouch\");" (clj->js [])
+                               ))))
 
 (defn add-db! [name schema & [f]]
   (let [n (apply str (next (str name)))]
@@ -36,6 +37,7 @@
 
 (defn db-init []
   (def db (js/openDatabase "projs" "1.0" "projs" 65536))
+  (.transaction db #(.executeSql %1 "DROP TABLE settings;"))
   (add-db! :projects (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                           " name TEXT NOT NULL"))
   (add-db! :buddies  (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
@@ -49,6 +51,7 @@
   (add-db! :settings (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                           " menuPos INTEGER NOT NULL,"
                           " menuOn INTEGER NOT NULL,"
+                          " theme TEXT NOT NULL,"
                           " help INTEGER NOT NULL")
            init-settings)
   (add-db! :relcbp   (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
@@ -62,14 +65,15 @@
 (defn update-settings [settings f]
     (.transaction db
      (fn [t]
-       (.executeSql t "UPDATE settings SET menuPos = ?, menuOn = ?, help = ? WHERE id = 1;"
+       (.executeSql t "UPDATE settings SET menuPos = ?, menuOn = ?, help = ?, theme = ? WHERE id = 1;"
                     (clj->js [(if (= :top (:menuPos settings)) 1 0)
                               (if (:menuOn settings) 1 0)
-                              (if (:help settings) 1 0)])
+                              (if (:help settings) 1 0)
+                              (:theme settings)])
                     f))))
 
 (defn do-settings [f]
-  (let [rq (str "SELECT settings.menuOn, settings.menuPos, settings.help FROM settings "
+  (let [rq (str "SELECT settings.menuOn, settings.menuPos, settings.help, settings.theme FROM settings "
                 " ;")]
     (do-select #(f (mk-settings %2)) rq)))
 
