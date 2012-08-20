@@ -21418,54 +21418,54 @@ goog.require("jayq.core");
 fb.vis.set_theme = function set_theme(settings) {
   return jayq.core.$.call(null, "#settheme").attr("href", [cljs.core.str("themes/css/"), cljs.core.str((new cljs.core.Keyword("\ufdd0'theme")).call(null, settings)), cljs.core.str(".css")].join(""))
 };
-var sp__1501170 = jayq.core.$.call(null, "<span></span>").addClass("money");
+var sp__1505214 = jayq.core.$.call(null, "<span></span>").addClass("money");
 fb.vis.money = function money(amount) {
-  return sp__1501170.clone().text(function(p1__1501169_SHARP_) {
-    if(cljs.core._EQ_.call(null, 1, cljs.core.count.call(null, p1__1501169_SHARP_))) {
+  return sp__1505214.clone().text(function(p1__1505213_SHARP_) {
+    if(cljs.core._EQ_.call(null, 1, cljs.core.count.call(null, p1__1505213_SHARP_))) {
       return"$0"
     }else {
-      return p1__1501169_SHARP_
+      return p1__1505213_SHARP_
     }
   }.call(null, [cljs.core.str(amount)].join("").replace(/^0*([0-9]*\.?[0-9]{0,2})?.*$/, "$$$1")))
 };
-var sp__1501173 = jayq.core.$.call(null, "<span></span>").addClass("buddy");
+var sp__1505217 = jayq.core.$.call(null, "<span></span>").addClass("buddy");
 fb.vis.buddy = function buddy(name) {
-  return sp__1501173.clone().text(name)
+  return sp__1505217.clone().text(name)
 };
 fb.vis.add_menu = function add_menu(pid, settings) {
-  var place__1501203 = cljs.core._EQ_.call(null, "\ufdd0'top", (new cljs.core.Keyword("\ufdd0'menuPos")).call(null, settings)) ? jayq.core.$.call(null, "#newpage div.top") : jayq.core.$.call(null, "#newpage div.bottom");
-  var menu__1501204 = jayq.core.$.call(null, "div.hidden div.menu").clone();
-  place__1501203.append(cljs.core.truth_((new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings)) ? menu__1501204.show() : menu__1501204.hide());
-  var ulr__1501205 = jayq.core.$.call(null, "#newpage div.menu div.right ul");
-  var ull__1501206 = jayq.core.$.call(null, "#newpage div.menu div.left ul");
-  var li__1501207 = jayq.core.$.call(null, "<li></li>");
-  var a__1501208 = jayq.core.$.call(null, "<a></a>");
-  var data__1501209 = cljs.core.ObjMap.fromObject(["settings"], {"settings":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["anim", "flipright"], true)], true)});
-  var ll__1501210 = cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["Expenses", "proj"], true), cljs.core.PersistentVector.fromArray(["Buddies", "buddies"], true)], true);
-  var lr__1501211 = cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["Total", "total"], true), cljs.core.PersistentVector.fromArray(["Settings", "settings"], true)], true);
-  var add__1501231 = function(p1__1501171_SHARP_, p2__1501172_SHARP_) {
-    var G__1501212__1501213 = cljs.core.seq.call(null, p1__1501171_SHARP_);
-    if(G__1501212__1501213) {
-      var G__1501215__1501217 = cljs.core.first.call(null, G__1501212__1501213);
-      var vec__1501216__1501218 = G__1501215__1501217;
-      var t__1501219 = cljs.core.nth.call(null, vec__1501216__1501218, 0, null);
-      var l__1501220 = cljs.core.nth.call(null, vec__1501216__1501218, 1, null);
-      var G__1501212__1501221 = G__1501212__1501213;
-      var G__1501215__1501222 = G__1501215__1501217;
-      var G__1501212__1501223 = G__1501212__1501221;
+  var place__1505247 = cljs.core._EQ_.call(null, "\ufdd0'top", (new cljs.core.Keyword("\ufdd0'menuPos")).call(null, settings)) ? jayq.core.$.call(null, "#newpage div.top") : jayq.core.$.call(null, "#newpage div.bottom");
+  var menu__1505248 = jayq.core.$.call(null, "div.hidden div.menu").clone();
+  place__1505247.append(cljs.core.truth_((new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings)) ? menu__1505248.show() : menu__1505248.hide());
+  var ulr__1505249 = jayq.core.$.call(null, "#newpage div.menu div.right ul");
+  var ull__1505250 = jayq.core.$.call(null, "#newpage div.menu div.left ul");
+  var li__1505251 = jayq.core.$.call(null, "<li></li>");
+  var a__1505252 = jayq.core.$.call(null, "<a></a>");
+  var data__1505253 = cljs.core.ObjMap.fromObject(["settings"], {"settings":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["anim", "flipright"], true)], true)});
+  var ll__1505254 = cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["Expenses", "proj"], true), cljs.core.PersistentVector.fromArray(["Buddies", "buddies"], true)], true);
+  var lr__1505255 = cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["Total", "total"], true), cljs.core.PersistentVector.fromArray(["Settings", "settings"], true)], true);
+  var add__1505275 = function(p1__1505215_SHARP_, p2__1505216_SHARP_) {
+    var G__1505256__1505257 = cljs.core.seq.call(null, p1__1505215_SHARP_);
+    if(G__1505256__1505257) {
+      var G__1505259__1505261 = cljs.core.first.call(null, G__1505256__1505257);
+      var vec__1505260__1505262 = G__1505259__1505261;
+      var t__1505263 = cljs.core.nth.call(null, vec__1505260__1505262, 0, null);
+      var l__1505264 = cljs.core.nth.call(null, vec__1505260__1505262, 1, null);
+      var G__1505256__1505265 = G__1505256__1505257;
+      var G__1505259__1505266 = G__1505259__1505261;
+      var G__1505256__1505267 = G__1505256__1505265;
       while(true) {
-        var vec__1501224__1501225 = G__1501215__1501222;
-        var t__1501226 = cljs.core.nth.call(null, vec__1501224__1501225, 0, null);
-        var l__1501227 = cljs.core.nth.call(null, vec__1501224__1501225, 1, null);
-        var G__1501212__1501228 = G__1501212__1501223;
-        p2__1501172_SHARP_.append(li__1501207.clone().append(fb.misc.add_data.call(null, a__1501208.clone().data("pid", pid).attr("href", l__1501227).text(t__1501226), l__1501227, data__1501209)));
-        var temp__3974__auto____1501229 = cljs.core.next.call(null, G__1501212__1501228);
-        if(temp__3974__auto____1501229) {
-          var G__1501212__1501230 = temp__3974__auto____1501229;
-          var G__1501232 = cljs.core.first.call(null, G__1501212__1501230);
-          var G__1501233 = G__1501212__1501230;
-          G__1501215__1501222 = G__1501232;
-          G__1501212__1501223 = G__1501233;
+        var vec__1505268__1505269 = G__1505259__1505266;
+        var t__1505270 = cljs.core.nth.call(null, vec__1505268__1505269, 0, null);
+        var l__1505271 = cljs.core.nth.call(null, vec__1505268__1505269, 1, null);
+        var G__1505256__1505272 = G__1505256__1505267;
+        p2__1505216_SHARP_.append(li__1505251.clone().append(fb.misc.add_data.call(null, a__1505252.clone().data("pid", pid).attr("href", l__1505271).text(t__1505270), l__1505271, data__1505253)));
+        var temp__3974__auto____1505273 = cljs.core.next.call(null, G__1505256__1505272);
+        if(temp__3974__auto____1505273) {
+          var G__1505256__1505274 = temp__3974__auto____1505273;
+          var G__1505276 = cljs.core.first.call(null, G__1505256__1505274);
+          var G__1505277 = G__1505256__1505274;
+          G__1505259__1505266 = G__1505276;
+          G__1505256__1505267 = G__1505277;
           continue
         }else {
           return null
@@ -21476,111 +21476,111 @@ fb.vis.add_menu = function add_menu(pid, settings) {
       return null
     }
   };
-  add__1501231.call(null, ll__1501210, ull__1501206);
-  return add__1501231.call(null, lr__1501211, ulr__1501205)
+  add__1505275.call(null, ll__1505254, ull__1505250);
+  return add__1505275.call(null, lr__1505255, ulr__1505249)
 };
 fb.vis.set_title_project = function set_title_project(f, pid) {
-  var sett__1501255 = function(tx, r) {
-    var i__1501245 = r.rows.item(0);
-    var n__1501246 = i__1501245.name;
-    var id__1501247 = i__1501245.id;
-    var tot__1501248 = i__1501245.tot;
-    var settings__1501249 = fb.misc.mk_settings.call(null, r);
-    var a__1501250 = jayq.core.$.call(null, "<a></a>");
-    var help__1501251 = jayq.core.$.call(null, "#newpage div.info");
-    if(cljs.core.truth_((new cljs.core.Keyword("\ufdd0'help")).call(null, settings__1501249))) {
-      help__1501251.show()
+  var sett__1505299 = function(tx, r) {
+    var i__1505289 = r.rows.item(0);
+    var n__1505290 = i__1505289.name;
+    var id__1505291 = i__1505289.id;
+    var tot__1505292 = i__1505289.tot;
+    var settings__1505293 = fb.misc.mk_settings.call(null, r);
+    var a__1505294 = jayq.core.$.call(null, "<a></a>");
+    var help__1505295 = jayq.core.$.call(null, "#newpage div.info");
+    if(cljs.core.truth_((new cljs.core.Keyword("\ufdd0'help")).call(null, settings__1505293))) {
+      help__1505295.show()
     }else {
-      help__1501251.hide()
+      help__1505295.hide()
     }
-    jayq.core.$.call(null, "#newpage div.top").data("pid", pid).append(jayq.core.$.call(null, '<div class="toolbar"></div>').append(jayq.core.$.call(null, "<h1></h1>").append(a__1501250.clone().attr("href", "proj").data("pid", pid).append([cljs.core.str(n__1501246), cljs.core.str(": ")].join("")).append(fb.vis.money.call(null, tot__1501248)))).append(a__1501250.clone().addClass("back").addClass("button").attr("href", "back").text("Back")).append(a__1501250.clone().addClass("button").attr("href", 
+    jayq.core.$.call(null, "#newpage div.top").data("pid", pid).append(jayq.core.$.call(null, '<div class="toolbar"></div>').append(jayq.core.$.call(null, "<h1></h1>").append(a__1505294.clone().attr("href", "proj").data("pid", pid).append([cljs.core.str(n__1505290), cljs.core.str(": ")].join("")).append(fb.vis.money.call(null, tot__1505292)))).append(a__1505294.clone().addClass("back").addClass("button").attr("href", "back").text("Back")).append(a__1505294.clone().addClass("button").attr("href", 
     "menu").text("Menu").bind("click touchend", function() {
       fb.sql.do_settings.call(null, function(settings) {
-        var menu__1501252 = jayq.core.$.call(null, "#content div.menu");
-        var settings__1501253 = cljs.core.into.call(null, settings, cljs.core.ObjMap.fromObject(["\ufdd0'menuOn"], {"\ufdd0'menuOn":cljs.core.not.call(null, (new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings))}));
-        var on__1501254 = (new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings__1501253);
-        return fb.sql.update_settings.call(null, settings__1501253, function() {
-          if(cljs.core.truth_(on__1501254)) {
-            return menu__1501252.show()
+        var menu__1505296 = jayq.core.$.call(null, "#content div.menu");
+        var settings__1505297 = cljs.core.into.call(null, settings, cljs.core.ObjMap.fromObject(["\ufdd0'menuOn"], {"\ufdd0'menuOn":cljs.core.not.call(null, (new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings))}));
+        var on__1505298 = (new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings__1505297);
+        return fb.sql.update_settings.call(null, settings__1505297, function() {
+          if(cljs.core.truth_(on__1505298)) {
+            return menu__1505296.show()
           }else {
-            return menu__1501252.hide()
+            return menu__1505296.hide()
           }
         })
       });
       return false
     })));
-    fb.vis.add_menu.call(null, pid, settings__1501249);
-    return f.call(null, id__1501247, n__1501246, tot__1501248, tx)
+    fb.vis.add_menu.call(null, pid, settings__1505293);
+    return f.call(null, id__1505291, n__1505290, tot__1505292, tx)
   };
-  return fb.sql.do_proj.call(null, sett__1501255, pid)
+  return fb.sql.do_proj.call(null, sett__1505299, pid)
 };
 fb.vis.mk_validate = function mk_validate(addb) {
   jayq.core.$.call(null, addb).hide();
   return cljs.core.partial.call(null, function(addb, e) {
-    var inp__1501258 = jayq.core.$.call(null, e.currentTarget);
-    var addb__1501259 = jayq.core.$.call(null, addb);
-    if(cljs.core.count.call(null, inp__1501258.val()) === 0) {
-      return addb__1501259.hide()
+    var inp__1505302 = jayq.core.$.call(null, e.currentTarget);
+    var addb__1505303 = jayq.core.$.call(null, addb);
+    if(cljs.core.count.call(null, inp__1505302.val()) === 0) {
+      return addb__1505303.hide()
     }else {
-      return addb__1501259.show()
+      return addb__1505303.show()
     }
   }, addb.replace(/^#newpage(.*)$/, "#content$1"))
 };
 fb.vis.canvas_rect = function canvas_rect(w_tot, h_tot, w) {
-  var c__1501262 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
-  var ctx__1501263 = c__1501262.getContext("2d", w_tot, h_tot);
-  c__1501262.width = w_tot;
-  c__1501262.height = h_tot;
-  ctx__1501263.fillStyle = "#121";
-  ctx__1501263.fillRect(0, 0, w_tot, h_tot);
-  ctx__1501263.fillStyle = "#131";
-  ctx__1501263.fillRect(0, 0, w, h_tot);
-  return ctx__1501263
+  var c__1505306 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
+  var ctx__1505307 = c__1505306.getContext("2d", w_tot, h_tot);
+  c__1505306.width = w_tot;
+  c__1505306.height = h_tot;
+  ctx__1505307.fillStyle = "#121";
+  ctx__1505307.fillRect(0, 0, w_tot, h_tot);
+  ctx__1505307.fillStyle = "#131";
+  ctx__1505307.fillRect(0, 0, w, h_tot);
+  return ctx__1505307
 };
 fb.vis.set_rect_back = function set_rect_back(elt, tot, amount) {
-  var w__1501268 = jayq.core.$.call(null, "body").width();
-  var h__1501269 = 50;
-  var nw__1501270 = cljs.core.int$.call(null, w__1501268 * (amount / tot));
-  var cvs__1501271 = fb.vis.canvas_rect.call(null, w__1501268, h__1501269, nw__1501270);
-  return elt.css("background-image", [cljs.core.str("url("), cljs.core.str(cvs__1501271.canvas.toDataURL("image/png")), cljs.core.str(")")].join("")).css("background-size", "100%")
+  var w__1505312 = jayq.core.$.call(null, "body").width();
+  var h__1505313 = 50;
+  var nw__1505314 = cljs.core.int$.call(null, w__1505312 * (amount / tot));
+  var cvs__1505315 = fb.vis.canvas_rect.call(null, w__1505312, h__1505313, nw__1505314);
+  return elt.css("background-image", [cljs.core.str("url("), cljs.core.str(cvs__1505315.canvas.toDataURL("image/png")), cljs.core.str(")")].join("")).css("background-size", "100%")
 };
 fb.vis.canvas_rect_take = function canvas_rect_take(w_tot, h_tot, wpaid, avg, max) {
-  var c__1501274 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
-  var ctx__1501275 = c__1501274.getContext("2d", w_tot, h_tot);
-  c__1501274.width = w_tot;
-  c__1501274.height = h_tot;
-  ctx__1501275.fillStyle = "#121";
-  ctx__1501275.fillRect(0, 0, w_tot, h_tot);
-  ctx__1501275.fillStyle = "#131";
-  ctx__1501275.fillRect(0, 0, avg, h_tot);
-  ctx__1501275.fillStyle = "#252";
-  ctx__1501275.fillRect(avg, 0, wpaid - avg, h_tot);
-  ctx__1501275.fillStyle = "#33F";
-  ctx__1501275.fillRect(avg, 0, 2, h_tot);
-  return ctx__1501275
+  var c__1505318 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
+  var ctx__1505319 = c__1505318.getContext("2d", w_tot, h_tot);
+  c__1505318.width = w_tot;
+  c__1505318.height = h_tot;
+  ctx__1505319.fillStyle = "#121";
+  ctx__1505319.fillRect(0, 0, w_tot, h_tot);
+  ctx__1505319.fillStyle = "#131";
+  ctx__1505319.fillRect(0, 0, avg, h_tot);
+  ctx__1505319.fillStyle = "#252";
+  ctx__1505319.fillRect(avg, 0, wpaid - avg, h_tot);
+  ctx__1505319.fillStyle = "#33F";
+  ctx__1505319.fillRect(avg, 0, 2, h_tot);
+  return ctx__1505319
 };
 fb.vis.canvas_rect_give = function canvas_rect_give(w_tot, h_tot, wpaid, avg) {
-  var c__1501278 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
-  var ctx__1501279 = c__1501278.getContext("2d", w_tot, h_tot);
-  c__1501278.width = w_tot;
-  c__1501278.height = h_tot;
-  ctx__1501279.fillStyle = "#121";
-  ctx__1501279.fillRect(0, 0, w_tot, h_tot);
-  ctx__1501279.fillStyle = "#131";
-  ctx__1501279.fillRect(0, 0, wpaid, h_tot);
-  ctx__1501279.fillStyle = "#822";
-  ctx__1501279.fillRect(wpaid, 0, avg - wpaid, h_tot);
-  ctx__1501279.fillStyle = "#33F";
-  ctx__1501279.fillRect(avg, 0, 2, h_tot);
-  return ctx__1501279
+  var c__1505322 = cljs.core.first.call(null, jayq.core.$.call(null, "<canvas></canvas>"));
+  var ctx__1505323 = c__1505322.getContext("2d", w_tot, h_tot);
+  c__1505322.width = w_tot;
+  c__1505322.height = h_tot;
+  ctx__1505323.fillStyle = "#121";
+  ctx__1505323.fillRect(0, 0, w_tot, h_tot);
+  ctx__1505323.fillStyle = "#131";
+  ctx__1505323.fillRect(0, 0, wpaid, h_tot);
+  ctx__1505323.fillStyle = "#822";
+  ctx__1505323.fillRect(wpaid, 0, avg - wpaid, h_tot);
+  ctx__1505323.fillStyle = "#33F";
+  ctx__1505323.fillRect(avg, 0, 2, h_tot);
+  return ctx__1505323
 };
 fb.vis.set_tot_rect_back = function set_tot_rect_back(elt, max, avg, amount) {
-  var w__1501285 = jayq.core.$.call(null, "body").width();
-  var h__1501286 = 50;
-  var np__1501287 = cljs.core.int$.call(null, w__1501285 * (amount / max));
-  var na__1501288 = cljs.core.int$.call(null, w__1501285 * (avg / max));
-  var cvs__1501289 = (np__1501287 > na__1501288 ? fb.vis.canvas_rect_take : fb.vis.canvas_rect_give).call(null, w__1501285, h__1501286, np__1501287, na__1501288);
-  return elt.css("background-image", [cljs.core.str("url("), cljs.core.str(cvs__1501289.canvas.toDataURL("image/png")), cljs.core.str(")")].join("")).css("background-size", "100%")
+  var w__1505329 = jayq.core.$.call(null, "body").width();
+  var h__1505330 = 50;
+  var np__1505331 = cljs.core.int$.call(null, w__1505329 * (amount / max));
+  var na__1505332 = cljs.core.int$.call(null, w__1505329 * (avg / max));
+  var cvs__1505333 = (np__1505331 > na__1505332 ? fb.vis.canvas_rect_take : fb.vis.canvas_rect_give).call(null, w__1505329, h__1505330, np__1505331, na__1505332);
+  return elt.css("background-image", [cljs.core.str("url("), cljs.core.str(cvs__1505333.canvas.toDataURL("image/png")), cljs.core.str(")")].join("")).css("background-size", "100%")
 };
 goog.provide("fb.pages");
 goog.require("cljs.core");
@@ -22306,12 +22306,14 @@ fb.total.show_total = function show_total(e, origa) {
 fb.pages.add_page_init_BANG_.call(null, "total", fb.total.show_total);
 goog.provide("fb.settings");
 goog.require("cljs.core");
+goog.require("fb.init");
 goog.require("jayq.util");
 goog.require("fb.vis");
 goog.require("fb.pages");
 goog.require("jayq.core");
 goog.require("fb.misc");
 goog.require("fb.sql");
+goog.require("fb.init");
 goog.require("fb.pages");
 goog.require("fb.misc");
 goog.require("fb.vis");
@@ -22320,54 +22322,59 @@ goog.require("jayq.util");
 goog.require("jayq.core");
 fb.settings.show_settings = function show_settings(e, origa) {
   fb.pages.load_template.call(null, "settings");
-  var pid__1485087 = origa.data("pid");
-  var menu__1485088 = jayq.core.$.call(null, "#newpage div.settings .toolbar");
-  var ulPos__1485089 = jayq.core.$.call(null, "#newpage div.settings ul.menuPos");
-  var ulHelp__1485090 = jayq.core.$.call(null, "#newpage div.settings ul.help");
-  var liApply__1485091 = jayq.core.$.call(null, "#newpage div.settings ul.apply li");
-  var li__1485092 = jayq.core.$.call(null, "<li></li>");
-  var a__1485093 = jayq.core.$.call(null, "<a></a>");
-  var inp__1485094 = jayq.core.$.call(null, "<input />");
-  var add_inp__1485095 = function(li, type, title, grp, check_QMARK_, data) {
-    return li.clone().append(fb.misc.add_data.call(null, inp__1485094.clone(), "inp", data).attr("checked", check_QMARK_).attr("title", title).attr("value", title).attr("type", type).attr("name", grp)).append()
+  var pid__1550148 = origa.data("pid");
+  var menu__1550149 = jayq.core.$.call(null, "#newpage div.settings .toolbar");
+  var ulPos__1550150 = jayq.core.$.call(null, "#newpage div.settings ul.menuPos");
+  var ulTheme__1550151 = jayq.core.$.call(null, "#newpage div.settings ul.theme");
+  var ulHelp__1550152 = jayq.core.$.call(null, "#newpage div.settings ul.help");
+  var liApply__1550153 = jayq.core.$.call(null, "#newpage div.settings ul.apply li");
+  var li__1550154 = jayq.core.$.call(null, "<li></li>");
+  var a__1550155 = jayq.core.$.call(null, "<a></a>");
+  var inp__1550156 = jayq.core.$.call(null, "<input />");
+  var add_inp__1550157 = function(li, type, title, grp, check_QMARK_, data) {
+    return li.clone().append(fb.misc.add_data.call(null, inp__1550156.clone(), "inp", data).attr("checked", check_QMARK_).attr("title", title).attr("value", title).attr("type", type).attr("name", grp)).append()
   };
-  var update__1485104 = function(e) {
+  var update__1550164 = function(e) {
     fb.sql.do_settings.call(null, function(settings) {
-      var menuPos__1485101 = function() {
-        var pred__1485096__1485099 = cljs.core._EQ_;
-        var expr__1485097__1485100 = jayq.core.$.call(null, '#content input[name="menuPos"]:checked').val();
-        if(pred__1485096__1485099.call(null, "Top", expr__1485097__1485100)) {
+      var settings__1550163 = cljs.core.ObjMap.fromObject(["\ufdd0'menuOn", "\ufdd0'menuPos", "\ufdd0'help", "\ufdd0'theme"], {"\ufdd0'menuOn":(new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings), "\ufdd0'menuPos":function() {
+        var pred__1550158__1550161 = cljs.core._EQ_;
+        var expr__1550159__1550162 = jayq.core.$.call(null, '#content input[name="menuPos"]:checked').data("type");
+        if(pred__1550158__1550161.call(null, "top", expr__1550159__1550162)) {
           return"\ufdd0'top"
         }else {
-          if(pred__1485096__1485099.call(null, "Bottom", expr__1485097__1485100)) {
+          if(pred__1550158__1550161.call(null, "bottom", expr__1550159__1550162)) {
             return"\ufdd0'bottom"
           }else {
-            throw new Error([cljs.core.str("No matching clause: "), cljs.core.str(expr__1485097__1485100)].join(""));
+            throw new Error([cljs.core.str("No matching clause: "), cljs.core.str(expr__1550159__1550162)].join(""));
           }
         }
-      }();
-      var help__1485102 = jayq.core.$.call(null, '#content input[name="help"]').attr("checked");
-      var settings__1485103 = cljs.core.ObjMap.fromObject(["\ufdd0'menuOn", "\ufdd0'menuPos", "\ufdd0'help", "\ufdd0'theme"], {"\ufdd0'menuOn":(new cljs.core.Keyword("\ufdd0'menuOn")).call(null, settings), "\ufdd0'menuPos":menuPos__1485101, "\ufdd0'help":help__1485102, "\ufdd0'theme":"red"});
-      return fb.sql.update_settings.call(null, settings__1485103, function() {
-        fb.vis.set_theme.call(null, settings__1485103);
+      }(), "\ufdd0'help":jayq.core.$.call(null, '#content input[name="help"]').attr("checked"), "\ufdd0'theme":jayq.core.$.call(null, '#content input[name="theme"]:checked').data("theme")});
+      return fb.sql.update_settings.call(null, settings__1550163, function() {
+        fb.vis.set_theme.call(null, settings__1550163);
         fb.pages.trigger_new_page.call(null, "back", null);
         return false
       })
     });
     return false
   };
-  var set_settings__1485105 = function(settings) {
-    ulPos__1485089.append(li__1485092.clone().text("Menu Placement:")).append(add_inp__1485095.call(null, li__1485092, "radio", "Top", "menuPos", cljs.core._EQ_.call(null, "\ufdd0'top", (new cljs.core.Keyword("\ufdd0'menuPos")).call(null, settings)), cljs.core.ObjMap.fromObject(["inp"], {"inp":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["type", "top"], true)], true)}))).append(add_inp__1485095.call(null, li__1485092, "radio", "Bottom", "menuPos", cljs.core._EQ_.call(null, 
+  var set_settings__1550165 = function(settings) {
+    ulPos__1550150.append(li__1550154.clone().text("Menu Placement:")).append(add_inp__1550157.call(null, li__1550154, "radio", "Top", "menuPos", cljs.core._EQ_.call(null, "\ufdd0'top", (new cljs.core.Keyword("\ufdd0'menuPos")).call(null, settings)), cljs.core.ObjMap.fromObject(["inp"], {"inp":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["type", "top"], true)], true)}))).append(add_inp__1550157.call(null, li__1550154, "radio", "Bottom", "menuPos", cljs.core._EQ_.call(null, 
     "\ufdd0'bottom", (new cljs.core.Keyword("\ufdd0'menuPos")).call(null, settings)), cljs.core.ObjMap.fromObject(["inp"], {"inp":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["type", "bottom"], true)], true)})));
-    ulHelp__1485090.append(add_inp__1485095.call(null, li__1485092, "checkbox", "Display Help", "help", (new cljs.core.Keyword("\ufdd0'help")).call(null, settings), cljs.core.ObjMap.fromObject(["inp"], {"inp":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["type", "help"], true)], true)})));
-    liApply__1485091.addClass("addli").append(a__1485093.clone().attr("href", "back").text("Apply").bind("click touchend", update__1485104));
-    jayq.core.$.call(null, "#newpage div.settings form").submit(update__1485104);
+    ulTheme__1550151.append(li__1550154.clone().text("Theme:")).append(add_inp__1550157.call(null, li__1550154, "radio", "Grey", "theme", cljs.core._EQ_.call(null, "jqtouch", (new cljs.core.Keyword("\ufdd0'theme")).call(null, settings)), cljs.core.ObjMap.fromObject(["inp"], {"inp":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["theme", "grey"], true)], true)}))).append(add_inp__1550157.call(null, li__1550154, "radio", "Blue", "theme", cljs.core._EQ_.call(null, "blue", 
+    (new cljs.core.Keyword("\ufdd0'theme")).call(null, settings)), cljs.core.ObjMap.fromObject(["inp"], {"inp":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["theme", "blue"], true)], true)}))).append(add_inp__1550157.call(null, li__1550154, "radio", "Red", "theme", cljs.core._EQ_.call(null, "red", (new cljs.core.Keyword("\ufdd0'theme")).call(null, settings)), cljs.core.ObjMap.fromObject(["inp"], {"inp":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["theme", 
+    "red"], true)], true)})));
+    ulHelp__1550152.append(add_inp__1550157.call(null, li__1550154, "checkbox", "Display Help", "help", (new cljs.core.Keyword("\ufdd0'help")).call(null, settings), cljs.core.ObjMap.fromObject(["inp"], {"inp":cljs.core.PersistentVector.fromArray([cljs.core.PersistentVector.fromArray(["type", "help"], true)], true)})));
+    liApply__1550153.addClass("addli").append(a__1550155.clone().attr("href", "back").text("Apply").bind("click touchend", update__1550164));
+    jayq.core.$.call(null, "#newpage div.settings form").submit(update__1550164);
     return fb.pages.swap_page.call(null, e, origa)
   };
-  menu__1485088.append(a__1485093.clone().addClass("back").attr("href", "back").text("Back"));
-  return fb.sql.do_settings.call(null, set_settings__1485105)
+  menu__1550149.append(a__1550155.clone().addClass("back").attr("href", "back").text("Back"));
+  return fb.sql.do_settings.call(null, set_settings__1550165)
 };
 fb.pages.add_page_init_BANG_.call(null, "settings", fb.settings.show_settings);
+fb.init.add_init_BANG_.call(null, function() {
+  return fb.sql.do_settings.call(null, fb.vis.set_theme)
+});
 goog.provide("fb.lol");
 goog.require("cljs.core");
 goog.require("jayq.util");

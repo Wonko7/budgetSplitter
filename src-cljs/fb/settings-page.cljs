@@ -8,6 +8,7 @@
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy set-theme]]
         [fb.misc :only [mk-settings add-data trim num]]
         [fb.pages :only [add-page-init! load-template swap-page trigger-new-page]]
+        [fb.init :only [add-init!]]
         ; FIXME get :use to import everything.
         ))
 
@@ -19,6 +20,7 @@
   (let [pid     (.data origa "pid")
         menu    ($ "#newpage div.settings .toolbar")
         ulPos   ($ "#newpage div.settings ul.menuPos")
+        ulTheme ($ "#newpage div.settings ul.theme")
         ulHelp  ($ "#newpage div.settings ul.help")
         liApply ($ "#newpage div.settings ul.apply li")
         li      ($ "<li></li>")
@@ -37,14 +39,12 @@
                                         (.attr "name" grp))))))
         update  (fn [e]
                   (do-settings (fn [settings]
-                                 (let [menuPos  (condp = (.val ($ "#content input[name=\"menuPos\"]:checked"))
-                                                  "Top"    :top
-                                                  "Bottom" :bottom)
-                                       help     (.attr ($ "#content input[name=\"help\"]") "checked")
-                                       settings {:menuOn  (:menuOn settings)
-                                                     :menuPos menuPos
-                                                     :help    help
-                                                     :theme   "red"}]
+                                 (let [settings {:menuOn  (:menuOn settings)
+                                                 :menuPos (condp = (.data ($ "#content input[name=\"menuPos\"]:checked") "type")
+                                                            "top"    :top
+                                                            "bottom" :bottom) 
+                                                 :help    (.attr ($ "#content input[name=\"help\"]") "checked")
+                                                 :theme   (.data ($ "#content input[name=\"theme\"]:checked") "theme")}]
                                    (update-settings settings
                                                     #(do
                                                        (set-theme settings)
@@ -58,6 +58,13 @@
                                     (.text "Menu Placement:")))
                          (.append (add-inp li "radio" "Top"    "menuPos" (= :top (:menuPos settings))    {"inp" [["type" "top"]]}))
                          (.append (add-inp li "radio" "Bottom" "menuPos" (= :bottom (:menuPos settings)) {"inp" [["type" "bottom"]]})))
+                       (-> ulTheme
+                         (.append (-> li
+                                    (.clone)
+                                    (.text "Theme:")))
+                         (.append (add-inp li "radio" "Grey" "theme" (= "jqtouch" (:theme settings)) {"inp" [["theme" "grey"]]}))
+                         (.append (add-inp li "radio" "Blue" "theme" (= "blue"    (:theme settings)) {"inp" [["theme" "blue"]]}))
+                         (.append (add-inp li "radio" "Red"  "theme" (= "red"     (:theme settings)) {"inp" [["theme" "red"]]})))
                        (-> ulHelp
                          (.append (add-inp li "checkbox" "Display Help" "help" (:help settings) {"inp" [["type" "help"]]})))
                        (-> liApply
@@ -77,3 +84,4 @@
     (do-settings set-settings)))
 
 (add-page-init! "settings" show-settings)
+(add-init! #(do-settings set-theme))
