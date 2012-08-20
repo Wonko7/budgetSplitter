@@ -14,6 +14,8 @@ body {
 	width: 100%;
 	/* Amount of negative space around the
 	inside of the body */
+	/* overflow is supposed to help with animations and scrolling: */
+	overflow: hidden;
 }
 
 .hidden {
