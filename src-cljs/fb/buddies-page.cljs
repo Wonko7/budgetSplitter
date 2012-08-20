@@ -5,7 +5,7 @@
                        update-settings up-cost up-buddy
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
-        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
+        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy mk-validate]]
         [fb.misc :only [mk-settings add-data trim num]]
         [fb.pages :only [add-page-init! load-template swap-page trigger-new-page]]
         ; FIXME get :use to import everything.
@@ -21,16 +21,14 @@
         li            ($ "<li></li>")
         a             ($ "<a></a>")
         ;; name edition:
-        validate      #(let [addb ($ "#content div.indivbuddy div.editname a")]
-                         (if (zero? (count (.val ($ "#content div.indivbuddy div.editname input"))))
-                           (.hide addb)
-                           (.show addb)))
+        validate      (mk-validate "#newpage div.indivbuddy div.editname a")
         update-name   (fn [e]
                        (let [v    (.val ($ "#content div.indivbuddy div.editname input"))
                              done (fn [e]
                                     (do-buddy #(do
                                                  (.text ($ "#content div.indivbuddy h2 div.title span.buddy")
                                                         (.-bname (.item (.-rows %2) 0)))
+                                                 ;; hide edit box:
                                                  (.trigger ($ "#content div.indivbuddy div.list li.addli a") "click"))
                                               bid))]
                          (if (zero? (count v))
@@ -66,8 +64,7 @@
                                                    (.data "pid" pid)
                                                    (.data "bid" bid)
                                                    (.attr "href" "null")
-                                                   (.bind "click touchend" edit-name)))))
-                          ))
+                                                   (.bind "click touchend" edit-name)))))))
         ;; set page data:
         set-budd-data (fn [id name tot tx]
                         (do-buddy (fn [tx r]
@@ -143,25 +140,18 @@
 
 (defn show-buddies [e origa]
   (load-template "buddies")
-  (let [pid     (.data origa "pid")
-        inp     ($ "#newpage div.buddies form [name=\"name\"]")
-        ul      ($ "#newpage div.buddies form div.list ul")
-        add     ($ "#newpage div.buddies form ul li.addli a")
-        li      ($ "<li></li>")
-        validate        (fn [e]
-                          (let [inp   ($ (.-currentTarget e))
-                                addb  ($ "#content div.buddies form ul li.addli a") ]
-                            (if (zero? (count (.val inp)))
-                              (.hide addb)
-                              (.show addb))))
+  (let [pid      (.data origa "pid")
+        inp      ($ "#newpage div.buddies form [name=\"name\"]")
+        ul       ($ "#newpage div.buddies form div.list ul")
+        li       ($ "<li></li>")
+        add      "#newpage div.buddies form ul li.addli a"
+        validate (mk-validate add)
         set-buddy-data  (fn [id name tot tx]
                           (-> inp
                             (.keyup validate)
                             (.data "pid" pid))
                           (.submit ($ "#newpage div.buddies form") add-page-buddy)
-                          (-> add
-                            (.hide)
-                            (.bind "touchend click" add-page-buddy))
+                          (.bind ($ add) "touchend click" add-page-buddy)
                           (do-buddies (fn [tx r]
                                         (let [buds (for [b (row-seq r)]
                                                      [(.-id b) (.-bname b) (.-btot b)])

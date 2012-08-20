@@ -5,10 +5,12 @@
         [fb.misc :only [mk-settings add-data]]
         ))
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; visualisation stuff
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; ui elements;
 
 ;; round off value and return amount in a span
 (let [sp (-> ($ "<span></span>")
@@ -27,6 +29,9 @@
     (-> sp
       (.clone)
       (.text name))))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; menu & title & info;
 
 (defn add-menu [pid settings]
   (let [place (if (= :top (:menuPos settings))
@@ -105,6 +110,24 @@
                  (add-menu pid settings)
                  (f id n tot tx)))]
     (do-proj sett pid)))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; validate input and hide button;
+
+(defn mk-validate [addb]
+  (.hide ($ addb))
+  (partial (fn [addb e]
+             (let [inp   ($ (.-currentTarget e))
+                   addb  ($ addb)]
+               (if (zero? (count (.val inp)))
+                 (.hide addb)
+                 (.show addb))))
+           (.replace addb
+                     #"^#newpage(.*)$"
+                     "#content$1")))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; canvas background;
 
 (defn canvas-rect [w-tot h-tot w]
   (let [c   (first ($ "<canvas></canvas>"))
