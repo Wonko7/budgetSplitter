@@ -7,8 +7,10 @@
                        nuke-db rm-proj rm-cost rm-buddy]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
         [fb.misc :only [mk-settings add-data trim num]]
+        [fb.init :only [add-init!]]
         ; FIXME get :use to import everything.
         ))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; page loading
@@ -17,6 +19,12 @@
 (def page-dyn-inits {})
 (def back-pages nil)
 (def jQT nil)
+
+(add-init!
+  ;#(def jQT (.jQTouch js/jQuery (clj->js {:icon "img/icon.png"}))) ; FIXME get this working with $
+  #(def jQT (.jQTouch js/jQuery (js-obj "icon" "img/icon.png"))) ; FIXME get this working with $
+  )
+
 
 (defn add-page-init! [name func]
   (def page-dyn-inits (into page-dyn-inits {name func})))
@@ -44,13 +52,9 @@
     (.attr newp "id" "content")
     (.attr cont "id" "old")))
 
-; FIXME add this to an init function
-($ #(.bind ($ "body") "pageAnimationEnd" (fn [e info]
+; remove old div from page after page swap
+(add-init! #(.bind ($ "body") "pageAnimationEnd" (fn [e info]
                                            (.remove ($ "#old")))))
-($
-  ;#(def jQT (.jQTouch js/jQuery (clj->js {:icon "img/icon.png"}))) ; FIXME get this working with $
-  #(def jQT (.jQTouch js/jQuery (js-obj "icon" "img/icon.png"))) ; FIXME get this working with $
- )
 
 (defn load-dyn-page [name e a]
   (when (= name "settings")
@@ -68,16 +72,16 @@
       (load-template name)
       (swap-page e a))))
 
-; FIXME add this to an init function
-($ #(delegate ($ "body") "a" "click touchend"
-              (fn [e]
-                (let [a    ($ (first ($ (.-currentTarget e))))
-                      link (.attr a "href")]
-                  (if (= "mailto" (apply str (take 6 link)))
-                    true
-                    (do
-                      (load-dyn-page link e a)
-                      false))))))
+;; catch a click and find page to load:
+(add-init! #(delegate ($ "body") "a" "click touchend"
+                      (fn [e]
+                        (let [a    ($ (first ($ (.-currentTarget e))))
+                              link (.attr a "href")]
+                          (if (= "mailto" (apply str (take 6 link)))
+                            true
+                            (do
+                              (load-dyn-page link e a)
+                              false))))))
 
 ;; trigger a click to load new page
 (defn trigger-new-page [href data]
@@ -85,7 +89,6 @@
     (.hide)
     (.attr "href" href)
     (add-data href data)
-    ;(#(reduce (fn [a [k v]] (.data a k v)) %1 data))
     (.appendTo ($ "#content"))
     (.click)))
 

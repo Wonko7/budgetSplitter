@@ -12,6 +12,8 @@
         ))
 
 
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; settings;
+
 (defn show-settings [e origa]
   (load-template "settings")
   (let [pid     (.data origa "pid")

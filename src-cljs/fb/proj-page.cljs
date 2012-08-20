@@ -12,7 +12,7 @@
         ))
 
 
-;; new project page:
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; create new project:
 
 (defn add-page-project []
   (let [name (.val ($ "#content div.new form [name=\"name\"]"))
@@ -39,7 +39,7 @@
     (swap-page e origa)))
 
 
-;; show all projects
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; show all projects:
 
 (defn show-projects [e a]
   (load-template "projects")
@@ -64,7 +64,7 @@
                (swap-page e a)))))
 
 
-;; show a project and its costs
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; show a project and its costs:
 
 ;; FIXME:;(.addClass "arrow")
 (defn show-proj [e origa]

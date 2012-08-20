@@ -2,6 +2,7 @@
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
         [fb.misc :only [mk-settings trim]]
+        [fb.init :only [add-init!]]
         ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -55,6 +56,8 @@
                           " bid  INTEGER NOT NULL,"
                           " cid  INTEGER NOT NULL,"
                           " tot  NUMERIC NOT NULL")))
+
+(add-init! db-init)
 
 (defn update-settings [settings f]
     (.transaction db

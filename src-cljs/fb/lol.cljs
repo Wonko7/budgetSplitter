@@ -8,38 +8,9 @@
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
         [fb.misc :only [mk-settings add-data trim num]]
         [fb.pages :only [add-page-init! load-template swap-page trigger-new-page]]
+        [fb.init :only [add-init! do-inits]]
         ; FIXME get :use to import everything.
         ))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;; pages
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;; forms
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; create new project:
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; rm;
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; settings;
-
-
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; inits;
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;;;;; jqt
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-
-
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -47,10 +18,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-($ #(do
-      (db-init)
-      ;(nuke-db)
-      (trigger-new-page "projects" nil)))
+(add-init! #(trigger-new-page "projects" nil) :last)
+(do-inits)
 
 
 ; DEBUG:
