@@ -37,7 +37,6 @@
 
 (defn db-init []
   (def db (js/openDatabase "projs" "1.0" "projs" 65536))
-  (.transaction db #(.executeSql %1 "DROP TABLE settings;"))
   (add-db! :projects (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                           " name TEXT NOT NULL"))
   (add-db! :buddies  (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"

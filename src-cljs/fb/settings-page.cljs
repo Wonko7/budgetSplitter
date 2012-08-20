@@ -62,7 +62,7 @@
                          (.append (-> li
                                     (.clone)
                                     (.text "Theme:")))
-                         (.append (add-inp li "radio" "Grey" "theme" (= "jqtouch" (:theme settings)) {"inp" [["theme" "grey"]]}))
+                         (.append (add-inp li "radio" "Grey" "theme" (= "jqtouch" (:theme settings)) {"inp" [["theme" "jqtouch"]]}))
                          (.append (add-inp li "radio" "Blue" "theme" (= "blue"    (:theme settings)) {"inp" [["theme" "blue"]]}))
                          (.append (add-inp li "radio" "Red"  "theme" (= "red"     (:theme settings)) {"inp" [["theme" "red"]]})))
                        (-> ulHelp
