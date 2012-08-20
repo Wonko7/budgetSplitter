@@ -113,7 +113,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; show buddies & add form
 
-(defn append-buddy [ul li pid bid name ptot btot]
+(defn append-buddy [ul li pid bid name maxpaid btot]
   (.append ul (-> li
                 (.clone)
                 (.append (-> ($ "<a></a>")
@@ -123,7 +123,7 @@
                            (.attr "href" "indivbuddy")
                            (.data "bid" bid)
                            (.data "pid" pid)))
-                (set-rect-back ptot btot))))
+                (set-rect-back maxpaid btot))))
 
 (defn add-page-buddy []
   (let [i    ($ "#content div.buddies form [name=\"name\"]")
@@ -163,8 +163,11 @@
                             (.hide)
                             (.bind "touchend click" add-page-buddy))
                           (do-buddies (fn [tx r]
-                                        (do-row #(append-buddy ul li pid (.-id %) (.-bname %) (.-ptot %) (.-btot %))
-                                                r))
+                                        (let [buds (for [b (row-seq r)]
+                                                     [(.-id b) (.-bname b) (.-btot b)])
+                                              maxpaid (apply max (map #(nth % 2) buds))]
+                                          (doseq [[id bname btot] buds]
+                                            (append-buddy ul li pid id bname maxpaid btot))))
                                       pid)
                           (swap-page e origa))]
     (set-title-project set-buddy-data pid)))
