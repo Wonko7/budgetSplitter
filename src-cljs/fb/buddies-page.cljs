@@ -28,7 +28,7 @@
         update-name   (fn [e]
                        (let [v    (.val ($ "#content div.indivbuddy div.editname input"))
                              done (fn [e]
-                                    (do-buddy #(do 
+                                    (do-buddy #(do
                                                  (.text ($ "#content div.indivbuddy h2 div.title span.buddy")
                                                         (.-bname (.item (.-rows %2) 0)))
                                                  (.trigger ($ "#content div.indivbuddy div.list li.addli a") "click"))
@@ -54,8 +54,8 @@
                         (let [div  (.hide ($ "#newpage div.indivbuddy div.editname"))
                               inp  (.val ($ "#newpage div.indivbuddy div.editname input") bname)]
                           (.hide ($ "#newpage div.indivbuddy div.editname"))
-                          (.bind ($ "#newpage div.indivbuddy div.editname li.addli a") "click touchend" update-name)  
-                          (.submit ($ "#newpage div.indivbuddy div.editname form") update-name)  
+                          (.bind ($ "#newpage div.indivbuddy div.editname li.addli a") "click touchend" update-name)
+                          (.submit ($ "#newpage div.indivbuddy div.editname form") update-name)
                           (.keyup inp validate)
                           (.append ul (-> li
                                         (.clone)
@@ -168,7 +168,7 @@
                                       pid)
                           (swap-page e origa))]
     (set-title-project set-buddy-data pid)))
- 
+
 
 (add-page-init! "indivbuddy" show-buddy)
 (add-page-init! "buddies" show-buddies)

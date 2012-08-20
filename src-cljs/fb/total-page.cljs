@@ -18,6 +18,7 @@
   (let [pid           (.data origa "pid")
         ul            ($ "#newpage div.total div ul")
         li            ($ "<li></li>")
+        title         ($ "#newpage h2 div.title")
         set-total-data (fn [id name tot tx]
                         (do-buddies (fn [tx r]
                                       (let [nbb     (.-length (.-rows r))
@@ -41,9 +42,12 @@
                                                           (recur (first ts) (next ts)
                                                                  [(- gdif tdif) gtot gname] gs
                                                                  (conj ac [gname tname tdif])))
-                                                        ac
-                                                        ;(do (js/console.log (str t " : " g)) ac)
-                                                        ))]
+                                                        ac))]
+                                        (-> title
+                                          (.append "Total: ")
+                                          (.append (money tot))
+                                          (.append " Average: ")
+                                          (.append (money av)))
                                         (doseq [[d t n] buds]
                                           (.append ul (-> li
                                                         (.clone)
