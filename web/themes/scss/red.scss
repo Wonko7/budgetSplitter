@@ -1,0 +1,16 @@
+$base-color: #484546;
+$base-color: #585556;
+
+//$base-bg-color: #877;
+//$base-bg-color: #888;
+$base-bg-color: #555;
+
+$list-background-color: $base-color;
+$toolbar-background-color: #844;
+$toolbar-background-color: #511;
+
+// Use a starter theme (will inherit colors from above)
+@import 'jqtouch-edited';
+
+// Write your custom CSS/SCSS here
+

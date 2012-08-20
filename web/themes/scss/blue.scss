@@ -1,0 +1,21 @@
+// Override variables
+// grey: $base-color: #555658;
+// grey green: $base-color: #354638;
+
+// kinda works, blue on brown
+// $base-color: #353846;
+// $base-bg-color: #463538;
+//$base-color: #555856;
+$base-color: #454846;
+
+$base-bg-color: #778;
+$base-bg-color: #888;
+$base-bg-color: #555;
+
+$list-background-color: $base-color;
+$toolbar-background-color: #448;
+
+// Use a starter theme (will inherit colors from above)
+@import 'jqtouch-edited';
+
+// Write your custom CSS/SCSS here
