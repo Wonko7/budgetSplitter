@@ -61,7 +61,7 @@
     (let [[[name data] & back-end] back-pages]
       (def back-pages
         (cons [name {name (replace {["anim" "slideright"] ["anim" "flipleft"]} (name data))}]
-              back-end))))
+              back-end)))) ;; another solution would be to read back anim data and use it on the page to load.
   (when (not= name "back")
     (def back-pages (cons [name {name (doall (cons ["anim" "slideright"]
                                                    (map #(vector % (.data a %)) ["pid" "bid" "cid"])))}]
@@ -77,11 +77,13 @@
                       (fn [e]
                         (let [a    ($ (first ($ (.-currentTarget e))))
                               link (.attr a "href")]
-                          (if (= "mailto" (apply str (take 6 link)))
-                            true
-                            (do
-                              (load-dyn-page link e a)
-                              false))))))
+                          (if (not= link (.attr ($ "#content div.middle div:first") "class"))
+                            (if (= "mailto" (apply str (take 6 link)))
+                              true
+                              (do
+                                (load-dyn-page link e a)
+                                false))
+                            false)))))
 
 ;; trigger a click to load new page
 (defn trigger-new-page [href data]
