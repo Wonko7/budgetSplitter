@@ -2,7 +2,7 @@
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
         [fb.sql :only [do-proj do-settings update-settings]]
-        [fb.misc :only [mk-settings add-data]]
+        [fb.misc :only [mk-settings add-data get-current-page]]
         ))
 
 
@@ -49,11 +49,18 @@
         ull ($ "#newpage div.menu div.left ul")
         li  ($ "<li></li>")
         a   ($ "<a></a>")
+        curr (get-current-page :new)
         data {"settings" [["anim" "flipright"]]}
-        ll  [["Expenses" "proj"]
-             ["Buddies" "buddies"]]
-        lr  [["Total" "total"]
-             ["Settings" "settings"]]
+        links (remove #(let [li (second %)]
+                         (if (or (= li "indivbuddy") (= li "buddies"))
+                           (or (= curr "indivbuddy") (= curr "buddies"))
+                           (= li curr)))
+                      [["Home" "projects"]
+                       ["Expenses" "proj"]
+                       ["Buddies" "buddies"]
+                       ["Total" "total"]
+                       ["Settings" "settings"]])
+        half (/ (count links) 2)
         add #(doseq [[t l] %1]
                (.append %2 (-> li
                              (.clone)
@@ -63,8 +70,8 @@
                                         (.attr "href" l)
                                         (.text t)
                                         (add-data l data))))))]
-    (add ll ull)
-    (add lr ulr)))
+    (add (take half links) ull)
+    (add (drop half links) ulr)))
 
 ;; sets the template's page title then executes a user fn
 ;; with the following prototype: fn [pid projname totalcost sqltx]

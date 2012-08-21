@@ -6,7 +6,7 @@
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
-        [fb.misc :only [mk-settings add-data trim num]]
+        [fb.misc :only [mk-settings add-data trim num get-current-page]]
         [fb.init :only [add-init!]]
         ; FIXME get :use to import everything.
         ))
@@ -24,7 +24,6 @@
   ;#(def jQT (.jQTouch js/jQuery (clj->js {:icon "img/icon.png"}))) ; FIXME get this working with $
   #(def jQT (.jQTouch js/jQuery (js-obj "icon" "img/icon.png"))) ; FIXME get this working with $
   )
-
 
 (defn add-page-init! [name func]
   (def page-dyn-inits (into page-dyn-inits {name func})))
@@ -77,7 +76,7 @@
                       (fn [e]
                         (let [a    ($ (first ($ (.-currentTarget e))))
                               link (.attr a "href")]
-                          (if (not= link (.attr ($ "#content div.middle div:first") "class"))
+                          (if (not= link (get-current-page :current))
                             (if (= "mailto" (apply str (take 6 link)))
                               true
                               (do
