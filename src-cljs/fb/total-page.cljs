@@ -66,7 +66,9 @@
                                                         (.append " owes ")
                                                         (.append (money tot))
                                                         (.append " to ")
-                                                        (.append (buddy tn)))))))
+                                                        (.append (buddy tn)))))
+                                        (when (zero? nbb)
+                                          (.remove ul))))
                                     pid)
                          (swap-page e origa))]
     (set-title-project set-total-data pid)))

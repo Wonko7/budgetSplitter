@@ -127,7 +127,7 @@
         name (.val i)
         pid  (.data i "pid")
         addb (fn [tx r]
-               (let [ul      ($ "#content div.buddies form div.list ul")
+               (let [ul      (.show ($ "#content div.buddies form div.list ul")) ;; only hidden when zero buddies
                      li      ($ "<li></li>")
                      inp     ($ "#content div.buddies form [name=\"name\"]")]
                  (.val inp "")
@@ -157,7 +157,9 @@
                                                      [(.-id b) (.-bname b) (.-btot b)])
                                               maxpaid (apply max (map #(nth % 2) buds))]
                                           (doseq [[id bname btot] buds]
-                                            (append-buddy ul li pid id bname maxpaid btot))))
+                                            (append-buddy ul li pid id bname maxpaid btot))
+                                          (when (zero? (count buds))
+                                            (.hide ul))))
                                       pid)
                           (swap-page e origa))]
     (set-title-project set-buddy-data pid)))
