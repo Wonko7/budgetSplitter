@@ -5,7 +5,7 @@
                        update-settings up-cost up-buddy
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
-        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy mk-validate]]
+        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy mk-validate give-input-focus]]
         [fb.misc :only [mk-settings add-data trim num]]
         [fb.pages :only [add-page-init! load-template swap-page trigger-new-page]]
         ; FIXME get :use to import everything.
@@ -28,7 +28,10 @@
   (load-template "new")
   (let [addb    "#newpage div.new form ul li a"
         inp      ($ "#newpage div.new form [name=\"name\"]") ]
-    (.keyup inp (mk-validate addb))
+    (-> inp
+      (.keyup (mk-validate addb))
+      (.focus)
+      (give-input-focus))
     (.submit ($ "#newpage div.new form") add-page-project)
     (.bind ($ addb) "click touchend" add-page-project)
     (swap-page e origa)))

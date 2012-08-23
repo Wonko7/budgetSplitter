@@ -5,7 +5,7 @@
                        update-settings up-cost up-buddy
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
-        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy set-theme]]
+        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy set-theme give-input-focus]]
         [fb.misc :only [mk-settings add-data trim num]]
         [fb.pages :only [add-page-init! load-template swap-page trigger-new-page]]
         [fb.init :only [add-init!]]
@@ -29,6 +29,7 @@
         add-inp (fn [li type title grp check? data]
                   (.append (-> li
                              (.clone)
+                             ;(give-input-focus :li)
                              (.append (-> inp
                                         (.clone)
                                         (add-data "inp" data)
@@ -42,7 +43,7 @@
                                  (let [settings {:menuOn  (:menuOn settings)
                                                  :menuPos (condp = (.data ($ "#content input[name=\"menuPos\"]:checked") "type")
                                                             "top"    :top
-                                                            "bottom" :bottom) 
+                                                            "bottom" :bottom)
                                                  :help    (.attr ($ "#content input[name=\"help\"]") "checked")
                                                  :theme   (.data ($ "#content input[name=\"theme\"]:checked") "theme")}]
                                    (update-settings settings

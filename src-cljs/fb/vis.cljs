@@ -52,9 +52,9 @@
         curr (get-current-page :new)
         data {"settings" [["anim" "flipright"]]}
         links (remove #(let [li (second %)]
-                         (if (or (= li "indivbuddy") (= li "buddies"))
-                           (or (= curr "indivbuddy") (= curr "buddies"))
-                           (= li curr)))
+                         (cond (or (= li "indivbuddy") (= li "buddies")) (or (= curr "indivbuddy") (= curr "buddies"))
+                               (or (= li "newcost") (= li "proj"))       (or (= curr "newcost") (= curr "proj"))
+                               :else (= li curr)))
                       [["Home" "projects"]
                        ["Expenses" "proj"]
                        ["Buddies" "buddies"]
@@ -136,6 +136,27 @@
            (.replace addb
                      #"^#newpage(.*)$"
                      "#content$1")))
+
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; focus:
+
+(defn give-input-focus
+  ([inp]
+   (.bind (.parents inp "li:first")
+          "focus click touchend"
+          (fn [e]
+            (.trigger (.children ($ (.-currentTarget e))
+                                 "input")
+                      "focus")))
+   inp)
+  ([li lisel]
+   (.bind li
+          "focus click touchend"
+          (fn [e]
+            (.trigger (.children ($ (.-currentTarget e))
+                                 "input")
+                      "focus")))
+   li))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; canvas background;

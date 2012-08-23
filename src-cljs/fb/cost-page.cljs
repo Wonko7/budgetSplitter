@@ -5,7 +5,7 @@
                        update-settings up-cost up-buddy
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
-        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
+        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy give-input-focus]]
         [fb.misc :only [mk-settings add-data trim num]]
         [fb.pages :only [add-page-init! load-template swap-page trigger-new-page]]
         ; FIXME get :use to import everything.
@@ -125,7 +125,8 @@
                           (-> inp
                             (.keyup validate)
                             (.data "cid" cid)
-                            (.data "pid" pid))
+                            (.data "pid" pid)
+                            (give-input-focus))
                           (do-buddies (fn [tx r]
                                         (if (> (.-length (.-rows r)) 0)
                                           (let [buds (if cid
@@ -149,11 +150,7 @@
                                                                       (.attr "placeholder" (str bname " paid..."))
                                                                       (#(if (zero? btot) % (.val % btot)))
                                                                       (.keyup validate)))
-                                                           (.bind "focus click touchend"
-                                                                  (fn [e]
-                                                                    (.trigger (.children ($ (.-currentTarget e))
-                                                                                         "input")
-                                                                              "focus")))))))
+                                                           (give-input-focus :li)))))
                                             (when cid
                                               (.val inp (.-cname (.item (.-rows r) 0))))
                                             (.append ul (-> li

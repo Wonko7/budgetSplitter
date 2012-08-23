@@ -5,7 +5,7 @@
                        update-settings up-cost up-buddy
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
-        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy mk-validate]]
+        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy mk-validate give-input-focus]]
         [fb.misc :only [mk-settings add-data trim num]]
         [fb.pages :only [add-page-init! load-template swap-page trigger-new-page]]
         ; FIXME get :use to import everything.
@@ -45,6 +45,9 @@
                             (.hide editdiv))
                           (do
                             (.show editdiv)
+                            ; FIXME: focus
+                            ;(js/console.log (str "lol:" (.html (.children editdiv "input:first"))))
+                            ;(.focus (.children editdiv "form ul li input:first"))
                             (.text a "Cancel Edit Name")
                             (.hide ($ "#content div.indivbuddy div.editname a")))))
                         false)
@@ -54,7 +57,9 @@
                           (.hide ($ "#newpage div.indivbuddy div.editname"))
                           (.bind ($ "#newpage div.indivbuddy div.editname li.addli a") "click touchend" update-name)
                           (.submit ($ "#newpage div.indivbuddy div.editname form") update-name)
-                          (.keyup inp validate)
+                          (-> inp
+                            (.keyup validate)
+                            (give-input-focus))
                           (.append ul (-> li
                                         (.clone)
                                         (.addClass "addli")
@@ -149,7 +154,8 @@
         set-buddy-data  (fn [id name tot tx]
                           (-> inp
                             (.keyup validate)
-                            (.data "pid" pid))
+                            (.data "pid" pid)
+                            (give-input-focus))
                           (.submit ($ "#newpage div.buddies form") add-page-buddy)
                           (.bind ($ add) "touchend click" add-page-buddy)
                           (do-buddies (fn [tx r]

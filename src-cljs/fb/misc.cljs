@@ -29,5 +29,5 @@
 
 (defn get-current-page [type]
   (if (= type :current)
-    (.attr ($ "#content div.middle div:first") "class")  
+    (.attr ($ "#content div.middle div:first") "class")
     (.attr ($ "#newpage div.middle div:first") "class")))

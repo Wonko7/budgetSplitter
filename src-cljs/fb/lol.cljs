@@ -33,6 +33,8 @@
 ;     - remove row-seq and extend js row obj instead.
 ;     - cljs advanced optimisation for compiling
 ;     - update jqtouch from github.
+;     - trigger focus on edit?
+;     - use swipe/dclick events?
 ;
 ;   - misc:
 ;     - add back/forward browser integration?
