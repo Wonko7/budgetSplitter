@@ -127,15 +127,15 @@
 
 (defn mk-validate [addb]
   (.hide ($ addb))
-  (partial (fn [addb e]
-             (let [inp   ($ (.-currentTarget e))
-                   addb  ($ addb)]
-               (if (zero? (count (.val inp)))
-                 (.hide addb)
-                 (.show addb))))
-           (.replace addb
-                     #"^#newpage(.*)$"
-                     "#content$1")))
+  (let [addb (.replace addb
+                       #"^#newpage(.*)$"
+                       "#content$1")]
+    (fn [e]
+      (let [inp   ($ (.-currentTarget e))
+            addb  ($ addb)]
+        (if (zero? (count (.val inp)))
+          (.hide addb)
+          (.show addb))))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; focus:
@@ -162,7 +162,7 @@
           "focus click touchend"
           (fn [e]
             (let [inp (.children ($ (.-currentTarget e)) "input")]
-              (if (= "radio "(.attr inp "type"))
+              (if (= "radio" (.attr inp "type"))
                 (.attr inp "checked" true)
                 (.attr inp "checked" (not (.attr inp "checked")))))))
    li))
