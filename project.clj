@@ -9,8 +9,10 @@
         ; The standard ClojureScript compiler options:
         ; (See the ClojureScript compiler documentation for details.)
         :compiler {
-          :output-to "web/js/main.js"  ; default: main.js in current directory
-          :optimizations :whitespace
-                   ;   :externs ["jquery.min.js"]
-          ; :optimizations :advanced
-          :pretty-print true}}]})
+                   :output-to "web/js/main.js"  ; default: main.js in current directory
+                   :optimizations :whitespace
+                   :externs ["web/js-static/jquery-min.js"
+                             "web/js-static/src/jqtouch.min.js" 
+                             "web/js-static/src/jqtouch-jquery.min.js"] 
+                   ; :optimizations :advanced
+                   :pretty-print true}}]})
