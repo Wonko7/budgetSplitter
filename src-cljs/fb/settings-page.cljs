@@ -29,7 +29,7 @@
         add-inp (fn [li type title grp check? data]
                   (.append (-> li
                              (.clone)
-                             ;(give-input-focus :li)
+                             (give-input-focus :li :radio)
                              (.append (-> inp
                                         (.clone)
                                         (add-data "inp" data)

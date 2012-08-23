@@ -156,6 +156,15 @@
             (.trigger (.children ($ (.-currentTarget e))
                                  "input")
                       "focus")))
+   li)
+  ([li lisel radiosel]
+   (.bind li
+          "focus click touchend"
+          (fn [e]
+            (let [inp (.children ($ (.-currentTarget e)) "input")]
+              (if (= "radio "(.attr inp "type"))
+                (.attr inp "checked" true)
+                (.attr inp "checked" (not (.attr inp "checked")))))))
    li))
 
 
