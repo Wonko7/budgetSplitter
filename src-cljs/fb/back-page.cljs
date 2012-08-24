@@ -9,6 +9,13 @@
   (let [[x [name d] & bs] back-pages]
     name))
 
+(defn rm-from-back! [key val]
+  (def back-pages
+    (for [[name data :as bp] back-pages
+          :let  [v (key (apply hash-map (flatten (name data))))]
+          :when (not= v val)]
+      bp)))
+
 (defn update-back! [name a]
   (when (= name "settings")
     (let [[[name data] & back-end] back-pages]

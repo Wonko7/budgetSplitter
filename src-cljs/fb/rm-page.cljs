@@ -8,6 +8,7 @@
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
         [fb.misc :only [mk-settings add-data trim num]]
         [fb.pages :only [add-page-init! load-template swap-page trigger-new-page]]
+        [fb.back :only [rm-from-back!]]
         ; FIXME get :use to import everything.
         ))
 
@@ -26,12 +27,15 @@
         li      ($ "<li></li>")
         a       ($ "<a></a>")
         rm-proj-page (fn [e]
+                       (rm-from-back! "pid" pid)
                        (rm-proj #(trigger-new-page "projects" {"projects" [["anim" "pop"]]}) pid)
                        false)
         rm-cost-page (fn [e]
+                       (rm-from-back! "cid" cid)
                        (rm-cost #(trigger-new-page "proj" {"proj" [["pid" pid] ["anim" "pop"]]}) cid)
                        false)
         rm-budd-page (fn [e]
+                       (rm-from-back! "bid" bid)
                        (rm-buddy #(trigger-new-page "buddies" {"buddies" [["bid" bid] ["pid" pid] ["anim" "pop"]]}) bid)
                        false)
         set-rm-budd  (fn [t r]
