@@ -3,7 +3,15 @@
         [jayq.util :only [clj->js]]
         [fb.sql :only [do-proj do-settings update-settings]]
         [fb.misc :only [mk-settings add-data get-current-page]]
+        [fb.back :only [get-back-href]]
         ))
+
+(def page-titles
+  {"projects" "Home"
+   "proj"     "Expenses"
+   "buddies"  "Buddies"
+   "total"    "Total"
+   "settings" "Settings"})
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -51,17 +59,13 @@
         a   ($ "<a></a>")
         curr (get-current-page :new)
         data {"settings" [["anim" "flipright"]]}
-        links (remove #(let [li (second %)]
+        links (remove #(let [li (first %)]
                          (cond (or (= li "indivbuddy") (= li "buddies"))         (or (= curr "indivbuddy") (= curr "buddies"))
                                (or (= li "newcost") (= li "cost") (= li "proj")) (or (= curr "cost") (= curr "newcost") (= curr "proj"))
                                :else (= li curr)))
-                      [["Home" "projects"]
-                       ["Expenses" "proj"]
-                       ["Buddies" "buddies"]
-                       ["Total" "total"]
-                       ["Settings" "settings"]])
+                      (vec page-titles))
         half (/ (count links) 2)
-        add #(doseq [[t l] %1]
+        add #(doseq [[l t] %1]
                (.append %2 (-> li
                              (.clone)
                              (.append (-> a
@@ -102,7 +106,7 @@
                                          (.addClass "back")
                                          (.addClass "button")
                                          (.attr "href" "back")
-                                         (.text "Back")))
+                                         (.text ((get-back-href) page-titles))))
                               (.append (-> a
                                          (.clone)
                                          (.addClass "button")

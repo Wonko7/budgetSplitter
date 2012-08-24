@@ -8,6 +8,7 @@
         [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
         [fb.misc :only [mk-settings add-data trim num get-current-page]]
         [fb.init :only [add-init!]]
+        [fb.back :only [update-back! go-back]]
         ; FIXME get :use to import everything.
         ))
 
@@ -17,7 +18,6 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (def page-dyn-inits {})
-(def back-pages nil)
 (def jQT nil)
 
 (add-init!
@@ -56,15 +56,7 @@
                                            (.remove ($ "#old")))))
 
 (defn load-dyn-page [name e a]
-  (when (= name "settings")
-    (let [[[name data] & back-end] back-pages]
-      (def back-pages
-        (cons [name {name (replace {["anim" "slideright"] ["anim" "flipleft"]} (name data))}]
-              back-end)))) ;; another solution would be to read back anim data and use it on the page to load.
-  (when (not= name "back")
-    (def back-pages (cons [name {name (doall (cons ["anim" "slideright"]
-                                                   (map #(vector % (.data a %)) ["pid" "bid" "cid"])))}]
-                          (take 15 back-pages))))
+  (update-back! name a)
   (if-let [f (page-dyn-inits name)]
     (f e a)
     (do
@@ -95,10 +87,5 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; back;
-
-(defn go-back [e]
-  (let [[x [name d] & bs] back-pages]
-    (def back-pages bs)
-    (trigger-new-page name d)))
 
 (add-page-init! "back" go-back)
