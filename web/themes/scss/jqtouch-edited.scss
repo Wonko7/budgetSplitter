@@ -8,6 +8,7 @@
 // $highlight-color: #000;
 
 @import 'include/core';
+@import "recipes/ui/helper/arrow";
 
 $base-bg-color: $base-color !default;
 
@@ -52,6 +53,16 @@ $base-bg-color: $base-color !default;
             }
 
         } // /li
+
+	li.myarrow {
+		//;;@include ui-helper-arrow($color: $base-color);
+		//@include ui-helper-arrow($color: red, $width: 20px);
+		@mixin css-arrow($orientation: "top", $bg-color: #fff, $arrow-color: #ccc, $size: 10px) {
+			font-size: 0px; 
+			line-height: 0%; 
+			width: 0px;
+		}
+	}
 
         &.metal {
             li {

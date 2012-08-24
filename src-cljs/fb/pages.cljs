@@ -42,7 +42,7 @@
                (.append )))))
 
 (defn swap-page [e a]
-  (let [newp (.show ($ "#newpage"))
+  (let [newp (.addClass (.show ($ "#newpage")) "scroll")
         cont ($ "#content")
         anim (.data a "anim")]
     (if anim

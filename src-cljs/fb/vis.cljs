@@ -52,8 +52,8 @@
         curr (get-current-page :new)
         data {"settings" [["anim" "flipright"]]}
         links (remove #(let [li (second %)]
-                         (cond (or (= li "indivbuddy") (= li "buddies")) (or (= curr "indivbuddy") (= curr "buddies"))
-                               (or (= li "newcost") (= li "proj"))       (or (= curr "newcost") (= curr "proj"))
+                         (cond (or (= li "indivbuddy") (= li "buddies"))         (or (= curr "indivbuddy") (= curr "buddies"))
+                               (or (= li "newcost") (= li "cost") (= li "proj")) (or (= curr "cost") (= curr "newcost") (= curr "proj"))
                                :else (= li curr)))
                       [["Home" "projects"]
                        ["Expenses" "proj"]

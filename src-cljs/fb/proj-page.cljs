@@ -53,11 +53,13 @@
                (do-row (fn [i]
                          (.append ul (-> li
                                        (.clone)
-                                       ;(.addClass "arrow")
+                                       (.addClass "arrow")
                                        (.append (-> ($ "<a></a>")
                                                   (.text (.-name i))
                                                   (.attr "href" "proj")
-                                                  (.data "pid" (.-id i)))))))
+                                                  (.data "pid" (.-id i))))
+                                       ;(.append (.addClass ($ "<small>42</small>") "counter"))
+                                       )))
                        r)
                (swap-page e a)))))
 
