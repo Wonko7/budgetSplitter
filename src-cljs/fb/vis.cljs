@@ -7,11 +7,18 @@
         ))
 
 (def page-titles
-  {"projects" "Home"
-   "proj"     "Expenses"
-   "buddies"  "Buddies"
-   "total"    "Total"
-   "settings" "Settings"})
+  [["projects" "Home"]
+   ["proj"     "Expenses"]
+   ["buddies"  "Buddies"]
+   ["total"    "Total"]
+   ["settings" "Settings"]])
+
+(def page-titles-map
+  (into {"indivbuddy" "Buddy"
+         "cost"       "Expense"
+         "newcost"    "New Expense"
+         "new"        "New"}
+        (apply hash-map (flatten page-titles))))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -63,7 +70,7 @@
                          (cond (or (= li "indivbuddy") (= li "buddies"))         (or (= curr "indivbuddy") (= curr "buddies"))
                                (or (= li "newcost") (= li "cost") (= li "proj")) (or (= curr "cost") (= curr "newcost") (= curr "proj"))
                                :else (= li curr)))
-                      (vec page-titles))
+                      page-titles)
         half (/ (count links) 2)
         add #(doseq [[l t] %1]
                (.append %2 (-> li
@@ -106,7 +113,7 @@
                                          (.addClass "back")
                                          (.addClass "button")
                                          (.attr "href" "back")
-                                         (.text ((get-back-href) page-titles))))
+                                         (.text ((get-back-href) page-titles-map))))
                               (.append (-> a
                                          (.clone)
                                          (.addClass "button")
