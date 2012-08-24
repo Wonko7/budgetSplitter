@@ -130,11 +130,11 @@ $base-bg-color: $base-color !default;
     }
 
     .graphOwes {
-	    color: $base-color + #b00 - #333 ;
+	    color: $base-color + #b00 - #666;
     }
 
     .graphNeeds {
-	    color: $base-color + #0b0 - #333;
+	    color: $base-color + #0b0 - #666;
     }
 
     .hidden {

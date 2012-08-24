@@ -205,7 +205,7 @@
         nw  (int (* w (/ amount tot)))
         cvs (canvas-rect w h nw) ]
     (-> elt
-      (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") "), -webkit-linear-gradient(top, rgba(123, 124, 127, 0.2), rgba(98, 99, 101, 0.2) 3%, rgba(72, 73, 75, 0.2))"))
+      (.css "background-image" (str "-webkit-linear-gradient(top, rgba(123, 124, 127, 0.2), rgba(98, 99, 101, 0.2) 3%, rgba(72, 73, 75, 0.2)), url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
       (.css "background-size" "100%")))  )
 
 (defn canvas-rect-take [w-tot h-tot wpaid avg max]
@@ -247,6 +247,5 @@
         na  (int (* w (/ avg max)))
         cvs ((if (> np na) canvas-rect-take canvas-rect-give) w h np na)]
     (-> elt
-      ;(.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
-      (.css "background-image" (str "url(" (.toDataURL (.-canvas cvs) "image/png") "), -webkit-linear-gradient(top, rgba(123, 124, 127, 0.2), rgba(98, 99, 101, 0.2) 3%, rgba(72, 73, 75, 0.2))"))
+      (.css "background-image" (str "-webkit-linear-gradient(top, rgba(123, 124, 127, 0.2), rgba(98, 99, 101, 0.2) 3%, rgba(72, 73, 75, 0.2)), url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
       (.css "background-size" "100%"))))
