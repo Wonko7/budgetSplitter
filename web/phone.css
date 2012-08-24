@@ -66,10 +66,7 @@ a:active {
 	width: 100%;
 	display: block;
 }
-#jqt li.addli {
-	background-color: #111;
-	background-image: ;
-}
+/*
 #jqt li.rmli {
 	text-align: center;
 	background-color: #866;
@@ -78,7 +75,7 @@ a:active {
 	text-align: center;
 	background-color: #668;
 }
-
+*/
 div.menu, ul.menu, li.menu {
 	padding: 0;
 	margin: 0;

@@ -8,7 +8,6 @@
 // $highlight-color: #000;
 
 @import 'include/core';
-@import "recipes/ui/helper/arrow";
 
 $base-bg-color: $base-color !default;
 
@@ -34,6 +33,32 @@ $base-bg-color: $base-color !default;
             border-top: 1px solid darken($base-color, 5);
             @include background-gradient(rgba($base-color, .2), matte);
 
+	    &.rmli {
+		    //background-color: #668;
+		    text-align: center;
+		    @include background-gradient(rgba($base-color + #b00, .2), matte);
+
+		    &:after {
+			    @extend .base-chevron;
+			    width: 27px;
+			    text-align: left;
+			    content: '-';
+		    }
+	    }
+
+	    &.addli {
+		    //background-color: #668;
+		    text-align: center;
+		    @include background-gradient(rgba($base-color + #00b, .2), matte);
+
+		    &:after {
+			    @extend .base-chevron;
+			    width: 27px;
+			    text-align: left;
+			    content: '+';
+		    }
+	    }
+
             a {
                 @include color-by-background($base-color);
             }
@@ -54,15 +79,6 @@ $base-bg-color: $base-color !default;
 
         } // /li
 
-	li.myarrow {
-		//;;@include ui-helper-arrow($color: $base-color);
-		//@include ui-helper-arrow($color: red, $width: 20px);
-		@mixin css-arrow($orientation: "top", $bg-color: #fff, $arrow-color: #ccc, $size: 10px) {
-			font-size: 0px; 
-			line-height: 0%; 
-			width: 0px;
-		}
-	}
 
         &.metal {
             li {
