@@ -37,18 +37,21 @@
                         false)
         edit-name     (fn [e]
                         (let [a       ($ (first ($ (.-currentTarget e))))
-                              editdiv ($ "#content div.indivbuddy div.editname")
-                              editbut ($ "#content div.indivbuddy div.list li.addli a")]
+                              editdiv ($ "#content div.indivbuddy div.editname")]
                         (if (.is editdiv ":visible")
                           (do
-                            (.text a "Edit Name")
-                            (.hide editdiv))
+                            (.hide editdiv)
+                            (-> (.parent (.text a "Edit Name"))
+                              (.removeClass "rmli")
+                              (.addClass "addli")))
                           (do
                             (.show editdiv)
+                            (-> (.parent (.text a  "Cancel Edit Name"))
+                              (.removeClass "addli")
+                              (.addClass "rmli"))
                             ; FIXME: focus
                             ;(js/console.log (str "lol:" (.html (.children editdiv "input:first"))))
                             ;(.focus (.children editdiv "form ul li input:first"))
-                            (.text a "Cancel Edit Name")
                             (.hide ($ "#content div.indivbuddy div.editname a")))))
                         false)
         set-edit      (fn [bname]
