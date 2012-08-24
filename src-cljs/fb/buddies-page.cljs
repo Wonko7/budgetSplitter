@@ -118,6 +118,7 @@
 (defn append-buddy [ul li pid bid name maxpaid btot]
   (.append ul (-> li
                 (.clone)
+                (.addClass "arrow")
                 (.append (-> ($ "<a></a>")
                            (.append (buddy name))
                            (.append ": ")

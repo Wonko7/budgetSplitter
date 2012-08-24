@@ -66,7 +66,6 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; show a project and its costs:
 
-;; FIXME:;(.addClass "arrow")
 (defn show-proj [e origa]
   (load-template "proj")
   (let [pid     (.data origa "pid")
@@ -89,6 +88,7 @@
                                       (doseq [[cid name tot] costs]
                                         (.append ul (-> li
                                                       (.clone)
+                                                      (.addClass "arrow")
                                                       (set-rect-back maxpaid tot)
                                                       (.append (-> a
                                                                  (.clone)

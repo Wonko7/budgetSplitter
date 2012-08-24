@@ -23,7 +23,7 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; back;
 
-(defn go-back [e]
+(defn go-back [trigger-new-page e]
   (let [[x [name d] & bs] back-pages]
     (def back-pages bs)
     (if name

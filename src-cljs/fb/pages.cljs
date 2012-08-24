@@ -87,5 +87,5 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; back;
-
-(add-page-init! "back" go-back)
+;; this is an ugly workaround double dependency pb:
+(add-page-init! "back" (partial go-back trigger-new-page))
