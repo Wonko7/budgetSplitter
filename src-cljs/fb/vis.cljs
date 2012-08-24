@@ -181,14 +181,21 @@
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; canvas background;
 
+(defn get-canvas-colors []
+  (let [div ($ "<div></div>")
+        getc #(-> ($ (str ".hidden ." %))
+                (.css "color"))]
+    [(getc "graphPaid") (getc "graphNothing") (getc "graphOwes") (getc "graphNeeds") (getc "graphAvg")]))
+
 (defn canvas-rect [w-tot h-tot w]
   (let [c   (first ($ "<canvas></canvas>"))
-        ctx (.getContext c "2d" w-tot h-tot)]
+        ctx (.getContext c "2d" w-tot h-tot)
+        [paid nothing owes needs average] (get-canvas-colors)]
     (set! (. c -width) w-tot)
     (set! (. c -height) h-tot)
-    (set! (. ctx -fillStyle) "#121")
+    (set! (. ctx -fillStyle) nothing)
     (.fillRect ctx 0 0 w-tot h-tot)
-    (set! (. ctx -fillStyle) "#131") ; FIXME css that shit
+    (set! (. ctx -fillStyle) paid)
     (.fillRect ctx 0 0 w h-tot)
     ctx))
 
@@ -203,31 +210,34 @@
 
 (defn canvas-rect-take [w-tot h-tot wpaid avg max]
   (let [c   (first ($ "<canvas></canvas>"))
-        ctx (.getContext c "2d" w-tot h-tot)]
+        ctx (.getContext c "2d" w-tot h-tot)
+        [paid nothing owes needs average] (get-canvas-colors)]
+    (js/console.log paid nothing owes needs average)
     (set! (. c -width) w-tot)
     (set! (. c -height) h-tot)
-    (set! (. ctx -fillStyle) "#121")
+    (set! (. ctx -fillStyle) nothing)
     (.fillRect ctx 0 0 w-tot h-tot)
-    (set! (. ctx -fillStyle) "#131") ; FIXME css that shit
+    (set! (. ctx -fillStyle) paid)
     (.fillRect ctx 0 0 avg h-tot)
-    (set! (. ctx -fillStyle) "#252") ; FIXME css that shit
+    (set! (. ctx -fillStyle) needs)
     (.fillRect ctx avg 0 (- wpaid avg) h-tot)
-    (set! (. ctx -fillStyle) "#33F") ; FIXME css that shit
+    (set! (. ctx -fillStyle) average)
     (.fillRect ctx avg 0 2 h-tot)
     ctx))
 
 (defn canvas-rect-give [w-tot h-tot wpaid avg]
   (let [c   (first ($ "<canvas></canvas>"))
-        ctx (.getContext c "2d" w-tot h-tot)]
+        ctx (.getContext c "2d" w-tot h-tot)
+        [paid nothing owes needs average] (get-canvas-colors)]
     (set! (. c -width) w-tot)
     (set! (. c -height) h-tot)
-    (set! (. ctx -fillStyle) "#121")
+    (set! (. ctx -fillStyle) nothing)
     (.fillRect ctx 0 0 w-tot h-tot)
-    (set! (. ctx -fillStyle) "#131") ; FIXME css that shit
+    (set! (. ctx -fillStyle) paid)
     (.fillRect ctx 0 0 wpaid h-tot)
-    (set! (. ctx -fillStyle) "#822") ; FIXME css that shit
+    (set! (. ctx -fillStyle) owes)
     (.fillRect ctx wpaid 0 (- avg wpaid) h-tot)
-    (set! (. ctx -fillStyle) "#33F") ; FIXME css that shit
+    (set! (. ctx -fillStyle) average)
     (.fillRect ctx avg 0 2 h-tot)
     ctx))
 

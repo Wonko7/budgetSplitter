@@ -116,4 +116,24 @@ $base-bg-color: $base-color !default;
         color: #444;
         border-top: 1px solid rgba(255,255,255,.2);
     }
+
+    .graphAvg {
+	    color: $base-color + #00b - #022;
+    }
+
+    .graphNothing {
+	    color: rgba(#000, 0);
+    }
+
+    .graphPaid {
+	    color: $base-color + #050 - #444;
+    }
+
+    .graphOwes {
+	    color: $base-color + #b00 - #333 ;
+    }
+
+    .graphNeeds {
+	    color: $base-color + #050 - #222;
+    }
 }
