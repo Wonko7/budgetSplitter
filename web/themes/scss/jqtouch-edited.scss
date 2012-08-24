@@ -136,4 +136,63 @@ $base-bg-color: $base-color !default;
     .graphNeeds {
 	    color: $base-color + #050 - #222;
     }
+
+    .hidden {
+	    visibility: hidden;
+	    display: none;
+    }
+
+    div.menu, ul.menu, li.menu {
+	    padding: 0;
+	    margin: 0;
+    }
+
+    .menu .right {
+	    width: 50%;
+	    padding: 0;
+	    margin: 0;
+	    margin-left: 50%;
+    }
+
+    .menu .left {
+	    padding: 0;
+	    margin: 0;
+	    width: 50%;
+	    float: left;
+    }
+
+    .title {
+	    padding-top: 15px;
+	    padding-bottom: 0px;
+	    text-align: center;
+	    font-weight: bold;
+	    font-size: 20px;
+    }
+
+    .buddy {
+	    color: #F88;
+    }
+
+    .money {
+	    color: #8F8;
+    }
+
+    .toolbar h1 a {
+	    text-decoration: none;
+	    font-size: 20px;
+	    font-weight: bold;
+	    line-height: 1.3em;
+	    text-align: center;
+	    text-overflow: ellipsis;
+	    white-space: nowrap;
+	    color: white;
+	    text-shadow: #161717 0 -1px 0;
+    } 
+
+    /* FIXME find equiv for other browsers */
+    input[type=number]::-webkit-inner-spin-button,
+    input[type=number]::-webkit-outer-spin-button {
+	    -webkit-appearance: none;
+	    margin: 0;
+    }
 }
