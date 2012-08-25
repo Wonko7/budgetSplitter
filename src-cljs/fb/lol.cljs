@@ -29,6 +29,7 @@
 ;
 ;   - misc:
 ;     - add back/forward browser integration?
+;     - fix gestion des animations
 ;     - better sql (remove costs.total, add views and shit?)        -> cyrille
 ;     - logs on sql error
 ;     - make a quick project/todo organiser app for internal usage? -> cyrille
