@@ -24,7 +24,7 @@
   (.executeSql t "SELECT * FROM settings;"
                (clj->js [])
                #(if (zero? (.-length (.-rows %2)))
-                  (.executeSql %1 "INSERT INTO settings (menuPos, menuOn, help, theme) VALUES (1, 1, 1, \"jqtouch\");" (clj->js [])
+                  (.executeSql %1 "INSERT INTO settings (menuPos, menuOn, help, theme) VALUES (1, 1, 1, \"jqtouch-edited\");" (clj->js [])
                                ))))
 
 (defn add-db! [name schema & [f]]
