@@ -1,13 +1,5 @@
 (ns fb.lol
-  (:use [jayq.core :only [$ inner delegate]]
-        [jayq.util :only [clj->js]]
-        [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy do-settings
-                       update-settings up-cost up-buddy
-                       db-init add-cost add-buddy add-proj
-                       nuke-db rm-proj rm-cost rm-buddy]]
-        [fb.vis :only [set-title-project set-rect-back set-tot-rect-back money buddy]]
-        [fb.misc :only [mk-settings add-data trim num]]
-        [fb.pages :only [add-page-init! load-template swap-page trigger-new-page]]
+  (:use [fb.pages :only [trigger-new-page]]
         [fb.init :only [add-init! do-inits]]
         ; FIXME get :use to import everything.
         ))
