@@ -53,7 +53,7 @@
 
 ; remove old div from page after page swap
 (add-init! #(.bind ($ "body") "pageAnimationEnd" (fn [e info]
-                                           (.remove ($ "#old")))))
+                                                   (.remove ($ "#old")))))
 
 (defn load-dyn-page [name e a]
   (update-back! name a)
