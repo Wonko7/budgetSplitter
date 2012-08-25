@@ -32,6 +32,7 @@
   (let [temp ($ (str "div.hidden div." name))
         temp (if (zero? (.-length temp)) ($ "div.hidden div.404") temp)
         body ($ "body")
+        bug  (.remove ($ "#newpage")) 
         newp (.hide ($ "<div id=\"newpage\"></div>"))]
     (.append body
              (-> newp
