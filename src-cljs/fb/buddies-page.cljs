@@ -26,7 +26,7 @@
                        (let [v    (.val ($ "#content div.indivbuddy div.editname input"))
                              done (fn [e]
                                     (do-buddy #(do
-                                                 (.text ($ "#content div.indivbuddy h2 div.title span.buddy")
+                                                 (.text ($ "#content div.indivbuddy span.buddy")
                                                         (.-bname (.item (.-rows %2) 0)))
                                                  ;; hide edit box:
                                                  (.trigger ($ "#content div.indivbuddy div.list li.addli a") "click"))
