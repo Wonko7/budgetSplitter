@@ -21,6 +21,7 @@
         (apply hash-map (flatten page-titles))))
 
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; visualisation stuff
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -183,14 +184,14 @@
 
 (defn get-canvas-colors []
   (let [div ($ "<div></div>")
-        getc #(-> ($ (str ".hidden ." %))
-                (.css "color"))]
-    [(getc "graphPaid") (getc "graphNothing") (getc "graphOwes") (getc "graphNeeds") (getc "graphAvg")]))
+        getcss #(-> ($ (str ".hidden ." %1))
+                  (.css %2))]
+    [(getcss "graphPaid" "color") (getcss "graphNothing" "color") (getcss "graphOwes" "color") (getcss "graphNeeds" "color") (getcss "graphAvg" "color") (getcss "graphNothing" "background-image")]))
 
-(defn canvas-rect [w-tot h-tot w]
+(defn canvas-rect [w-tot h-tot w colors]
   (let [c   (first ($ "<canvas></canvas>"))
         ctx (.getContext c "2d" w-tot h-tot)
-        [paid nothing owes needs average] (get-canvas-colors)]
+        [paid nothing owes needs average]  colors]
     (set! (. c -width) w-tot)
     (set! (. c -height) h-tot)
     (set! (. ctx -fillStyle) nothing)
@@ -200,18 +201,20 @@
     ctx))
 
 (defn set-rect-back [elt tot amount]
-  (let [w   (.width ($ "body"))
-        h   50
-        nw  (int (* w (/ amount tot)))
-        cvs (canvas-rect w h nw) ]
+  (let [w    (.width ($ "body"))
+        h    50
+        nw   (int (* w (/ amount tot)))
+        cols (get-canvas-colors)
+        bck  (last cols)
+        cvs  (canvas-rect w h nw cols) ]
     (-> elt
-      (.css "background-image" (str "-webkit-linear-gradient(top, rgba(123, 124, 127, 0.2), rgba(98, 99, 101, 0.2) 3%, rgba(72, 73, 75, 0.2)), url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
+      (.css "background-image" (str bck ", url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
       (.css "background-size" "100%")))  )
 
-(defn canvas-rect-take [w-tot h-tot wpaid avg max]
+(defn canvas-rect-take [w-tot h-tot wpaid avg cols]
   (let [c   (first ($ "<canvas></canvas>"))
         ctx (.getContext c "2d" w-tot h-tot)
-        [paid nothing owes needs average] (get-canvas-colors)]
+        [paid nothing owes needs average] cols]
     (set! (. c -width) w-tot)
     (set! (. c -height) h-tot)
     (set! (. ctx -fillStyle) nothing)
@@ -224,10 +227,10 @@
     (.fillRect ctx avg 0 2 h-tot)
     ctx))
 
-(defn canvas-rect-give [w-tot h-tot wpaid avg]
+(defn canvas-rect-give [w-tot h-tot wpaid avg cols]
   (let [c   (first ($ "<canvas></canvas>"))
         ctx (.getContext c "2d" w-tot h-tot)
-        [paid nothing owes needs average] (get-canvas-colors)]
+        [paid nothing owes needs average] cols]
     (set! (. c -width) w-tot)
     (set! (. c -height) h-tot)
     (set! (. ctx -fillStyle) nothing)
@@ -241,11 +244,13 @@
     ctx))
 
 (defn set-tot-rect-back [elt max avg amount]
-  (let [w   (.width ($ "body"))
-        h   50
-        np  (int (* w (/ amount max)))
-        na  (int (* w (/ avg max)))
-        cvs ((if (> np na) canvas-rect-take canvas-rect-give) w h np na)]
+  (let [w    (.width ($ "body"))
+        h    50
+        np   (int (* w (/ amount max)))
+        na   (int (* w (/ avg max)))
+        cols (get-canvas-colors)
+        bck  (last cols)
+        cvs  ((if (> np na) canvas-rect-take canvas-rect-give) w h np na cols)]
     (-> elt
-      (.css "background-image" (str "-webkit-linear-gradient(top, rgba(123, 124, 127, 0.2), rgba(98, 99, 101, 0.2) 3%, rgba(72, 73, 75, 0.2)), url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
+      (.css "background-image" (str bck ", url(" (.toDataURL (.-canvas cvs) "image/png") ")"))
       (.css "background-size" "100%"))))

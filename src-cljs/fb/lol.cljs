@@ -35,9 +35,6 @@
 ;
 ;   - UI: better compass themes:
 ;     - simple white with blue borders.
-;     - fetch Canvas colors from theme.css:               DONE! now needs gradient as background.
-;                                                               fetch gradients from css then draw.
-;                                                                  -> william
 ;
 ;   - Tests:
 ;     - test with empty db, empty entries

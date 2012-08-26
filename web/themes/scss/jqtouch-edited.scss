@@ -123,6 +123,7 @@ $base-bg-color: $base-color !default;
 
     .graphNothing {
 	    color: rgba(#000, 0);
+            @include background-gradient(rgba($base-color, .2), matte);
     }
 
     .graphPaid {
