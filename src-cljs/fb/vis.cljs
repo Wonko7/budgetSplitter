@@ -175,7 +175,7 @@
             (let [inp (.children ($ (.-currentTarget e)) "input")]
               (if (= "radio" (.attr inp "type"))
                 (.attr inp "checked" true)
-                (.attr inp "checked" (not (.attr inp "checked")))))))
+                (.attr inp "checked" (if (.attr inp "checked") nil "checked"))))))
    li))
 
 
