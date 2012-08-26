@@ -55,8 +55,8 @@
                                                         (.append " paid: ")
                                                         (.append (money t))
                                                         (.append (if (> t av)
-                                                                   ": needs "
-                                                                   ": owes "))
+                                                                   " needs: "
+                                                                   " owes: "))
                                                         (.append (money d))
                                                         (set-tot-rect-back maxpaid av t))))
                                         (doseq [[gn tn tot] owes]
