@@ -23,7 +23,8 @@
 ;     - add phonegap for contacts.                                  -> william
 ;     - try zepto instead of jquery, benchmark.
 ;     - remove row-seq and extend js row obj instead.               -> william
-;     - cljs advanced optimisation for compiling
+;     - cljs advanced optimisation for compiling                    -> william... fuuuuuuuuuuuuu
+;                                                                      compiles (takes a few hours) but doesn't work. see optim_ext branch.
 ;     - use swipe/dclick events?                                    -> cyrille
 ;
 ;   - misc:
