@@ -115,8 +115,6 @@
                                 addb  ($ "#content div.newcost form div.buddieslist ul li.addli a")
                                 tot   (reduce + 0 (for [i alli]
                                                     (num (.val ($ i)))))]
-                            ;(if (.data inp "bid")
-                            ;  (.val inp (.replace v #"^[^0-9]*([0-9]+\.?[0-9]*).*$" "$1")))
                             (.html total (money tot))
                             (if (or (<= tot 0) (<= (count name) 0))
                               (.hide addb)
@@ -170,7 +168,8 @@
                                       pid cid)
                           (.submit ($ "#newpage div.newcost form") add-page-cost)
                           (.bind ($ "#newpage") "pageAnimationEnd" #(.trigger inp "keyup"))
-                          (swap-page e origa))]
+                          (swap-page e origa)
+                          (.focus ($ "#content div.newcost form [name=\"name\"]")))]
     (set-title-project set-buddy-data pid)))
 
 
