@@ -49,9 +49,7 @@
                             (-> (.parent (.text a  "Cancel Edit Name"))
                               (.removeClass "addli")
                               (.addClass "rmli"))
-                            ; FIXME: focus
-                            ;(js/console.log (str "lol:" (.html (.children editdiv "input:first"))))
-                            ;(.focus (.children editdiv "form ul li input:first"))
+                            (.focus (.find editdiv "input:first"))
                             (.hide ($ "#content div.indivbuddy div.editname a")))))
                         false)
         set-edit      (fn [bname]
