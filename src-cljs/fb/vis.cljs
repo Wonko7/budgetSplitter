@@ -170,13 +170,21 @@
                       "focus")))
    li)
   ([li lisel radiosel]
-   (.bind li
-          "focus click touchend"
-          (fn [e]
-            (let [inp (.children ($ (.-currentTarget e)) "input")]
-              (if (= "radio" (.attr inp "type"))
-                (.attr inp "checked" true)
-                (.attr inp "checked" (if (.attr inp "checked") nil "checked"))))))
+   (let [inp (.find li "input")]
+     (when (= "checkbox" (.attr inp "type"))
+       (.bind inp
+              "focus click touchend"
+              (fn [e]
+                (let [inp ($ (first ($ (.-currentTarget e))))]
+                  (.attr inp "checked" (if (.attr inp "checked") nil "checked"))
+                  true))))
+     (.bind li
+            "focus click touchend"
+            (fn [e]
+              (let [inp (.children ($ (.-currentTarget e)) "input")]
+                (if (= "radio" (.attr inp "type"))
+                  (.attr inp "checked" true)
+                  (.attr inp "checked" (if (.attr inp "checked") nil "checked")))))))
    li))
 
 

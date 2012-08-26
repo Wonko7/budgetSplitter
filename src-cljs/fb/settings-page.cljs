@@ -29,7 +29,6 @@
         add-inp (fn [li type title grp check? data]
                   (.append (-> li
                              (.clone)
-                             (give-input-focus :li :radio)
                              (.append (-> inp
                                         (.clone)
                                         (add-data "inp" data)
@@ -37,7 +36,8 @@
                                         (.attr "title" title)
                                         (.attr "value" title)
                                         (.attr "type" type)
-                                        (.attr "name" grp))))))
+                                        (.attr "name" grp)))
+                             (give-input-focus :li :radio))))
         update  (fn [e]
                   (do-settings (fn [settings]
                                  (let [settings {:menuOn  (:menuOn settings)
