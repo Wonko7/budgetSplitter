@@ -40,7 +40,7 @@ $base-bg-color: $base-color !default;
 
 		    &:after {
 			    @extend .base-chevron;
-			    width: 27px;
+			    width: 25px;
 			    text-align: left;
 			    content: '-';
 		    }

@@ -24,7 +24,6 @@
 ;     - try zepto instead of jquery, benchmark.
 ;     - remove row-seq and extend js row obj instead.               -> william
 ;     - cljs advanced optimisation for compiling
-;     - trigger focus on edit?                                      -> william
 ;     - use swipe/dclick events?                                    -> cyrille
 ;
 ;   - misc:
