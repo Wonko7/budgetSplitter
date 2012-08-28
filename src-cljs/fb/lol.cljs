@@ -26,6 +26,8 @@
 ;     - cljs advanced optimisation for compiling                    -> william... fuuuuuuuuuuuuu
 ;                                                                      compiles (takes a few hours) but doesn't work. see optim_ext branch.
 ;     - use swipe/dclick events?                                    -> cyrille
+;     - fix jqtouch init with icon, loading splash screen & toolbar
+;       style
 ;
 ;   - misc:
 ;     - add back/forward browser integration?
