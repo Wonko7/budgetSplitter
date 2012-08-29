@@ -86,6 +86,7 @@
     (.appendTo ($ "#content"))
     (.click)))
 
+(add-init! #(trigger-new-page "projects" nil) :last)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; back;
 ;; this is an ugly workaround double dependency pb:

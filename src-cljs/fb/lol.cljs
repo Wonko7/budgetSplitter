@@ -1,8 +1,8 @@
-(ns fb.lol
-  (:use [fb.pages :only [trigger-new-page]]
-        [fb.init :only [add-init! do-inits]]
+;(ns fb.lol
+;  (:use [fb.pages :only [trigger-new-page]]
+;        [fb.init :only [add-init! do-inits]]
         ; FIXME get :use to import everything.
-        ))
+;        ))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -10,8 +10,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 
-(add-init! #(trigger-new-page "projects" nil) :last)
-(do-inits)
+;(add-init! #(trigger-new-page "projects" nil) :last)
+;(do-inits)
 
 
 ; DEBUG:

@@ -1,6 +1,6 @@
 (ns fb.init
-  (:use [jayq.core :only [$]]
-        ))
+  (:use [jayq.core :only [$]]))
+        
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;;;;; init
@@ -20,3 +20,5 @@
   ($ #(do
         (doseq [f (concat (:any inits) (:last inits))]
           (f)))))
+
+(do-inits)
