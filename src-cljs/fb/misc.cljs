@@ -1,5 +1,5 @@
 (ns fb.misc
-  (:use [jayq.core :only [$ inner delegate]]
+  (:use [fb.jq :only [$]]
         [jayq.util :only [clj->js]]
         ))
 
