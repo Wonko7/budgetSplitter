@@ -1,10 +1,11 @@
 (ns fb.jq)
 
-(def $ js/jQuery)
+;(def $ js/jQuery)
+(def $ js/Zepto)
 
 ;; taken from jayq
 
-(extend-type js/jQuery
+(extend-type $
   ISeqable
   (-seq [this] (when (.get this 0)
                  this))

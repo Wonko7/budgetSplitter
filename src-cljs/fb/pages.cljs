@@ -21,7 +21,7 @@
 
 (add-init!
   ;#(def jQT (.jQTouch js/jQuery (clj->js {:icon "img/icon.png"}))) ; FIXME get this working with $
-  #(def jQT (.jQTouch js/jQuery (js-obj "icon" "img/icon.png"))) ; FIXME get this working with $
+  #(def jQT (.jQTouch $ (js-obj "icon" "img/icon.png"))) ; FIXME get this working with $
   )
 
 (defn add-page-init! [name func]
