@@ -1,7 +1,6 @@
 (ns fb.jq)
 
-;(def $ js/jQuery)
-(def $ js/Zepto)
+(def $ js/jQuery)
 
 ;; taken from jayq
 
