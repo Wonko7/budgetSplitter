@@ -1,6 +1,5 @@
 (ns fb.vis
-  (:use [jayq.core :only [$ inner delegate]]
-        [jayq.util :only [clj->js]]
+  (:use [fb.jq :only [$ clj->js]]
         [fb.sql :only [do-proj do-settings update-settings]]
         [fb.misc :only [mk-settings add-data get-current-page]]
         [fb.back :only [get-back-href]]

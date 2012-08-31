@@ -1,6 +1,5 @@
 (ns fb.pages
-  (:use [jayq.core :only [$ inner delegate]]
-        [jayq.util :only [clj->js]]
+  (:use [fb.jq :only [$ clj->js]]
         [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy do-settings
                        update-settings up-cost up-buddy
                        db-init add-cost add-buddy add-proj
@@ -65,17 +64,17 @@
       (swap-page e a))))
 
 ;; catch a click and find page to load:
-(add-init! #(delegate ($ "body") "a" "click touchend"
-                      (fn [e]
-                        (let [a    ($ (first ($ (.-currentTarget e))))
-                              link (.attr a "href")]
-                          (if (not= link (get-current-page :current))
-                            (if (= "mailto" (apply str (take 6 link)))
-                              true
-                              (do
-                                (load-dyn-page link e a)
-                                false))
-                            false)))))
+(add-init! #(.delegate ($ "body") "a" "click touchend"
+                       (fn [e]
+                         (let [a    ($ (first ($ (.-currentTarget e))))
+                               link (.attr a "href")]
+                           (if (not= link (get-current-page :current))
+                             (if (= "mailto" (apply str (take 6 link)))
+                               true
+                               (do
+                                 (load-dyn-page link e a)
+                                 false))
+                             false)))))
 
 ;; trigger a click to load new page
 (defn trigger-new-page [href data]

@@ -1,6 +1,5 @@
 (ns fb.misc
-  (:use [fb.jq :only [$]]
-        [jayq.util :only [clj->js]]
+  (:use [fb.jq :only [$ clj->js]]
         ))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

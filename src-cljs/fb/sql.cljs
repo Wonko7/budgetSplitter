@@ -1,6 +1,5 @@
 (ns fb.sql
-  (:use [jayq.core :only [$ inner delegate]]
-        [jayq.util :only [clj->js]]
+  (:use [fb.jq :only [$ clj->js]]
         [fb.misc :only [mk-settings trim]]
         [fb.init :only [add-init!]]
         ))
