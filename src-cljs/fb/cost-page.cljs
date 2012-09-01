@@ -124,12 +124,10 @@
                               (.hide addb)
                               (.show addb))))
         ;; opt out:
-        opt-vis         (fn [checkbox]
-                          (let [li   ($ (.parents checkbox "li")) 
-                                c?   (.attr checkbox "checked")
+        opt-vis         (fn [li checkbox]
+                          (let [c?   (.attr checkbox "checked")
                                 ninp ($ (.find li "input[name=\"tot\"]")) 
                                 info ($ (.find li "span.optout"))] 
-                                     (js/console.log "vis" c?)
                             (if c?
                               (do 
                                 (.hide info)           
@@ -144,16 +142,9 @@
                                    (let [li  (.parents ($ (.-currentTarget e)) "li") 
                                          cinp ($ (.find li "input[name=\"optin\"]")) 
                                          c?   (.attr cinp "checked")]
-                                     (js/console.log "t" c? cinp child)
-                                     (opt-vis (.attr cinp "checked" (if c? false true)))
-                                     true
-                                     ;(if (not= child :current) 
-                                     ;  (do 
-                                     ;    true)
-                                     ;  (do 
-                                     ;    (opt-vis (.attr cinp "checked" (if c? false true)))
-                                     ;    true)) 
-                                     ))))
+                                     (opt-vis li
+                                              (.attr cinp "checked" (if c? false true)))
+                                     true))))
         ;; set page data:
         set-buddy-data  (fn [id name tot tx]
                           (-> inp
