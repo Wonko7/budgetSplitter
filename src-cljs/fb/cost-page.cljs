@@ -126,21 +126,24 @@
         ;; opt out:
         opt-vis         (fn [li checkbox]
                           (let [c?   (.attr checkbox "checked")
-                                ninp ($ (.find li "input[name=\"tot\"]")) 
-                                info ($ (.find li "span.optout"))] 
+                                ninp ($ (.find li "input[name=\"tot\"]"))
+                                info ($ (.find li "span.optout"))
+                                bud  ($ (.find li "span.buddy"))]
                             (if c?
-                              (do 
-                                (.hide info)           
+                              (do
+                                (.removeClass bud "unselected")
+                                (.hide info)
                                 (.show ninp))
-                              (do 
-                                (.show info)           
+                              (do
+                                (.addClass bud "unselected")
+                                (.show info)
                                 (.hide ninp)))))
         opt-toggle      (fn [src child]
                           (.bind src
                                  "focus click touchend"
                                  (fn [e]
-                                   (let [li  (.parents ($ (.-currentTarget e)) "li") 
-                                         cinp ($ (.find li "input[name=\"optin\"]")) 
+                                   (let [li  (.parents ($ (.-currentTarget e)) "li")
+                                         cinp ($ (.find li "input[name=\"optin\"]"))
                                          c?   (.attr cinp "checked")]
                                      (opt-vis li
                                               (.attr cinp "checked" (if c? false true)))
@@ -165,18 +168,18 @@
                                                            (.clone)
 
                                                            (.append (-> div
-                                                                      (.clone) 
+                                                                      (.clone)
                                                                       (.append (-> cinput
                                                                                  (.clone)
                                                                                  (.attr "checked" true)
                                                                                  (opt-toggle :current)))
-                                                                      (.append " ") 
+                                                                      (.append " ")
                                                                       (.append (-> label
                                                                                  (.clone)
                                                                                  (.append (buddy bname))
                                                                                  (.append ":")))
                                                                       (.append (.clone optinfo))
-                                                                      (opt-toggle "input[name=\"optin\"]"))) 
+                                                                      (opt-toggle "input[name=\"optin\"]")))
                                                            (.append (-> binput
                                                                       (.clone)
                                                                       (.data "pid" pid)
