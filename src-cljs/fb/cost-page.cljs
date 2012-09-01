@@ -105,7 +105,11 @@
         ul      ($ "#newpage div.newcost form div.buddieslist ul")
         label   ($ "<label></label>")
         li      ($ "<li></li>")
+        div     ($ "<span></span>")
         binput  ($ "<input type=\"number\" step=\"any\" min=\"0\" class=\"numbers\" name=\"tot\" />")
+        cinput  ($ "<input type=\"checkbox\" name=\"optin\" />")
+        optinfo (.hide ($ "<span class=\"optout\"> has opted out of this expense.</span>"))
+        ;; validate input & set title:
         validate        (fn [e]
                           (let [inp   ($ (.-currentTarget e))
                                 v     (.val inp)
@@ -119,6 +123,38 @@
                             (if (or (<= tot 0) (<= (count name) 0))
                               (.hide addb)
                               (.show addb))))
+        ;; opt out:
+        opt-vis         (fn [checkbox]
+                          (let [li   ($ (.parents checkbox "li")) 
+                                c?   (.attr checkbox "checked")
+                                ninp ($ (.find li "input[name=\"tot\"]")) 
+                                info ($ (.find li "span.optout"))] 
+                                     (js/console.log "vis" c?)
+                            (if c?
+                              (do 
+                                (.hide info)           
+                                (.show ninp))
+                              (do 
+                                (.show info)           
+                                (.hide ninp)))))
+        opt-toggle      (fn [src child]
+                          (.bind src
+                                 "focus click touchend"
+                                 (fn [e]
+                                   (let [li  (.parents ($ (.-currentTarget e)) "li") 
+                                         cinp ($ (.find li "input[name=\"optin\"]")) 
+                                         c?   (.attr cinp "checked")]
+                                     (js/console.log "t" c? cinp child)
+                                     (opt-vis (.attr cinp "checked" (if c? false true)))
+                                     true
+                                     ;(if (not= child :current) 
+                                     ;  (do 
+                                     ;    true)
+                                     ;  (do 
+                                     ;    (opt-vis (.attr cinp "checked" (if c? false true)))
+                                     ;    true)) 
+                                     ))))
+        ;; set page data:
         set-buddy-data  (fn [id name tot tx]
                           (-> inp
                             (.keyup validate)
@@ -136,10 +172,20 @@
                                               (-> ul
                                                 (.append (-> li
                                                            (.clone)
-                                                           (.append (-> label
-                                                                      (.clone)
-                                                                      (.append (buddy bname))
-                                                                      (.append ":")))
+
+                                                           (.append (-> div
+                                                                      (.clone) 
+                                                                      (.append (-> cinput
+                                                                                 (.clone)
+                                                                                 (.attr "checked" true)
+                                                                                 (opt-toggle :current)))
+                                                                      (.append " ") 
+                                                                      (.append (-> label
+                                                                                 (.clone)
+                                                                                 (.append (buddy bname))
+                                                                                 (.append ":")))
+                                                                      (.append (.clone optinfo))
+                                                                      (opt-toggle "input[name=\"optin\"]"))) 
                                                            (.append (-> binput
                                                                       (.clone)
                                                                       (.data "pid" pid)

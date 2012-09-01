@@ -187,6 +187,17 @@
                   (.attr inp "checked" (if (.attr inp "checked") nil "checked")))))))
    li))
 
+(defn give-child-focus [src child]
+  (.bind src
+         "focus click touchend"
+         (fn [e]
+           (let [inp (.children ($ (.-currentTarget e))
+                                child)
+                 c?  (.attr inp "checked")]
+             (js/console.log c?)
+             (.attr inp "checked" (not c?))
+             false))))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; canvas background;
 
