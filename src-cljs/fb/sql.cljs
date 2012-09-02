@@ -197,6 +197,33 @@
                   " ;"))]
     (do-select f rq)))
 
+(defn do-total [f pid]
+  (let [rq-buds  (str "SELECT buddies.name AS bname, buddies.id AS bid, buddies.img FROM buddies WHERE buddies.pid = " pid " ;")
+        rq-costs #(str "SELECT relb.cid, SUM(relb.tot) as btot, relc.nbbuds, relc.ctot FROM relcbp AS relb "
+                       " INNER JOIN ( SELECT reld.cid, COUNT(reld.bid) AS nbbuds, SUM(reld.tot) AS ctot FROM relcbp AS reld "
+                       "              WHERE reld.pid = " pid " GROUP BY reld.cid ) AS relc "
+                       "  ON relc.cid = relb.cid  "
+                       " WHERE relb.bid = " % " "
+                       " GROUP BY relb.cid ;")
+        mk-cost  (fn [r]
+                   (doall (for  [c (row-seq r)]
+                            (do (js/console.log c)
+                            {:cid (.-cid c) :btot (.-btot c) :nbbuds (.-nbbuds c) :ctot (.-ctot c)}))))
+        mk-buds  (fn [b r [bb & bs]]
+                   (cons b (cons (into bb {:costs (mk-cost r)}) bs)))
+        do-bud   (fn [f b buddies]
+                   (let [b {:bname (.-bname b) :bid (.-bid b)}]
+                     (fn [t r]
+                       (.executeSql t (rq-costs (:bid b)) (clj->js [])
+                                    (f (mk-buds b r buddies))
+                                    #(js/alert (str "fuck. " (.-message %2)))))))
+        do-buds  (fn [t r]
+                   (((reduce #(partial do-bud %1 %2) #(fn [t r]
+                                                         (f (drop-last (next (mk-buds nil r %)))))
+                             (row-seq r))
+                       [{}]) t r))]
+    (do-select do-buds rq-buds)))
+
 (defn rm [rq & [f]]
   (fn [t r]
     (if f

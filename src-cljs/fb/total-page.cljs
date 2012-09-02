@@ -1,7 +1,7 @@
 (ns fb.total
   (:use [jayq.core :only [$ inner delegate]]
         [jayq.util :only [clj->js]]
-        [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy do-settings
+        [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy do-settings do-total
                        update-settings up-cost up-buddy
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
@@ -71,6 +71,11 @@
                                           (.remove ul))))
                                     pid)
                          (swap-page e origa))]
+    (do-total (fn [buddies]
+                (js/console.log "user fn do total!")  
+                (doseq [b buddies]
+                  (js/console.log (str b ))))
+              pid)
     (set-title-project set-total-data pid)))
 
 (add-page-init! "total" show-total)
