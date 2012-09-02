@@ -107,7 +107,7 @@
         div     ($ "<span></span>")
         binput  ($ "<input type=\"number\" step=\"any\" min=\"0\" class=\"numbers\" name=\"tot\" />")
         cinput  (.attr ($ "<input type=\"checkbox\" name=\"optin\" />")
-                       "checked" true)
+                       "tabindex" 1000) ;; FIXME; html hack to remove checkbox from tab list
         optinfo (.hide ($ "<span class=\"optout\"> has opted out of this expense.</span>"))
         ;; validate input & set title:
         validate        (fn [e]
