@@ -140,7 +140,7 @@
                             (validate nil)))
         opt-toggle      (fn [src child]
                           (.bind src
-                                 "focus click touchend"
+                                 "click" ;; FIXME wtf
                                  (fn [e]
                                    (let [li   (.parents ($ (.-currentTarget e)) "li")
                                          cinp (.find li "input[name=\"optin\"]")

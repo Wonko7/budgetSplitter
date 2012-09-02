@@ -14,7 +14,9 @@
 
 (defn get-back-href []
   (let [[x [name d] & bs] (get-back back-pages)]
-    name))
+    (if name
+      name
+      "projects")));; FIXME wtf
 
 (defn rm-from-back! [key val]
   (def back-pages

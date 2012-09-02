@@ -114,7 +114,8 @@
                                          (.addClass "back")
                                          (.addClass "button")
                                          (.attr "href" "back")
-                                         (.text ((get-back-href) page-titles-map))))
+                                         (.text ((get-back-href) page-titles-map))
+                                         ))
                               (.append (-> a
                                          (.clone)
                                          (.addClass "button")
