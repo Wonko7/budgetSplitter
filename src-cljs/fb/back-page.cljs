@@ -6,15 +6,13 @@
 
 (def back-pages nil)
 
-(defn get-back [[[fname fd] & bs :as back-pages]]
-  (js/console.log (get-current-page :current) " " fname ":" (str back-pages))
-  (if (= fname (get-current-page :current)) 
+(defn get-back [[[fname fd] & bs :as back-pages] current]
+  (if (= fname (get-current-page current)) 
     bs 
     back-pages))
 
 (defn get-back-href []
-  (let [[x [name d] & bs] (get-back back-pages)]
-    (js/console.log name "!")
+  (let [[[name d] & bs] (get-back back-pages :newpage)]
     (if name
       name
       "projects")));; FIXME wtf
@@ -42,7 +40,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; back;
 
 (defn go-back [trigger-new-page e]
-  (let [[[name d] & bs] (get-back back-pages)]
+  (let [[[name d] & bs] (get-back back-pages :current)]
     (def back-pages bs)
     (if name
       (trigger-new-page name d)
