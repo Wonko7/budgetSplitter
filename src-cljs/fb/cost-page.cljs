@@ -74,7 +74,10 @@
         name  (.val i)
         pid   (.data i "pid")
         cid   (.data i "cid")
-        alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
+        costs (for [i ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
+                    :let [e ($ i) rid (.data e "rid") bid (.data e "bid")
+                          o? (.find (.parent e) "input[name=\"optin\"]")]]
+                {:rid rid :bid bid :o? o? :tot (num (.val e))})
         total (reduce + (for [i alli]
                           (num (.val ($ i)))))
         done  #(trigger-new-page "proj" {"proj" [["pid" pid]]})]
@@ -84,16 +87,20 @@
         (js/alert "No money")
         (if cid
           (up-cost cid name
-                   (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (zero? rid) (> (.val e) 0))]             ; New relation
-                     [(.data e "bid") (num (.val e))])
-                   (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (> (.val e) 0))]               ; Update rel
-                     [(.data e "rid") (num (.val e))])
-                   (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (zero? (num (.val e))))]       ; rm rel
-                     [(.data e "bid") (.data e "rid")])
+                   (filter #(and (zero? (:rid %)) (:o? %)) costs)
+                   ;(for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (zero? rid) (> (.val e) 0))]             ; New relation
+                   ;  [(.data e "bid") (num (.val e))])
+                   (filter #(and (> (:rid %) 0) (:o? %)) costs)
+                   ;(for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (> (.val e) 0))]               ; Update rel
+                   ;  [(.data e "rid") (num (.val e))])
+                   (filter #(and (> (:rid %) 0) (not (:o? %))) costs)
+                   ;(for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (zero? (num (.val e))))]       ; rm rel
+                   ;  [(.data e "bid") (.data e "rid")])
                    pid total done)
           (add-cost name
-                    (for [i alli :let [e ($ i)] :when (> (.val e) 0)]
-                      [(num (.data e "bid")) (num (.val e))])
+                   (filter #(:o? %) costs)
+                    ;(for [i alli :let [e ($ i)] :when (> (.val e) 0)]
+                    ;  [(num (.data e "bid")) (num (.val e))])
                     pid total done))))
     false))
 
@@ -107,7 +114,8 @@
         li      ($ "<li></li>")
         div     ($ "<span></span>")
         binput  ($ "<input type=\"number\" step=\"any\" min=\"0\" class=\"numbers\" name=\"tot\" />")
-        cinput  ($ "<input type=\"checkbox\" name=\"optin\" />")
+        cinput  (.attr ($ "<input type=\"checkbox\" name=\"optin\" />")
+                       "checked" true)
         optinfo (.hide ($ "<span class=\"optout\"> has opted out of this expense.</span>"))
         ;; validate input & set title:
         validate        (fn [e]
@@ -171,7 +179,6 @@
                                                                       (.clone)
                                                                       (.append (-> cinput
                                                                                  (.clone)
-                                                                                 (.attr "checked" true)
                                                                                  (opt-toggle :current)))
                                                                       (.append " ")
                                                                       (.append (-> label
