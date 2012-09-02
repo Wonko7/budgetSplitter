@@ -22,12 +22,11 @@
         li            ($ "<li></li>")
         a             ($ "<a></a>")
         set-cost-data (fn [id name tot tx]
-                        ;; FIXME should other buddies be shown? $0?
                         (do-cost (fn [tx r]
                                    (let [i        (.item (.-rows r) 0)
                                          buds     (for [b (row-seq r)]
                                                     [(.-bname b) (.-btot b) (.-ctot b)])
-                                          maxpaid (apply max (map #(nth % 1) buds))]
+                                         maxpaid  (apply max (map #(nth % 1) buds))]
                                      (-> ti
                                        (.append (str (.-cname i) ": "))
                                        (.append (money (.-ctot i))))
@@ -43,14 +42,12 @@
                                      (doseq [[name btot ctot] buds]
                                        (.append ul (-> li
                                                      (.clone)
-                                                     (set-rect-back maxpaid btot)
-                                                     (.append (-> a
-                                                                (.clone)
-                                                                (.append (buddy name))
-                                                                (.append ": ")
-                                                                (.append (money btot))
-                                                                (.data "cid" cid)
-                                                                (.data "pid" pid))))))
+                                                     (.append (buddy name))
+                                                     (.append ": ")
+                                                     (.append (money btot))
+                                                     (.data "cid" cid)
+                                                     (.data "pid" pid)
+                                                     (set-rect-back maxpaid btot))))
                                      (.append ul (-> li
                                                    (.clone)
                                                    (.addClass "rmli")
