@@ -76,9 +76,10 @@
         cid   (.data i "cid")
         costs (for [i ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
                     :let [e ($ i) rid (.data e "rid") bid (.data e "bid")
-                          o? (.find (.parent e) "input[name=\"optin\"]")]]
+                          o? (.attr (.find (.parent e) "input[name=\"optin\"]")
+                                    "checked")]]
                 {:rid rid :bid bid :o? o? :tot (num (.val e))})
-        total (reduce #(+ %1 (:tot %2)) 0 costs)
+        total (reduce #(+ %1 (if (:o? %2) (:tot %2) 0)) 0 costs)
         done  #(trigger-new-page "proj" {"proj" [["pid" pid]]})]
     (if (<= (count name) 0) ;; FIXME with contracts, also better notifs.
       (js/alert "Invalid name")
@@ -92,15 +93,13 @@
                    pid total done)
           (add-cost name
                    (filter #(:o? %) costs)
-                    ;(for [i alli :let [e ($ i)] :when (> (.val e) 0)]
-                    ;  [(num (.data e "bid")) (num (.val e))])
                     pid total done))))
     false))
 
 (defn show-new-cost [e origa]
   (load-template "newcost")
   (let [pid     (.data origa "pid")
-        cid     (.data origa "cid")
+        cid     (.data origa "cid") ;; If cid is set, this is an update, not a new cost.
         inp     ($ "#newpage div.newcost form [name=\"name\"]")
         ul      ($ "#newpage div.newcost form div.buddieslist ul")
         label   ($ "<label></label>")
@@ -112,14 +111,14 @@
         optinfo (.hide ($ "<span class=\"optout\"> has opted out of this expense.</span>"))
         ;; validate input & set title:
         validate        (fn [e]
-                          (let [inp   ($ (.-currentTarget e))
-                                v     (.val inp)
-                                total ($ "#content div.newcost .costtotal")
+                          (let [total ($ "#content div.newcost .costtotal")
                                 alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
                                 name  (.val ($ "#content div.newcost form [name=\"name\"]"))
                                 addb  ($ "#content div.newcost form div.buddieslist ul li.addli a")
-                                tot   (reduce + 0 (for [i alli]
-                                                    (num (.val ($ i)))))]
+                                tot   (reduce + 0 (for [i alli
+                                                        :let [i ($ i)]
+                                                        :when (.is i ":visible")]
+                                                    (num (.val i))))]
                             (.html total (money tot))
                             (if (or (<= tot 0) (<= (count name) 0))
                               (.hide addb)
@@ -137,14 +136,15 @@
                               (do
                                 (.addClass bud "unselected")
                                 (.show info)
-                                (.hide ninp)))))
+                                (.hide ninp)))
+                            (validate nil)))
         opt-toggle      (fn [src child]
                           (.bind src
                                  "focus click touchend"
                                  (fn [e]
-                                   (let [li  (.parents ($ (.-currentTarget e)) "li")
-                                         cinp ($ (.find li "input[name=\"optin\"]"))
-                                         c?   (if (.attr cinp "checked") false true)]
+                                   (let [li   (.parents ($ (.-currentTarget e)) "li")
+                                         cinp (.find li "input[name=\"optin\"]")
+                                         c?   (not (.attr cinp "checked"))]
                                      (.attr cinp "checked" c?)
                                      (opt-vis li c?)
                                      true))))

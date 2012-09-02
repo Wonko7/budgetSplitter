@@ -107,9 +107,16 @@
         addrq "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
         uprq   #(str "UPDATE relcbp SET tot = ? WHERE id = " % ";")
         rmrq   #(str "DELETE FROM relcbp WHERE id = " % ";")
-        fns    (reduce #(do-cbud %1 addrq [proj (first %2) cid (second %2)]) f   buddies-add)
-        fns    (reduce #(do-cbud %1 (uprq (first %2)) [(second %2)])         fns buddies-up)
-        fns    (reduce #(do-cbud %1 (rmrq (first %2)) [])                    fns buddies-rm)]
+        fns    (reduce #(do-cbud %1 addrq [proj (:bid %2) cid (:tot %2)]) f   buddies-add)
+        fns    (reduce #(do-cbud %1 (uprq (:rid %2)) [(:tot %2)])         fns buddies-up)
+        fns    (reduce #(do-cbud %1 (rmrq (:rid %2)) [])                  fns buddies-rm)]
+    (js/console.log (str name amount))
+    (doseq [b buddies-add]
+      (js/console.log (str "add: " b)))
+    (doseq [b buddies-up]
+      (js/console.log (str "up:  " b)))
+    (doseq [b buddies-rm]
+      (js/console.log (str "rm:  " b)))
     (.transaction db
                   (fn [t]
                     (.executeSql t
