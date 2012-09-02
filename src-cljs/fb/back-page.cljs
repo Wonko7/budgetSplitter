@@ -1,12 +1,19 @@
-(ns fb.back)
+(ns fb.back
+  (:use [fb.misc :only [get-current-page]]))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; stack;
 
 (def back-pages nil)
 
+(defn get-back [[[fname fd] & bs :as back-pages]]
+  (js/console.log (get-current-page :current) " " fname)
+  (if (= fname (get-current-page :current)) 
+    bs 
+    back-pages))
+
 (defn get-back-href []
-  (let [[x [name d] & bs] back-pages]
+  (let [[x [name d] & bs] (get-back back-pages)]
     name))
 
 (defn rm-from-back! [key val]
@@ -32,7 +39,7 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;; back;
 
 (defn go-back [trigger-new-page e]
-  (let [[x [name d] & bs] back-pages]
+  (let [[[name d] & bs] (get-back back-pages)]
     (def back-pages bs)
     (if name
       (trigger-new-page name d)
