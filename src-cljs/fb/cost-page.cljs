@@ -78,8 +78,7 @@
                     :let [e ($ i) rid (.data e "rid") bid (.data e "bid")
                           o? (.find (.parent e) "input[name=\"optin\"]")]]
                 {:rid rid :bid bid :o? o? :tot (num (.val e))})
-        total (reduce + (for [i alli]
-                          (num (.val ($ i)))))
+        total (reduce #(+ %1 (:tot %2)) 0 costs)
         done  #(trigger-new-page "proj" {"proj" [["pid" pid]]})]
     (if (<= (count name) 0) ;; FIXME with contracts, also better notifs.
       (js/alert "Invalid name")
@@ -87,15 +86,9 @@
         (js/alert "No money")
         (if cid
           (up-cost cid name
-                   (filter #(and (zero? (:rid %)) (:o? %)) costs)
-                   ;(for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (zero? rid) (> (.val e) 0))]             ; New relation
-                   ;  [(.data e "bid") (num (.val e))])
-                   (filter #(and (> (:rid %) 0) (:o? %)) costs)
-                   ;(for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (> (.val e) 0))]               ; Update rel
-                   ;  [(.data e "rid") (num (.val e))])
-                   (filter #(and (> (:rid %) 0) (not (:o? %))) costs)
-                   ;(for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (zero? (num (.val e))))]       ; rm rel
-                   ;  [(.data e "bid") (.data e "rid")])
+                   (filter #(and (zero? (:rid %)) (:o? %)) costs)           ; New relation 
+                   (filter #(and (pos?  (:rid %)) (:o? %)) costs)           ; Update rel 
+                   (filter #(and (pos?  (:rid %)) (not (:o? %))) costs)     ; rm rel 
                    pid total done)
           (add-cost name
                    (filter #(:o? %) costs)
@@ -132,9 +125,8 @@
                               (.hide addb)
                               (.show addb))))
         ;; opt out:
-        opt-vis         (fn [li checkbox]
-                          (let [c?   (.attr checkbox "checked")
-                                ninp ($ (.find li "input[name=\"tot\"]"))
+        opt-vis         (fn [li c?]
+                          (let [ninp ($ (.find li "input[name=\"tot\"]"))
                                 info ($ (.find li "span.optout"))
                                 bud  ($ (.find li "span.buddy"))]
                             (if c?
@@ -152,10 +144,17 @@
                                  (fn [e]
                                    (let [li  (.parents ($ (.-currentTarget e)) "li")
                                          cinp ($ (.find li "input[name=\"optin\"]"))
-                                         c?   (.attr cinp "checked")]
-                                     (opt-vis li
-                                              (.attr cinp "checked" (if c? false true)))
+                                         c?   (if (.attr cinp "checked") false true)]
+                                     (.attr cinp "checked" c?)
+                                     (opt-vis li c?)
                                      true))))
+        opt-set         (fn [li]
+                          (let [cinp ($ (.find li "input[name=\"optin\"]"))
+                                rid  (.data cinp "rid")
+                                c?   (if cid (pos? rid) true)]  ;; FIXME true -> set from settings 
+                            (.attr cinp "checked" c?)
+                            (opt-vis li c?)
+                            li))
         ;; set page data:
         set-buddy-data  (fn [id name tot tx]
                           (-> inp
@@ -174,11 +173,12 @@
                                               (-> ul
                                                 (.append (-> li
                                                            (.clone)
-
                                                            (.append (-> div
                                                                       (.clone)
                                                                       (.append (-> cinput
                                                                                  (.clone)
+                                                                                 (.data "bid" bid)
+                                                                                 (.data "rid" rid)
                                                                                  (opt-toggle :current)))
                                                                       (.append " ")
                                                                       (.append (-> label
@@ -195,6 +195,7 @@
                                                                       (.attr "placeholder" (str bname " paid..."))
                                                                       (#(if (zero? btot) % (.val % btot)))
                                                                       (.keyup validate)))
+                                                           (opt-set)
                                                            (give-input-focus :li)))))
                                             (when cid
                                               (.val inp (.-cname (.item (.-rows r) 0))))
