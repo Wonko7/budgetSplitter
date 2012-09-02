@@ -110,13 +110,6 @@
         fns    (reduce #(do-cbud %1 addrq [proj (:bid %2) cid (:tot %2)]) f   buddies-add)
         fns    (reduce #(do-cbud %1 (uprq (:rid %2)) [(:tot %2)])         fns buddies-up)
         fns    (reduce #(do-cbud %1 (rmrq (:rid %2)) [])                  fns buddies-rm)]
-    (js/console.log (str name amount))
-    (doseq [b buddies-add]
-      (js/console.log (str "add: " b)))
-    (doseq [b buddies-up]
-      (js/console.log (str "up:  " b)))
-    (doseq [b buddies-rm]
-      (js/console.log (str "rm:  " b)))
     (.transaction db
                   (fn [t]
                     (.executeSql t
@@ -137,7 +130,7 @@
                                  "INSERT INTO costs (name, pid, tot) VALUES (?, ?, ?);"
                                  (clj->js [(trim name) proj amount])
                                  (fn [t r]
-                                  ((reduce #(do-cbud %1 [proj (first %2) (.-insertId r) (second %2)]) f buddies) t r)))))))
+                                  ((reduce #(do-cbud %1 [proj (:bid %2) (.-insertId r) (:tot %2)]) f buddies) t r)))))))
 
 (defn do-proj [f & [id]]
   (let [rq (if id
