@@ -20,62 +20,67 @@
         li            ($ "<li></li>")
         title         ($ "#newpage h2 div.title")
         set-total-data (fn [id name tot tx]
-                        (do-buddies (fn [tx r]
-                                      (let [nbb     (.-length (.-rows r))
-                                            av      (/ tot nbb)
+                        (do-total (fn [buddies]
+                                      (let [;nbb     (.-length (.-rows r))
+                                            ;av      (/ tot nbb)
                                             abs     #(if (< 0 %) % (- %))
-                                            buds    (for [b (row-seq r)]
-                                                      [(abs (- av (.-btot b))) (.-btot b) (.-bname b)])
-                                            divbuds (group-by #(> av (second %)) buds)
-                                            maxpaid (apply max (map #(second %) buds))
-                                            cmp     #(< (.-btot %1) (.-btot %2))
+                                            buds    (for [b buddies
+                                                          :let [av (reduce #(+ %1 (/ (:ctot %2) (:nbbuds %2))) 0 (:costs b))]]
+                                                      (into b {:avg av :delta (abs (- (:btot b) av))}))
+                                            divbuds (group-by #(> (:avg %) (:btot %)) buds)
+                                            maxpaid (apply max (map #(:btot %) buds))
+                                            cmp     #(< (:btot %1) (:btot %2))
                                             bgive   (sort cmp (divbuds true))
                                             btake   (sort cmp (divbuds false))
-                                            owes    (loop [[tdif ttot tname :as t] (first btake) ts (next btake)
-                                                           [gdif gtot gname :as g] (first bgive) gs (next bgive)
+                                            updif   #(into %1 {:delta %2})
+                                            owes    (loop [{tdelta :delta ttot :btot :as t} (first btake) ts (next btake)
+                                                           {gdelta :delta gtot :btot :as g} (first bgive) gs (next bgive)
                                                            ac []]
                                                       (if (and g t)
-                                                        (if (> tdif gdif)
-                                                          (recur [(- tdif gdif) ttot tname] ts
+                                                        (if (> tdelta gdelta)
+                                                          (recur (updif t (- tdelta gdelta)) ts
                                                                  (first gs) (next gs)
-                                                                 (conj ac [gname tname gdif]))
+                                                                 (conj ac [g t gdelta]))
                                                           (recur (first ts) (next ts)
-                                                                 [(- gdif tdif) gtot gname] gs
-                                                                 (conj ac [gname tname tdif])))
+                                                                 (updif g (- gdelta tdelta)) gs
+                                                                 (conj ac [g t tdelta])))
                                                         ac))]
+                                        (doseq [b buds]
+                                          (js/console.log (str "tot: " b)))
                                         (-> title
                                           (.append "Total: ")
                                           (.append (money tot))
-                                          (.append " Average: ")
-                                          (.append (money av)))
-                                        (doseq [[d t n] buds]
+                                          ;(.append " Average: ")
+                                          ;(.append (money av))
+                                          )
+                                        (doseq [{n :bname t :btot a :avg d :delta} buds]
                                           (.append ul (-> li
                                                         (.clone)
                                                         (.append (buddy n))
                                                         (.append " paid: ")
                                                         (.append (money t))
-                                                        (.append (if (> t av)
+                                                        (.append (if (> t a)
                                                                    " needs: "
                                                                    " owes: "))
                                                         (.append (money d))
-                                                        (set-tot-rect-back maxpaid av t))))
+                                                        (set-tot-rect-back maxpaid a t))))
                                         (doseq [[gn tn tot] owes]
                                           (.append ul (-> li
                                                         (.clone)
-                                                        (.append (buddy gn))
+                                                        (.append (buddy (:bname gn)))
                                                         (.append " owes ")
                                                         (.append (money tot))
                                                         (.append " to ")
-                                                        (.append (buddy tn)))))
-                                        (when (zero? nbb)
+                                                        (.append (buddy (:bname tn))))))
+                                        (when (zero? (count buds))
                                           (.remove ul))))
                                     pid)
                          (swap-page e origa))]
-    (do-total (fn [buddies]
-                (js/console.log "user fn do total!")  
-                (doseq [b buddies]
-                  (js/console.log (str b ))))
-              pid)
+    ;(do-total (fn [buddies]
+    ;            (js/console.log "user fn do total!")  
+    ;            (doseq [b buddies]
+    ;              (js/console.log (str b ))))
+    ;          pid)
     (set-title-project set-total-data pid)))
 
 (add-page-init! "total" show-total)

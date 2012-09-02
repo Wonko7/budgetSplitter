@@ -212,7 +212,7 @@
         mk-buds  (fn [b r [bb & bs]]
                    (cons b (cons (into bb {:costs (mk-cost r)}) bs)))
         do-bud   (fn [f b buddies]
-                   (let [b {:bname (.-bname b) :bid (.-bid b)}]
+                   (let [b {:bname (.-bname b) :bid (.-id b) :btot (.-btot b)}]
                      (fn [t r]
                        (.executeSql t (rq-costs (:bid b)) (clj->js [])
                                     (f (mk-buds b r buddies))
@@ -222,7 +222,7 @@
                                                          (f (drop-last (next (mk-buds nil r %)))))
                              (row-seq r))
                        [{}]) t r))]
-    (do-select do-buds rq-buds)))
+    (do-buddies do-buds pid)))
 
 (defn rm [rq & [f]]
   (fn [t r]
