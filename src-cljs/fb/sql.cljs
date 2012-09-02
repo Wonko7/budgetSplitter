@@ -207,8 +207,7 @@
                        " GROUP BY relb.cid ;")
         mk-cost  (fn [r]
                    (doall (for  [c (row-seq r)]
-                            (do (js/console.log c)
-                            {:cid (.-cid c) :btot (.-btot c) :nbbuds (.-nbbuds c) :ctot (.-ctot c)}))))
+                            {:cid (.-cid c) :btot (.-btot c) :nbbuds (.-nbbuds c) :ctot (.-ctot c)})))
         mk-buds  (fn [b r [bb & bs]]
                    (cons b (cons (into bb {:costs (mk-cost r)}) bs)))
         do-bud   (fn [f b buddies]

@@ -33,6 +33,11 @@ $base-bg-color: $base-color !default;
             border-top: 1px solid darken($base-color, 5);
             @include background-gradient(rgba($base-color, .2), matte);
 
+			&.sepli {
+				text-align: center;
+				@include background-gradient(rgba($base-color - #222, .2), matte);
+			}
+
 			&.rmli {
 				//background-color: #668;
 				text-align: center;

@@ -21,9 +21,7 @@
         title         ($ "#newpage h2 div.title")
         set-total-data (fn [id name tot tx]
                         (do-total (fn [buddies]
-                                      (let [;nbb     (.-length (.-rows r))
-                                            ;av      (/ tot nbb)
-                                            abs     #(if (< 0 %) % (- %))
+                                      (let [abs     #(if (< 0 %) % (- %))
                                             buds    (for [b buddies
                                                           :let [av (reduce #(+ %1 (/ (:ctot %2) (:nbbuds %2))) 0 (:costs b))]]
                                                       (into b {:avg av :delta (abs (- (:btot b) av))}))
@@ -43,13 +41,13 @@
                                                                  (conj ac [g t gdelta]))
                                                           (recur (first ts) (next ts)
                                                                  (updif g (- gdelta tdelta)) gs
-                                                                 (conj ac [g t tdelta])))
+                                                                 (if (pos? tdelta)
+                                                                   (conj ac [g t tdelta])
+                                                                   ac)))
                                                         ac))]
-                                        (doseq [b buds]
-                                          (js/console.log (str "tot: " b)))
                                         (-> title
                                           (.append "Total: ")
-                                          (.append (money tot))
+                                          (.append (money tot)) ;; FIXME better title?
                                           ;(.append " Average: ")
                                           ;(.append (money av))
                                           )
@@ -64,6 +62,10 @@
                                                                    " owes: "))
                                                         (.append (money d))
                                                         (set-tot-rect-back maxpaid a t))))
+                                        (.append ul (-> li
+                                                      (.clone)
+                                                      (.addClass "sepli")
+                                                      (.text "Solution:")))
                                         (doseq [[gn tn tot] owes]
                                           (.append ul (-> li
                                                         (.clone)
@@ -76,11 +78,6 @@
                                           (.remove ul))))
                                     pid)
                          (swap-page e origa))]
-    ;(do-total (fn [buddies]
-    ;            (js/console.log "user fn do total!")  
-    ;            (doseq [b buddies]
-    ;              (js/console.log (str b ))))
-    ;          pid)
     (set-title-project set-total-data pid)))
 
 (add-page-init! "total" show-total)
