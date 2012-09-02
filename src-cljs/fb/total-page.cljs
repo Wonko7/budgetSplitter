@@ -26,7 +26,7 @@
                                                           :let [av (reduce #(+ %1 (/ (:ctot %2) (:nbbuds %2))) 0 (:costs b))]]
                                                       (into b {:avg av :delta (abs (- (:btot b) av))}))
                                             divbuds (group-by #(> (:avg %) (:btot %)) buds)
-                                            maxpaid (apply max (map #(:btot %) buds))
+                                            maxpaid (apply max (map #(max (:avg %) (:btot %)) buds))
                                             cmp     #(< (:btot %1) (:btot %2))
                                             bgive   (sort cmp (divbuds true))
                                             btake   (sort cmp (divbuds false))
