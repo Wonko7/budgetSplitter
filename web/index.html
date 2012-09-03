@@ -7,7 +7,7 @@
 		<!--
 		<link rel="stylesheet" href="themes/css/blue.css" type="text/css" />
 		-->
-		<link id="settheme" rel="stylesheet" href="themes/css/green.css" type="text/css" />
+		<link id="settheme" rel="stylesheet" href="themes/css/jqtouch-edited.css" type="text/css" />
 
 		<script type="text/javascript" src="js-static/jquery-min.js" charset="utf-8"></script>
 		<script type="text/javascript" src="js-static/src/jqtouch.min.js" charset="utf-8"></script>
@@ -193,6 +193,7 @@
 				</div>
 				<div class="info">
 					This page shows how much each participant has spent, and how to resolve the difference.
+					Dark green represents what has been paid, bright green what has been paid in excess, and red what is owed.
 				</div>
 			</div>
 
@@ -231,14 +232,15 @@
 				</div>
 				<form>
 					<ul>
+						<li> <ul class="rounded optin"> </ul> </li>
 						<li> <ul class="rounded menuPos"> </ul> </li>
-						<li> <ul class="rounded theme"> </ul> </li>
 						<li> <ul class="rounded help"> </ul> </li>
+						<li> <ul class="rounded theme"> </ul> </li>
 						<li> <ul class="rounded apply"> <li></li> </ul> </li>
 						<li>
 						<!-- FIXME: email & app name -->
 						<ul class="rounded">
-							<li>Feedback:</li>
+							<li class="sepli">Feedback:</li>
 							<li>
 							<a href="mailto:author@company.com?subject=[Bugs][AppName] ">Report Bugs</a>
 							</li>

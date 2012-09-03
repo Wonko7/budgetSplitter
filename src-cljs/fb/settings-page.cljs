@@ -22,6 +22,7 @@
         ulPos   ($ "#newpage div.settings ul.menuPos")
         ulTheme ($ "#newpage div.settings ul.theme")
         ulHelp  ($ "#newpage div.settings ul.help")
+        ulOptin ($ "#newpage div.settings ul.optin")
         liApply ($ "#newpage div.settings ul.apply li")
         li      ($ "<li></li>")
         a       ($ "<a></a>")
@@ -53,22 +54,35 @@
                                                        false)))))
                   false)
         set-settings (fn [settings]
+                       (-> ulOptin
+                         (.append (-> li
+                                    (.clone)
+                                    (.addClass "sepli")
+                                    (.text "Add Expense Behaviour:")))
+                         (.append (add-inp li "radio" "Opt In by default"  "Optin" (:optin settings)       {"inp" [["type" "optin"]]}))
+                         (.append (add-inp li "radio" "Opt Out by default" "Optin" (not (:optin settings)) {"inp" [["type" "optout"]]})))
                        (-> ulPos
                          (.append (-> li
                                     (.clone)
+                                    (.addClass "sepli")
                                     (.text "Menu Placement:")))
                          (.append (add-inp li "radio" "Top"    "menuPos" (= :top    (:menuPos settings)) {"inp" [["type" "top"]]}))
                          (.append (add-inp li "radio" "Bottom" "menuPos" (= :bottom (:menuPos settings)) {"inp" [["type" "bottom"]]})))
+                       (-> ulHelp
+                         (.append (-> li
+                                    (.clone)
+                                    (.addClass "sepli")
+                                    (.text "Menu Placement:")))
+                         (.append (add-inp li "checkbox" "Display Help" "help" (:help settings) {"inp" [["type" "help"]]})))
                        (-> ulTheme
                          (.append (-> li
                                     (.clone)
+                                    (.addClass "sepli")
                                     (.text "Theme:")))
                          (.append (add-inp li "radio" "Grey"  "theme" (= "jqtouch-edited" (:theme settings)) {"inp" [["theme" "jqtouch-edited"]]}))
                          (.append (add-inp li "radio" "Blue"  "theme" (= "blue"           (:theme settings)) {"inp" [["theme" "blue"]]}))
                          (.append (add-inp li "radio" "Green" "theme" (= "green"          (:theme settings)) {"inp" [["theme" "green"]]}))
                          (.append (add-inp li "radio" "Red"   "theme" (= "red"            (:theme settings)) {"inp" [["theme" "red"]]})))
-                       (-> ulHelp
-                         (.append (add-inp li "checkbox" "Display Help" "help" (:help settings) {"inp" [["type" "help"]]})))
                        (-> liApply
                          (.addClass "addli")
                          (.append (-> a

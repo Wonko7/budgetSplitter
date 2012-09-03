@@ -210,7 +210,7 @@
     ctx))
 
 (defn set-rect-back [elt tot amount]
-  (let [w    (.width ($ "body"))
+  (let [w    (max (.-width js/screen) (.-height js/screen))
         h    50
         nw   (int (* w (/ amount tot)))
         cols (get-canvas-colors)
@@ -232,8 +232,8 @@
     (.fillRect ctx 0 0 avg h-tot)
     (set! (. ctx -fillStyle) needs)
     (.fillRect ctx avg 0 (- wpaid avg) h-tot)
-    (set! (. ctx -fillStyle) average)
-    (.fillRect ctx avg 0 2 h-tot)
+    ;(set! (. ctx -fillStyle) average)
+    ;(.fillRect ctx avg 0 2 h-tot)
     ctx))
 
 (defn canvas-rect-give [w-tot h-tot wpaid avg cols]
@@ -248,15 +248,15 @@
     (.fillRect ctx 0 0 wpaid h-tot)
     (set! (. ctx -fillStyle) owes)
     (.fillRect ctx wpaid 0 (- avg wpaid) h-tot)
-    (set! (. ctx -fillStyle) average)
-    (.fillRect ctx avg 0 2 h-tot)
+    ;(set! (. ctx -fillStyle) average)
+    ;(.fillRect ctx avg 0 2 h-tot)
     ctx))
 
-(defn set-tot-rect-back [elt max avg amount]
-  (let [w    (.width ($ "body"))
+(defn set-tot-rect-back [elt maxpaid avg amount]
+  (let [w    (max (.-width js/screen) (.-height js/screen))
         h    50
-        np   (int (* w (/ amount max)))
-        na   (int (* w (/ avg max)))
+        np   (int (* w (/ amount maxpaid)))
+        na   (int (* w (/ avg maxpaid)))
         cols (get-canvas-colors)
         bck  (last cols)
         cvs  ((if (> np na) canvas-rect-take canvas-rect-give) w h np na cols)]

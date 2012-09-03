@@ -24,7 +24,7 @@
   (.executeSql t "SELECT * FROM settings;"
                (clj->js [])
                #(if (zero? (.-length (.-rows %2)))
-                  (.executeSql %1 "INSERT INTO settings (menuPos, menuOn, help, theme) VALUES (1, 1, 1, \"jqtouch-edited\");" (clj->js [])
+                  (.executeSql %1 "INSERT INTO settings (menuPos, menuOn, help, theme, optIn) VALUES (1, 1, 1, \"jqtouch-edited\", 1);" (clj->js [])
                                ))))
 
 (defn add-db! [name schema & [f]]
@@ -51,6 +51,7 @@
   (add-db! :settings (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                           " menuPos INTEGER NOT NULL,"
                           " menuOn INTEGER NOT NULL,"
+                          " optIn INTEGER NOT NULL,"
                           " theme TEXT NOT NULL,"
                           " help INTEGER NOT NULL")
            init-settings)
@@ -277,3 +278,10 @@
                                                       ))
                                #(js/alert (str "fuck. " (.-message %2)))
                                ))))
+
+(defn nuke-settings []
+  (.transaction db
+                (fn [t] (.executeSql t "DROP TABLE settings;" (clj->js [])
+                                     #(js/alert (str "dropped."))
+                                     #(js/alert (str "fuck. " (.-message %2)))
+                                     ))))
