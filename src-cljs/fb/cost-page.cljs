@@ -21,7 +21,7 @@
         ti            ($ "#newpage div.cost div.title")
         li            ($ "<li></li>")
         a             ($ "<a></a>")
-        set-cost-data (fn [id name tot tx]
+        set-cost-data (fn [id name tot tx settings]
                         (do-cost (fn [tx r]
                                    (let [i        (.item (.-rows r) 0)
                                          buds     (for [b (row-seq r)]
@@ -145,15 +145,15 @@
                                      (.attr cinp "checked" c?)
                                      (opt-vis li c?)
                                      true))))
-        opt-set         (fn [li]
+        opt-set         (fn [li settings]
                           (let [cinp ($ (.find li "input[name=\"optin\"]"))
                                 rid  (.data cinp "rid")
-                                c?   (if cid (pos? rid) true)]  ;; FIXME true -> set from settings 
+                                c?   (if cid (pos? rid) (:optIn settings))]
                             (.attr cinp "checked" c?)
                             (opt-vis li c?)
                             li))
         ;; set page data:
-        set-buddy-data  (fn [id name tot tx]
+        set-buddy-data  (fn [id name tot tx settings]
                           (-> inp
                             (.keyup validate)
                             (.data "cid" cid)
@@ -192,7 +192,7 @@
                                                                       (.attr "placeholder" (str bname " paid..."))
                                                                       (#(if (zero? btot) % (.val % btot)))
                                                                       (.keyup validate)))
-                                                           (opt-set)
+                                                           (opt-set settings)
                                                            (give-input-focus :li)))))
                                             (when cid
                                               (.val inp (.-cname (.item (.-rows r) 0))))

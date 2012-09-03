@@ -19,7 +19,7 @@
         ul            ($ "#newpage div.total div ul")
         li            ($ "<li></li>")
         title         ($ "#newpage h2 div.title")
-        set-total-data (fn [id name tot tx]
+        set-total-data (fn [id name tot tx settings]
                         (do-total (fn [buddies]
                                       (let [abs     #(if (< 0 %) % (- %))
                                             buds    (for [b buddies

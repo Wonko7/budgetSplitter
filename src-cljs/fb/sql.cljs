@@ -136,10 +136,10 @@
 
 (defn do-proj [f & [id]]
   (let [rq (if id
-             (str "SELECT projects.id, projects.name, SUM(relcbp.tot) AS tot, settings.menuOn, settings.menuPos, settings.help FROM projects, relcbp, settings "
+             (str "SELECT projects.id, projects.name, SUM(relcbp.tot) AS tot, settings.menuOn, settings.menuPos, settings.help, settings.theme, settings.optIn FROM projects, relcbp, settings "
                   "WHERE projects.id = " id " AND relcbp.pid = projects.id "
                   "GROUP BY projects.id "
-                  "UNION ALL SELECT  projects.id, projects.name, 0 AS tot, settings.menuOn, settings.menuPos, settings.help FROM projects, settings "
+                  "UNION ALL SELECT  projects.id, projects.name, 0 AS tot, settings.menuOn, settings.menuPos, settings.help, settings.theme, settings.optIn FROM projects, settings "
                   "WHERE projects.id = " id " AND NOT EXISTS (SELECT * FROM relcbp WHERE projects.id = relcbp.pid )"
                   " ;")
              "SELECT * FROM projects;")]

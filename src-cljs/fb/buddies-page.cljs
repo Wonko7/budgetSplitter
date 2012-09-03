@@ -72,7 +72,7 @@
                                                    (.attr "href" "null")
                                                    (.bind "click touchend" edit-name)))))))
         ;; set page data:
-        set-budd-data (fn [id name tot tx]
+        set-budd-data (fn [id name tot tx settings]
                         (do-buddy (fn [tx r]
                                     (let [i       (.item (.-rows r) 0)
                                           nbc     (.-length (.-rows r))
@@ -153,7 +153,7 @@
         li       ($ "<li></li>")
         add      "#newpage div.buddies form ul li.addli a"
         validate (mk-validate add)
-        set-buddy-data  (fn [id name tot tx]
+        set-buddy-data  (fn [id name tot tx settings]
                           (-> inp
                             (.keyup validate)
                             (.data "pid" pid)

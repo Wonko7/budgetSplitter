@@ -80,7 +80,7 @@
                                       (.text "Add Expense")
                                       (.data "pid" pid)
                                       (.attr "href" "newcost")))))
-        set-proj-data (fn [id name tot tx]
+        set-proj-data (fn [id name tot tx settings]
                         (.data ($ "#newpage div.proj div.menu a") "pid" pid)
                         (do-costs (fn [tx r]
                                     (let [costs   (for [c (row-seq r)]

@@ -132,7 +132,7 @@
                                                                                                 (.hide menu))))))
                                                   false)))))))
                  (add-menu pid settings)
-                 (f id n tot tx)))]
+                 (f id n tot tx settings)))]
     (do-proj sett pid)))
 
 
