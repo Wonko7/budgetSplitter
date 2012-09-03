@@ -45,6 +45,7 @@
                                                  :menuPos (condp = (.data ($ "#content input[name=\"menuPos\"]:checked") "type")
                                                             "top"    :top
                                                             "bottom" :bottom)
+                                                 :optIn   (= "optin" (.data ($ "#content input[name=\"optIn\"]:checked") "type"))
                                                  :help    (.attr ($ "#content input[name=\"help\"]") "checked")
                                                  :theme   (.data ($ "#content input[name=\"theme\"]:checked") "theme")}]
                                    (update-settings settings
@@ -59,8 +60,8 @@
                                     (.clone)
                                     (.addClass "sepli")
                                     (.text "Add Expense Behaviour:")))
-                         (.append (add-inp li "radio" "Opt In by default"  "Optin" (:optin settings)       {"inp" [["type" "optin"]]}))
-                         (.append (add-inp li "radio" "Opt Out by default" "Optin" (not (:optin settings)) {"inp" [["type" "optout"]]})))
+                         (.append (add-inp li "radio" "Opt In by default"  "optIn" (:optIn settings)       {"inp" [["type" "optin"]]}))
+                         (.append (add-inp li "radio" "Opt Out by default" "optIn" (not (:optIn settings)) {"inp" [["type" "optout"]]})))
                        (-> ulPos
                          (.append (-> li
                                     (.clone)
@@ -72,7 +73,7 @@
                          (.append (-> li
                                     (.clone)
                                     (.addClass "sepli")
-                                    (.text "Menu Placement:")))
+                                    (.text "Help/Info:")))
                          (.append (add-inp li "checkbox" "Display Help" "help" (:help settings) {"inp" [["type" "help"]]})))
                        (-> ulTheme
                          (.append (-> li

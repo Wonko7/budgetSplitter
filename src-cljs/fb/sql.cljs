@@ -66,15 +66,16 @@
 (defn update-settings [settings f]
     (.transaction db
      (fn [t]
-       (.executeSql t "UPDATE settings SET menuPos = ?, menuOn = ?, help = ?, theme = ? WHERE id = 1;"
+       (.executeSql t "UPDATE settings SET menuPos = ?, menuOn = ?, optIn = ?, help = ?, theme = ? WHERE id = 1;"
                     (clj->js [(if (= :top (:menuPos settings)) 1 0)
                               (if (:menuOn settings) 1 0)
+                              (if (:optIn settings) 1 0)
                               (if (:help settings) 1 0)
                               (:theme settings)])
                     f))))
 
 (defn do-settings [f]
-  (let [rq (str "SELECT settings.menuOn, settings.menuPos, settings.help, settings.theme FROM settings "
+  (let [rq (str "SELECT settings.menuOn, settings.menuPos, settings.help, settings.theme, settings.optIn FROM settings "
                 " ;")]
     (do-select #(f (mk-settings %2)) rq)))
 
