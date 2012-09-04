@@ -125,7 +125,7 @@
                                                 (fn []
                                                   (do-settings (fn [settings]
                                                                  (let [menu     ($ "#content div.menu")
-                                                                       settings (into settings {:menuOn (not (:menuOn settings))})
+                                                                       settings (assoc settings :menuOn (not (:menuOn settings)))
                                                                        on       (:menuOn settings)]
                                                                    (update-settings settings #(if on
                                                                                                 (.show menu)

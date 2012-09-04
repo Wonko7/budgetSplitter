@@ -211,7 +211,7 @@
                    (doall (for  [c (row-seq r)]
                             {:cid (.-cid c) :btot (.-btot c) :nbbuds (.-nbbuds c) :ctot (.-ctot c)})))
         mk-buds  (fn [b r [bb & bs]]
-                   (cons b (cons (into bb {:costs (mk-cost r)}) bs)))
+                   (cons b (cons (assoc bb :costs (mk-cost r)) bs)))
         do-bud   (fn [f b buddies]
                    (let [b {:bname (.-bname b) :bid (.-id b) :btot (.-btot b)}]
                      (fn [t r]

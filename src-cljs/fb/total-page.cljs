@@ -24,23 +24,22 @@
                                       (let [abs     #(if (< 0 %) % (- %))
                                             buds    (for [b buddies
                                                           :let [av (reduce #(+ %1 (/ (:ctot %2) (:nbbuds %2))) 0 (:costs b))]]
-                                                      (into b {:avg av :delta (abs (- (:btot b) av))}))
+                                                      (assoc b :avg av :delta (abs (- (:btot b) av))))
                                             divbuds (group-by #(> (:avg %) (:btot %)) buds)
                                             maxpaid (apply max (map #(max (:avg %) (:btot %)) buds))
                                             cmp     #(< (:btot %1) (:btot %2))
                                             bgive   (sort cmp (divbuds true))
                                             btake   (sort cmp (divbuds false))
-                                            updif   #(into %1 {:delta %2})
                                             owes    (loop [{tdelta :delta ttot :btot :as t} (first btake) ts (next btake)
                                                            {gdelta :delta gtot :btot :as g} (first bgive) gs (next bgive)
                                                            ac []]
                                                       (if (and g t)
                                                         (if (> tdelta gdelta)
-                                                          (recur (updif t (- tdelta gdelta)) ts
+                                                          (recur (assoc t :delta (- tdelta gdelta)) ts
                                                                  (first gs) (next gs)
                                                                  (conj ac [g t gdelta]))
                                                           (recur (first ts) (next ts)
-                                                                 (updif g (- gdelta tdelta)) gs
+                                                                 (assoc g :delta (- gdelta tdelta)) gs
                                                                  (if (pos? tdelta)
                                                                    (conj ac [g t tdelta])
                                                                    ac)))
