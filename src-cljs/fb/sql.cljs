@@ -23,7 +23,7 @@
   (.executeSql t "SELECT * FROM settings;"
                (clj->js [])
                #(if (zero? (.-length (.-rows %2)))
-                  (.executeSql %1 "INSERT INTO settings (menuPos, menuOn, help, theme) VALUES (1, 1, 1, \"jqtouch-edited\");" (clj->js [])
+                  (.executeSql %1 "INSERT INTO settings (menuPos, menuOn, help, theme, optIn) VALUES (1, 1, 1, \"jqtouch-edited\", 1);" (clj->js [])
                                ))))
 
 (defn add-db! [name schema & [f]]
@@ -50,6 +50,7 @@
   (add-db! :settings (str " id   INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,"
                           " menuPos INTEGER NOT NULL,"
                           " menuOn INTEGER NOT NULL,"
+                          " optIn INTEGER NOT NULL,"
                           " theme TEXT NOT NULL,"
                           " help INTEGER NOT NULL")
            init-settings)
@@ -64,15 +65,16 @@
 (defn update-settings [settings f]
     (.transaction db
      (fn [t]
-       (.executeSql t "UPDATE settings SET menuPos = ?, menuOn = ?, help = ?, theme = ? WHERE id = 1;"
+       (.executeSql t "UPDATE settings SET menuPos = ?, menuOn = ?, optIn = ?, help = ?, theme = ? WHERE id = 1;"
                     (clj->js [(if (= :top (:menuPos settings)) 1 0)
                               (if (:menuOn settings) 1 0)
+                              (if (:optIn settings) 1 0)
                               (if (:help settings) 1 0)
                               (:theme settings)])
                     f))))
 
 (defn do-settings [f]
-  (let [rq (str "SELECT settings.menuOn, settings.menuPos, settings.help, settings.theme FROM settings "
+  (let [rq (str "SELECT settings.menuOn, settings.menuPos, settings.help, settings.theme, settings.optIn FROM settings "
                 " ;")]
     (do-select #(f (mk-settings %2)) rq)))
 
@@ -106,9 +108,9 @@
         addrq "INSERT INTO relcbp (pid, bid, cid, tot) VALUES (?, ?, ?, ?);"
         uprq   #(str "UPDATE relcbp SET tot = ? WHERE id = " % ";")
         rmrq   #(str "DELETE FROM relcbp WHERE id = " % ";")
-        fns    (reduce #(do-cbud %1 addrq [proj (first %2) cid (second %2)]) f   buddies-add)
-        fns    (reduce #(do-cbud %1 (uprq (first %2)) [(second %2)])         fns buddies-up)
-        fns    (reduce #(do-cbud %1 (rmrq (first %2)) [])                    fns buddies-rm)]
+        fns    (reduce #(do-cbud %1 addrq [proj (:bid %2) cid (:tot %2)]) f   buddies-add)
+        fns    (reduce #(do-cbud %1 (uprq (:rid %2)) [(:tot %2)])         fns buddies-up)
+        fns    (reduce #(do-cbud %1 (rmrq (:rid %2)) [])                  fns buddies-rm)]
     (.transaction db
                   (fn [t]
                     (.executeSql t
@@ -129,14 +131,14 @@
                                  "INSERT INTO costs (name, pid, tot) VALUES (?, ?, ?);"
                                  (clj->js [(trim name) proj amount])
                                  (fn [t r]
-                                  ((reduce #(do-cbud %1 [proj (first %2) (.-insertId r) (second %2)]) f buddies) t r)))))))
+                                  ((reduce #(do-cbud %1 [proj (:bid %2) (.-insertId r) (:tot %2)]) f buddies) t r)))))))
 
 (defn do-proj [f & [id]]
   (let [rq (if id
-             (str "SELECT projects.id, projects.name, SUM(relcbp.tot) AS tot, settings.menuOn, settings.menuPos, settings.help FROM projects, relcbp, settings "
+             (str "SELECT projects.id, projects.name, SUM(relcbp.tot) AS tot, settings.menuOn, settings.menuPos, settings.help, settings.theme, settings.optIn FROM projects, relcbp, settings "
                   "WHERE projects.id = " id " AND relcbp.pid = projects.id "
                   "GROUP BY projects.id "
-                  "UNION ALL SELECT  projects.id, projects.name, 0 AS tot, settings.menuOn, settings.menuPos, settings.help FROM projects, settings "
+                  "UNION ALL SELECT  projects.id, projects.name, 0 AS tot, settings.menuOn, settings.menuPos, settings.help, settings.theme, settings.optIn FROM projects, settings "
                   "WHERE projects.id = " id " AND NOT EXISTS (SELECT * FROM relcbp WHERE projects.id = relcbp.pid )"
                   " ;")
              "SELECT * FROM projects;")]
@@ -196,6 +198,32 @@
                   " ;"))]
     (do-select f rq)))
 
+(defn do-total [f pid]
+  (let [rq-buds  (str "SELECT buddies.name AS bname, buddies.id AS bid, buddies.img FROM buddies WHERE buddies.pid = " pid " ;")
+        rq-costs #(str "SELECT relb.cid, SUM(relb.tot) as btot, relc.nbbuds, relc.ctot FROM relcbp AS relb "
+                       " INNER JOIN ( SELECT reld.cid, COUNT(reld.bid) AS nbbuds, SUM(reld.tot) AS ctot FROM relcbp AS reld "
+                       "              WHERE reld.pid = " pid " GROUP BY reld.cid ) AS relc "
+                       "  ON relc.cid = relb.cid  "
+                       " WHERE relb.bid = " % " "
+                       " GROUP BY relb.cid ;")
+        mk-cost  (fn [r]
+                   (doall (for  [c (row-seq r)]
+                            {:cid (.-cid c) :btot (.-btot c) :nbbuds (.-nbbuds c) :ctot (.-ctot c)})))
+        mk-buds  (fn [b r [bb & bs]]
+                   (cons b (cons (assoc bb :costs (mk-cost r)) bs)))
+        do-bud   (fn [f b buddies]
+                   (let [b {:bname (.-bname b) :bid (.-id b) :btot (.-btot b)}]
+                     (fn [t r]
+                       (.executeSql t (rq-costs (:bid b)) (clj->js [])
+                                    (f (mk-buds b r buddies))
+                                    #(js/alert (str "fuck. " (.-message %2)))))))
+        do-buds  (fn [t r]
+                   (((reduce #(partial do-bud %1 %2) #(fn [t r]
+                                                         (f (drop-last (next (mk-buds nil r %)))))
+                             (row-seq r))
+                       [{}]) t r))]
+    (do-buddies do-buds pid)))
+
 (defn rm [rq & [f]]
   (fn [t r]
     (if f
@@ -250,3 +278,10 @@
                                                       ))
                                #(js/alert (str "fuck. " (.-message %2)))
                                ))))
+
+(defn nuke-settings []
+  (.transaction db
+                (fn [t] (.executeSql t "DROP TABLE settings;" (clj->js [])
+                                     #(js/alert (str "dropped."))
+                                     #(js/alert (str "fuck. " (.-message %2)))
+                                     ))))

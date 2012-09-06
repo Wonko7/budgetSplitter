@@ -33,49 +33,54 @@ $base-bg-color: $base-color !default;
             border-top: 1px solid darken($base-color, 5);
             @include background-gradient(rgba($base-color, .2), matte);
 
-	    &.rmli {
-		    //background-color: #668;
-		    text-align: center;
-		    @include background-gradient(rgba($base-color + #b00, .2), matte);
+			&.sepli {
+				text-align: center;
+				@include background-gradient(rgba($base-color - #222, .2), matte);
+			}
 
-		    &:after {
-			    @extend .base-chevron;
-			    width: 25px;
-			    text-align: left;
-			    content: '-';
-		    }
-	    }
+			&.rmli {
+				//background-color: #668;
+				text-align: center;
+				@include background-gradient(rgba($base-color + #b00, .2), matte);
 
-	    &.addli {
-		    //background-color: #668;
-		    text-align: center;
-		    @include background-gradient(rgba($base-color + #00b, .2), matte);
+				&:after {
+					@extend .base-chevron;
+					width: 25px;
+					text-align: left;
+					content: '-';
+				}
+			}
 
-		    &:after {
-			    @extend .base-chevron;
-			    width: 27px;
-			    text-align: left;
-			    content: '+';
-		    }
-	    }
+			&.addli {
+				//background-color: #668;
+				text-align: center;
+				@include background-gradient(rgba($base-color + #00b, .2), matte);
 
-            a {
-                @include color-by-background($base-color);
-            }
-        
-            .toggle input[type="checkbox"] {
-                @include border-radius(5px);
-                background: #fff url(../img/jqt/on_off.png) 0 0 no-repeat;
-            }
+				&:after {
+					@extend .base-chevron;
+					width: 27px;
+					text-align: left;
+					content: '+';
+				}
+			}
 
-            input[type='submit'] {
-                @include background-gradient(color-by-background($list-background-color), glossy);
-                border: 1px outset black;
-            }
+			a {
+				@include color-by-background($base-color);
+			}
 
-            small.counter {
-                @include box-shadow(rgba(#fff,.1) 0 1px 0);
-            }
+			.toggle input[type="checkbox"] {
+				@include border-radius(5px);
+				background: #fff url(../img/jqt/on_off.png) 0 0 no-repeat;
+			}
+
+			input[type='submit'] {
+				@include background-gradient(color-by-background($list-background-color), glossy);
+				border: 1px outset black;
+			}
+
+			small.counter {
+				@include box-shadow(rgba(#fff,.1) 0 1px 0);
+			}
 
         } // /li
 
@@ -187,6 +192,11 @@ $base-bg-color: $base-color !default;
 	    text-overflow: ellipsis;
 	    white-space: nowrap;
 	    color: white;
+	    text-shadow: #161717 0 -1px 0;
+    } 
+
+	.unselected {
+		color: #888;
 	    text-shadow: #161717 0 -1px 0;
     } 
 

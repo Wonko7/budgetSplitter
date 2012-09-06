@@ -20,13 +20,12 @@
         ti            ($ "#newpage div.cost div.title")
         li            ($ "<li></li>")
         a             ($ "<a></a>")
-        set-cost-data (fn [id name tot tx]
-                        ;; FIXME should other buddies be shown? $0?
+        set-cost-data (fn [id name tot tx settings]
                         (do-cost (fn [tx r]
                                    (let [i        (.item (.-rows r) 0)
                                          buds     (for [b (row-seq r)]
                                                     [(.-bname b) (.-btot b) (.-ctot b)])
-                                          maxpaid (apply max (map #(nth % 1) buds))]
+                                         maxpaid  (apply max (map #(nth % 1) buds))]
                                      (-> ti
                                        (.append (str (.-cname i) ": "))
                                        (.append (money (.-ctot i))))
@@ -42,14 +41,12 @@
                                      (doseq [[name btot ctot] buds]
                                        (.append ul (-> li
                                                      (.clone)
-                                                     (set-rect-back maxpaid btot)
-                                                     (.append (-> a
-                                                                (.clone)
-                                                                (.append (buddy name))
-                                                                (.append ": ")
-                                                                (.append (money btot))
-                                                                (.data "cid" cid)
-                                                                (.data "pid" pid))))))
+                                                     (.append (buddy name))
+                                                     (.append ": ")
+                                                     (.append (money btot))
+                                                     (.data "cid" cid)
+                                                     (.data "pid" pid)
+                                                     (set-rect-back maxpaid btot))))
                                      (.append ul (-> li
                                                    (.clone)
                                                    (.addClass "rmli")
@@ -73,9 +70,12 @@
         name  (.val i)
         pid   (.data i "pid")
         cid   (.data i "cid")
-        alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
-        total (reduce + (for [i alli]
-                          (num (.val ($ i)))))
+        costs (for [i ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
+                    :let [e ($ i) rid (.data e "rid") bid (.data e "bid")
+                          o? (.attr (.find (.parent e) "input[name=\"optin\"]")
+                                    "checked")]]
+                {:rid rid :bid bid :o? o? :tot (num (.val e))})
+        total (reduce #(+ %1 (if (:o? %2) (:tot %2) 0)) 0 costs)
         done  #(trigger-new-page "proj" {"proj" [["pid" pid]]})]
     (if (<= (count name) 0) ;; FIXME with contracts, also better notifs.
       (js/alert "Invalid name")
@@ -83,42 +83,76 @@
         (js/alert "No money")
         (if cid
           (up-cost cid name
-                   (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (zero? rid) (> (.val e) 0))]             ; New relation
-                     [(.data e "bid") (num (.val e))])
-                   (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (> (.val e) 0))]               ; Update rel
-                     [(.data e "rid") (num (.val e))])
-                   (for [i alli :let [e ($ i) rid (.data e "rid")] :when (and (> rid 0) (zero? (num (.val e))))]       ; rm rel
-                     [(.data e "bid") (.data e "rid")])
+                   (filter #(and (zero? (:rid %)) (:o? %)) costs)           ; New relation 
+                   (filter #(and (pos?  (:rid %)) (:o? %)) costs)           ; Update rel 
+                   (filter #(and (pos?  (:rid %)) (not (:o? %))) costs)     ; rm rel 
                    pid total done)
           (add-cost name
-                    (for [i alli :let [e ($ i)] :when (> (.val e) 0)]
-                      [(num (.data e "bid")) (num (.val e))])
+                   (filter #(:o? %) costs)
                     pid total done))))
     false))
 
 (defn show-new-cost [e origa]
   (load-template "newcost")
   (let [pid     (.data origa "pid")
-        cid     (.data origa "cid")
+        cid     (.data origa "cid") ;; If cid is set, this is an update, not a new cost.
         inp     ($ "#newpage div.newcost form [name=\"name\"]")
         ul      ($ "#newpage div.newcost form div.buddieslist ul")
         label   ($ "<label></label>")
         li      ($ "<li></li>")
+        div     ($ "<span></span>")
         binput  ($ "<input type=\"number\" step=\"any\" min=\"0\" class=\"numbers\" name=\"tot\" />")
+        cinput  (.attr ($ "<input type=\"checkbox\" name=\"optin\" />")
+                       "tabindex" 1000) ;; FIXME; html hack to remove checkbox from tab list
+        optinfo (.hide ($ "<span class=\"optout\"> has opted out of this expense.</span>"))
+        ;; validate input & set title:
         validate        (fn [e]
-                          (let [inp   ($ (.-currentTarget e))
-                                v     (.val inp)
-                                total ($ "#content div.newcost .costtotal")
+                          (let [total ($ "#content div.newcost .costtotal")
                                 alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
                                 name  (.val ($ "#content div.newcost form [name=\"name\"]"))
                                 addb  ($ "#content div.newcost form div.buddieslist ul li.addli a")
-                                tot   (reduce + 0 (for [i alli]
-                                                    (num (.val ($ i)))))]
+                                tot   (reduce + 0 (for [i alli
+                                                        :let [i ($ i)]
+                                                        :when (.is i ":visible")]
+                                                    (num (.val i))))]
                             (.html total (money tot))
                             (if (or (<= tot 0) (<= (count name) 0))
                               (.hide addb)
                               (.show addb))))
-        set-buddy-data  (fn [id name tot tx]
+        ;; opt out:
+        opt-vis         (fn [li c?]
+                          (let [ninp ($ (.find li "input[name=\"tot\"]"))
+                                info ($ (.find li "span.optout"))
+                                bud  ($ (.find li "span.buddy"))]
+                            (if c?
+                              (do
+                                (.removeClass bud "unselected")
+                                (.hide info)
+                                (.show ninp))
+                              (do
+                                (.addClass bud "unselected")
+                                (.show info)
+                                (.hide ninp)))
+                            (validate nil)))
+        opt-toggle      (fn [src child]
+                          (.on src
+                               "click" ;; FIXME wtf
+                               (fn [e]
+                                 (let [li   (.parents ($ (.-currentTarget e)) "li")
+                                       cinp (.find li "input[name=\"optin\"]")
+                                       c?   (not (.attr cinp "checked"))]
+                                   (.attr cinp "checked" c?)
+                                   (opt-vis li c?)
+                                   true))))
+        opt-set         (fn [li settings]
+                          (let [cinp ($ (.find li "input[name=\"optin\"]"))
+                                rid  (.data cinp "rid")
+                                c?   (if cid (pos? rid) (:optIn settings))]
+                            (.attr cinp "checked" c?)
+                            (opt-vis li c?)
+                            li))
+        ;; set page data:
+        set-buddy-data  (fn [id name tot tx settings]
                           (-> inp
                             (.keyup validate)
                             (.data "cid" cid)
@@ -135,10 +169,20 @@
                                               (-> ul
                                                 (.append (-> li
                                                            (.clone)
-                                                           (.append (-> label
+                                                           (.append (-> div
                                                                       (.clone)
-                                                                      (.append (buddy bname))
-                                                                      (.append ":")))
+                                                                      (.append (-> cinput
+                                                                                 (.clone)
+                                                                                 (.data "bid" bid)
+                                                                                 (.data "rid" rid)
+                                                                                 (opt-toggle :current)))
+                                                                      (.append " ")
+                                                                      (.append (-> label
+                                                                                 (.clone)
+                                                                                 (.append (buddy bname))
+                                                                                 (.append ":")))
+                                                                      (.append (.clone optinfo))
+                                                                      (opt-toggle "input[name=\"optin\"]")))
                                                            (.append (-> binput
                                                                       (.clone)
                                                                       (.data "pid" pid)
@@ -147,6 +191,7 @@
                                                                       (.attr "placeholder" (str bname " paid..."))
                                                                       (#(if (zero? btot) % (.val % btot)))
                                                                       (.keyup validate)))
+                                                           (opt-set settings)
                                                            (give-input-focus :li)))))
                                             (when cid
                                               (.val inp (.-cname (.item (.-rows r) 0))))
@@ -157,7 +202,7 @@
                                                                      (.hide)
                                                                      (.text "Add")
                                                                      (.attr "href" "null")
-                                                                     (.bind "click touchend" add-page-cost))))))
+                                                                     (.on "click" add-page-cost))))))
                                           (.append ul (-> li
                                                         (.clone)
                                                         (.append (-> ($ "<a></a>")
@@ -166,7 +211,7 @@
                                                                    (.text "Add buddies first!")))))))
                                       pid cid)
                           (.submit ($ "#newpage div.newcost form") add-page-cost)
-                          (.bind ($ "#newpage") "pageAnimationEnd" #(.trigger inp "keyup"))
+                          (.on ($ "#newpage") "pageAnimationEnd" #(.trigger inp "keyup"))
                           (swap-page e origa)
                           (.focus ($ "#content div.newcost form [name=\"name\"]")))]
     (set-title-project set-buddy-data pid)))

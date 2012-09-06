@@ -1,6 +1,6 @@
 (ns fb.total
-  (:use [fb.jq :only [$ clj->js]]
-        [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy do-settings
+  (:use [fb.jq :only [$ clj->js]] 
+        [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy do-settings do-total
                        update-settings up-cost up-buddy
                        db-init add-cost add-buddy add-proj
                        nuke-db rm-proj rm-cost rm-buddy]]
@@ -18,55 +18,61 @@
         ul            ($ "#newpage div.total div ul")
         li            ($ "<li></li>")
         title         ($ "#newpage h2 div.title")
-        set-total-data (fn [id name tot tx]
-                        (do-buddies (fn [tx r]
-                                      (let [nbb     (.-length (.-rows r))
-                                            av      (/ tot nbb)
-                                            abs     #(if (< 0 %) % (- %))
-                                            buds    (for [b (row-seq r)]
-                                                      [(abs (- av (.-btot b))) (.-btot b) (.-bname b)])
-                                            divbuds (group-by #(> av (second %)) buds)
-                                            maxpaid (apply max (map #(second %) buds))
-                                            cmp     #(< (.-btot %1) (.-btot %2))
+        set-total-data (fn [id name tot tx settings]
+                        (do-total (fn [buddies]
+                                      (let [abs     #(if (< 0 %) % (- %))
+                                            buds    (for [b buddies
+                                                          :let [av (reduce #(+ %1 (/ (:ctot %2) (:nbbuds %2))) 0 (:costs b))]]
+                                                      (assoc b :avg av :delta (abs (- (:btot b) av))))
+                                            divbuds (group-by #(> (:avg %) (:btot %)) buds)
+                                            maxpaid (apply max (map #(max (:avg %) (:btot %)) buds))
+                                            cmp     #(< (:btot %1) (:btot %2))
                                             bgive   (sort cmp (divbuds true))
                                             btake   (sort cmp (divbuds false))
-                                            owes    (loop [[tdif ttot tname :as t] (first btake) ts (next btake)
-                                                           [gdif gtot gname :as g] (first bgive) gs (next bgive)
+                                            owes    (loop [{tdelta :delta ttot :btot :as t} (first btake) ts (next btake)
+                                                           {gdelta :delta gtot :btot :as g} (first bgive) gs (next bgive)
                                                            ac []]
                                                       (if (and g t)
-                                                        (if (> tdif gdif)
-                                                          (recur [(- tdif gdif) ttot tname] ts
+                                                        (if (> tdelta gdelta)
+                                                          (recur (assoc t :delta (- tdelta gdelta)) ts
                                                                  (first gs) (next gs)
-                                                                 (conj ac [gname tname gdif]))
+                                                                 (conj ac [g t gdelta]))
                                                           (recur (first ts) (next ts)
-                                                                 [(- gdif tdif) gtot gname] gs
-                                                                 (conj ac [gname tname tdif])))
+                                                                 (assoc g :delta (- gdelta tdelta)) gs
+                                                                 (if (pos? tdelta)
+                                                                   (conj ac [g t tdelta])
+                                                                   ac)))
                                                         ac))]
                                         (-> title
                                           (.append "Total: ")
-                                          (.append (money tot))
-                                          (.append " Average: ")
-                                          (.append (money av)))
-                                        (doseq [[d t n] buds]
+                                          (.append (money tot)) ;; FIXME better title?
+                                          ;(.append " Average: ")
+                                          ;(.append (money av))
+                                          )
+                                        (doseq [{n :bname t :btot a :avg d :delta} buds]
                                           (.append ul (-> li
                                                         (.clone)
                                                         (.append (buddy n))
                                                         (.append " paid: ")
                                                         (.append (money t))
-                                                        (.append (if (> t av)
+                                                        (.append (if (> t a)
                                                                    " needs: "
                                                                    " owes: "))
                                                         (.append (money d))
-                                                        (set-tot-rect-back maxpaid av t))))
+                                                        (set-tot-rect-back maxpaid a t))))
+                                        (.append ul (-> li
+                                                      (.clone)
+                                                      (.addClass "sepli")
+                                                      (.text "Solution:")))
                                         (doseq [[gn tn tot] owes]
                                           (.append ul (-> li
                                                         (.clone)
-                                                        (.append (buddy gn))
+                                                        (.append (buddy (:bname gn)))
                                                         (.append " owes ")
                                                         (.append (money tot))
                                                         (.append " to ")
-                                                        (.append (buddy tn)))))
-                                        (when (zero? nbb)
+                                                        (.append (buddy (:bname tn))))))
+                                        (when (zero? (count buds))
                                           (.remove ul))))
                                     pid)
                          (swap-page e origa))]

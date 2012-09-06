@@ -113,24 +113,25 @@
                                          (.addClass "back")
                                          (.addClass "button")
                                          (.attr "href" "back")
-                                         (.text ((get-back-href) page-titles-map))))
+                                         (.text ((get-back-href) page-titles-map))
+                                         ))
                               (.append (-> a
                                          (.clone)
                                          (.addClass "button")
                                          (.attr "href" "menu")
                                          (.text "Menu")
-                                         (.bind "click touchend"
-                                                (fn []
-                                                  (do-settings (fn [settings]
-                                                                 (let [menu     ($ "#content div.menu")
-                                                                       settings (into settings {:menuOn (not (:menuOn settings))})
-                                                                       on       (:menuOn settings)]
-                                                                   (update-settings settings #(if on
-                                                                                                (.show menu)
-                                                                                                (.hide menu))))))
-                                                  false)))))))
+                                         (.on "click"
+                                              (fn []
+                                                (do-settings (fn [settings]
+                                                               (let [menu     ($ "#content div.menu")
+                                                                     settings (assoc settings :menuOn (not (:menuOn settings)))
+                                                                     on       (:menuOn settings)]
+                                                                 (update-settings settings #(if on
+                                                                                              (.show menu)
+                                                                                              (.hide menu))))))
+                                                false)))))))
                  (add-menu pid settings)
-                 (f id n tot tx)))]
+                 (f id n tot tx settings)))]
     (do-proj sett pid)))
 
 
@@ -153,37 +154,37 @@
 
 (defn give-input-focus
   ([inp]
-   (.bind (.parents inp "li:first")
-          "focus click touchend"
-          (fn [e]
-            (.trigger (.children ($ (.-currentTarget e))
-                                 "input")
-                      "focus")))
+   (.on (.parents inp "li:first")
+        "click"
+        (fn [e]
+          (.trigger (.children ($ (.-currentTarget e))
+                               "input")
+                    "focus")))
    inp)
   ([li lisel]
-   (.bind li
-          "focus click touchend"
-          (fn [e]
-            (.trigger (.children ($ (.-currentTarget e))
-                                 "input")
-                      "focus")))
+   (.on li
+        "click"
+        (fn [e]
+          (.trigger (.children ($ (.-currentTarget e))
+                               "input")
+                    "focus")))
    li)
   ([li lisel radiosel]
    (let [inp (.find li "input")]
      (when (= "checkbox" (.attr inp "type"))
-       (.bind inp
-              "focus click touchend"
-              (fn [e]
-                (let [inp ($ (first ($ (.-currentTarget e))))]
-                  (.attr inp "checked" (if (.attr inp "checked") nil "checked"))
-                  true))))
-     (.bind li
-            "focus click touchend"
+       (.on inp
+            "click"
             (fn [e]
-              (let [inp (.children ($ (.-currentTarget e)) "input")]
-                (if (= "radio" (.attr inp "type"))
-                  (.attr inp "checked" true)
-                  (.attr inp "checked" (if (.attr inp "checked") nil "checked")))))))
+              (let [inp ($ (first ($ (.-currentTarget e))))]
+                (.attr inp "checked" (if (.attr inp "checked") nil "checked"))
+                true))))
+     (.on li
+          "click"
+          (fn [e]
+            (let [inp (.children ($ (.-currentTarget e)) "input")]
+              (if (= "radio" (.attr inp "type"))
+                (.attr inp "checked" true)
+                (.attr inp "checked" (if (.attr inp "checked") nil "checked")))))))
    li))
 
 
@@ -208,7 +209,7 @@
     ctx))
 
 (defn set-rect-back [elt tot amount]
-  (let [w    (.width ($ "body"))
+  (let [w    (max (.-width js/screen) (.-height js/screen))
         h    50
         nw   (int (* w (/ amount tot)))
         cols (get-canvas-colors)
@@ -230,8 +231,8 @@
     (.fillRect ctx 0 0 avg h-tot)
     (set! (. ctx -fillStyle) needs)
     (.fillRect ctx avg 0 (- wpaid avg) h-tot)
-    (set! (. ctx -fillStyle) average)
-    (.fillRect ctx avg 0 2 h-tot)
+    ;(set! (. ctx -fillStyle) average)
+    ;(.fillRect ctx avg 0 2 h-tot)
     ctx))
 
 (defn canvas-rect-give [w-tot h-tot wpaid avg cols]
@@ -246,15 +247,15 @@
     (.fillRect ctx 0 0 wpaid h-tot)
     (set! (. ctx -fillStyle) owes)
     (.fillRect ctx wpaid 0 (- avg wpaid) h-tot)
-    (set! (. ctx -fillStyle) average)
-    (.fillRect ctx avg 0 2 h-tot)
+    ;(set! (. ctx -fillStyle) average)
+    ;(.fillRect ctx avg 0 2 h-tot)
     ctx))
 
-(defn set-tot-rect-back [elt max avg amount]
-  (let [w    (.width ($ "body"))
+(defn set-tot-rect-back [elt maxpaid avg amount]
+  (let [w    (max (.-width js/screen) (.-height js/screen))
         h    50
-        np   (int (* w (/ amount max)))
-        na   (int (* w (/ avg max)))
+        np   (int (* w (/ amount maxpaid)))
+        na   (int (* w (/ avg maxpaid)))
         cols (get-canvas-colors)
         bck  (last cols)
         cvs  ((if (> np na) canvas-rect-take canvas-rect-give) w h np na cols)]

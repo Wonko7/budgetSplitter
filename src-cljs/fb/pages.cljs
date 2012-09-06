@@ -52,8 +52,8 @@
     (.attr cont "id" "old")))
 
 ; remove old div from page after page swap
-(add-init! #(.bind ($ "body") "pageAnimationEnd" (fn [e info]
-                                                   (.remove ($ "#old")))))
+(add-init! #(.on ($ "body") "pageAnimationEnd" (fn [e info]
+                                                 (.remove ($ "#old")))))
 
 (defn load-dyn-page [name e a]
   (update-back! name a)
@@ -64,17 +64,17 @@
       (swap-page e a))))
 
 ;; catch a click and find page to load:
-(add-init! #(.delegate ($ "body") "a" "click touchend"
-                       (fn [e]
-                         (let [a    ($ (first ($ (.-currentTarget e))))
-                               link (.attr a "href")]
-                           (if (not= link (get-current-page :current))
-                             (if (= "mailto" (apply str (take 6 link)))
-                               true
-                               (do
-                                 (load-dyn-page link e a)
-                                 false))
-                             false)))))
+(add-init! #(.on ($ "body") "click" "a"
+                 (fn [e]
+                   (let [a    ($ (first ($ (.-currentTarget e))))
+                         link (.attr a "href")]
+                     (if (not= link (get-current-page :current))
+                       (if (= "mailto" (apply str (take 6 link)))
+                         true
+                         (do
+                           (load-dyn-page link e a)
+                           false))
+                       false)))))
 
 ;; trigger a click to load new page
 (defn trigger-new-page [href data]

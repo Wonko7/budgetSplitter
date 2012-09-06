@@ -11,6 +11,7 @@
   (let [i (.item (.-rows r) 0)]
     {:menuOn  (= 1 (.-menuOn i))
      :help    (= 1 (.-help i))
+     :optIn   (= 1 (.-optIn i))
      :menuPos (if (= 1 (.-menuPos i)) :top :bottom)
      :theme   (.-theme i)}))
 

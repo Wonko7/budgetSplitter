@@ -21,6 +21,7 @@
         ulPos   ($ "#newpage div.settings ul.menuPos")
         ulTheme ($ "#newpage div.settings ul.theme")
         ulHelp  ($ "#newpage div.settings ul.help")
+        ulOptin ($ "#newpage div.settings ul.optin")
         liApply ($ "#newpage div.settings ul.apply li")
         li      ($ "<li></li>")
         a       ($ "<a></a>")
@@ -43,6 +44,7 @@
                                                  :menuPos (condp = (.data ($ "#content input[name=\"menuPos\"]:checked") "type")
                                                             "top"    :top
                                                             "bottom" :bottom)
+                                                 :optIn   (= "optin" (.data ($ "#content input[name=\"optIn\"]:checked") "type"))
                                                  :help    (.attr ($ "#content input[name=\"help\"]") "checked")
                                                  :theme   (.data ($ "#content input[name=\"theme\"]:checked") "theme")}]
                                    (update-settings settings
@@ -52,29 +54,42 @@
                                                        false)))))
                   false)
         set-settings (fn [settings]
+                       (-> ulOptin
+                         (.append (-> li
+                                    (.clone)
+                                    (.addClass "sepli")
+                                    (.text "Add Expense Behaviour:")))
+                         (.append (add-inp li "radio" "Opt In by default"  "optIn" (:optIn settings)       {"inp" [["type" "optin"]]}))
+                         (.append (add-inp li "radio" "Opt Out by default" "optIn" (not (:optIn settings)) {"inp" [["type" "optout"]]})))
                        (-> ulPos
                          (.append (-> li
                                     (.clone)
+                                    (.addClass "sepli")
                                     (.text "Menu Placement:")))
                          (.append (add-inp li "radio" "Top"    "menuPos" (= :top    (:menuPos settings)) {"inp" [["type" "top"]]}))
                          (.append (add-inp li "radio" "Bottom" "menuPos" (= :bottom (:menuPos settings)) {"inp" [["type" "bottom"]]})))
+                       (-> ulHelp
+                         (.append (-> li
+                                    (.clone)
+                                    (.addClass "sepli")
+                                    (.text "Help/Info:")))
+                         (.append (add-inp li "checkbox" "Display Help" "help" (:help settings) {"inp" [["type" "help"]]})))
                        (-> ulTheme
                          (.append (-> li
                                     (.clone)
+                                    (.addClass "sepli")
                                     (.text "Theme:")))
                          (.append (add-inp li "radio" "Grey"  "theme" (= "jqtouch-edited" (:theme settings)) {"inp" [["theme" "jqtouch-edited"]]}))
                          (.append (add-inp li "radio" "Blue"  "theme" (= "blue"           (:theme settings)) {"inp" [["theme" "blue"]]}))
                          (.append (add-inp li "radio" "Green" "theme" (= "green"          (:theme settings)) {"inp" [["theme" "green"]]}))
                          (.append (add-inp li "radio" "Red"   "theme" (= "red"            (:theme settings)) {"inp" [["theme" "red"]]})))
-                       (-> ulHelp
-                         (.append (add-inp li "checkbox" "Display Help" "help" (:help settings) {"inp" [["type" "help"]]})))
                        (-> liApply
                          (.addClass "addli")
                          (.append (-> a
                                     (.clone)
                                     (.attr "href" "back")
                                     (.text "Apply")
-                                    (.bind "click touchend" update))))
+                                    (.on "click" update))))
                        (.submit ($ "#newpage div.settings form") update)
                        (swap-page e origa))]
     (.append menu (-> a
