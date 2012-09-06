@@ -29,7 +29,7 @@
                                                  (.text ($ "#content div.indivbuddy span.buddy")
                                                         (.-bname (.item (.-rows %2) 0)))
                                                  ;; hide edit box:
-                                                 (.trigger ($ "#content div.indivbuddy div.list li.addli a") "click"))
+                                                 (.trigger ($ "#content div.indivbuddy div.list li.editnamebuttonid a") "click"))
                                               bid))]
                          (if (zero? (count v))
                            (js/alert "Empty name")
@@ -56,7 +56,7 @@
                         (let [div  (.hide ($ "#newpage div.indivbuddy div.editname"))
                               inp  (.val ($ "#newpage div.indivbuddy div.editname input") bname)]
                           (.hide ($ "#newpage div.indivbuddy div.editname"))
-                          (.bind ($ "#newpage div.indivbuddy div.editname li.addli a") "click touchend" update-name)
+                          (.on ($ "#newpage div.indivbuddy div.editname li.addli a") "click" update-name)
                           (.submit ($ "#newpage div.indivbuddy div.editname form") update-name)
                           (-> inp
                             (.keyup validate)
@@ -64,13 +64,14 @@
                           (.append ul (-> li
                                         (.clone)
                                         (.addClass "addli")
+                                        (.addClass "editnamebuttonid")
                                         (.append (-> a
                                                    (.clone)
                                                    (.text "Edit name")
                                                    (.data "pid" pid)
                                                    (.data "bid" bid)
                                                    (.attr "href" "null")
-                                                   (.bind "click touchend" edit-name)))))))
+                                                   (.on "click" edit-name)))))))
         ;; set page data:
         set-budd-data (fn [id name tot tx settings]
                         (do-buddy (fn [tx r]
@@ -159,7 +160,7 @@
                             (.data "pid" pid)
                             (give-input-focus))
                           (.submit ($ "#newpage div.buddies form") add-page-buddy)
-                          (.bind ($ add) "touchend click" add-page-buddy)
+                          (.on ($ add) "click" add-page-buddy)
                           (do-buddies (fn [tx r]
                                         (let [buds (for [b (row-seq r)]
                                                      [(.-id b) (.-bname b) (.-btot b)])
