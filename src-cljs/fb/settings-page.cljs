@@ -90,7 +90,7 @@
                                     (.clone)
                                     (.attr "href" "back")
                                     (.text "Apply")
-                                    (.bind "click touchend" update))))
+                                    (.on "click" update))))
                        (.submit ($ "#newpage div.settings form") update)
                        (swap-page e origa))]
     (.append menu (-> a

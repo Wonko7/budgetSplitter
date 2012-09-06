@@ -57,8 +57,8 @@
                                                  (.text "Delete")
                                                  (.attr "href" "null")
                                                  (.data "bid" bid)
-                                                 (.bind "touchend click"
-                                                        rm-budd-page)))))))
+                                                 (.on "click"
+                                                      rm-budd-page)))))))
                        (swap-page e origa))
         set-rm-cost  (fn [t r]
                        (let [i (.item (.-rows r) 0)]
@@ -78,8 +78,8 @@
                                                  (.text "Delete")
                                                  (.attr "href" "null")
                                                  (.data "cid" (.-id i))
-                                                 (.bind "touchend click"
-                                                        rm-cost-page)))))))
+                                                 (.on "click"
+                                                      rm-cost-page)))))))
                        (swap-page e origa))
         set-rm-proj  (fn [t r]
                        (let [i (.item (.-rows r) 0)]
@@ -95,8 +95,8 @@
                                                  (.text "Delete")
                                                  (.attr "href" "null")
                                                  (.data "pid" (.-id i))
-                                                 (.bind "touchend click"
-                                                        rm-proj-page)))))))
+                                                 (.on "click"
+                                                      rm-proj-page)))))))
                        (swap-page e origa))]
     (.append menu (-> a
                     (.clone)

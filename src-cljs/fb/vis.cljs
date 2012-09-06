@@ -121,16 +121,16 @@
                                          (.addClass "button")
                                          (.attr "href" "menu")
                                          (.text "Menu")
-                                         (.bind "click touchend"
-                                                (fn []
-                                                  (do-settings (fn [settings]
-                                                                 (let [menu     ($ "#content div.menu")
-                                                                       settings (assoc settings :menuOn (not (:menuOn settings)))
-                                                                       on       (:menuOn settings)]
-                                                                   (update-settings settings #(if on
-                                                                                                (.show menu)
-                                                                                                (.hide menu))))))
-                                                  false)))))))
+                                         (.on "click"
+                                              (fn []
+                                                (do-settings (fn [settings]
+                                                               (let [menu     ($ "#content div.menu")
+                                                                     settings (assoc settings :menuOn (not (:menuOn settings)))
+                                                                     on       (:menuOn settings)]
+                                                                 (update-settings settings #(if on
+                                                                                              (.show menu)
+                                                                                              (.hide menu))))))
+                                                false)))))))
                  (add-menu pid settings)
                  (f id n tot tx settings)))]
     (do-proj sett pid)))
@@ -155,37 +155,37 @@
 
 (defn give-input-focus
   ([inp]
-   (.bind (.parents inp "li:first")
-          "focus click touchend"
-          (fn [e]
-            (.trigger (.children ($ (.-currentTarget e))
-                                 "input")
-                      "focus")))
+   (.on (.parents inp "li:first")
+        "click"
+        (fn [e]
+          (.trigger (.children ($ (.-currentTarget e))
+                               "input")
+                    "focus")))
    inp)
   ([li lisel]
-   (.bind li
-          "focus click touchend"
-          (fn [e]
-            (.trigger (.children ($ (.-currentTarget e))
-                                 "input")
-                      "focus")))
+   (.on li
+        "click"
+        (fn [e]
+          (.trigger (.children ($ (.-currentTarget e))
+                               "input")
+                    "focus")))
    li)
   ([li lisel radiosel]
    (let [inp (.find li "input")]
      (when (= "checkbox" (.attr inp "type"))
-       (.bind inp
-              "focus click touchend"
-              (fn [e]
-                (let [inp ($ (first ($ (.-currentTarget e))))]
-                  (.attr inp "checked" (if (.attr inp "checked") nil "checked"))
-                  true))))
-     (.bind li
-            "focus click touchend"
+       (.on inp
+            "click"
             (fn [e]
-              (let [inp (.children ($ (.-currentTarget e)) "input")]
-                (if (= "radio" (.attr inp "type"))
-                  (.attr inp "checked" true)
-                  (.attr inp "checked" (if (.attr inp "checked") nil "checked")))))))
+              (let [inp ($ (first ($ (.-currentTarget e))))]
+                (.attr inp "checked" (if (.attr inp "checked") nil "checked"))
+                true))))
+     (.on li
+          "click"
+          (fn [e]
+            (let [inp (.children ($ (.-currentTarget e)) "input")]
+              (if (= "radio" (.attr inp "type"))
+                (.attr inp "checked" true)
+                (.attr inp "checked" (if (.attr inp "checked") nil "checked")))))))
    li))
 
 

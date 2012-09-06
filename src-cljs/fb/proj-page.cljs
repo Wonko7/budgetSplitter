@@ -33,7 +33,7 @@
       (.focus)
       (give-input-focus))
     (.submit ($ "#newpage div.new form") add-page-project)
-    (.bind ($ addb) "click touchend" add-page-project)
+    (.on ($ addb) "click" add-page-project)
     (swap-page e origa)
     (.focus ($ "#content div.new form [name=\"name\"]"))))
 
