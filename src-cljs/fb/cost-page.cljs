@@ -136,15 +136,15 @@
                                 (.hide ninp)))
                             (validate nil)))
         opt-toggle      (fn [src child]
-                          (.bind src
-                                 "click" ;; FIXME wtf
-                                 (fn [e]
-                                   (let [li   (.parents ($ (.-currentTarget e)) "li")
-                                         cinp (.find li "input[name=\"optin\"]")
-                                         c?   (not (.attr cinp "checked"))]
-                                     (.attr cinp "checked" c?)
-                                     (opt-vis li c?)
-                                     true))))
+                          (.on src
+                               "click" ;; FIXME wtf
+                               (fn [e]
+                                 (let [li   (.parents ($ (.-currentTarget e)) "li")
+                                       cinp (.find li "input[name=\"optin\"]")
+                                       c?   (not (.attr cinp "checked"))]
+                                   (.attr cinp "checked" c?)
+                                   (opt-vis li c?)
+                                   true))))
         opt-set         (fn [li settings]
                           (let [cinp ($ (.find li "input[name=\"optin\"]"))
                                 rid  (.data cinp "rid")
@@ -203,7 +203,7 @@
                                                                      (.hide)
                                                                      (.text "Add")
                                                                      (.attr "href" "null")
-                                                                     (.bind "click touchend" add-page-cost))))))
+                                                                     (.on "click" add-page-cost))))))
                                           (.append ul (-> li
                                                         (.clone)
                                                         (.append (-> ($ "<a></a>")
@@ -212,7 +212,7 @@
                                                                    (.text "Add buddies first!")))))))
                                       pid cid)
                           (.submit ($ "#newpage div.newcost form") add-page-cost)
-                          (.bind ($ "#newpage") "pageAnimationEnd" #(.trigger inp "keyup"))
+                          (.on ($ "#newpage") "pageAnimationEnd" #(.trigger inp "keyup"))
                           (swap-page e origa)
                           (.focus ($ "#content div.newcost form [name=\"name\"]")))]
     (set-title-project set-buddy-data pid)))
