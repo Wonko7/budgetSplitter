@@ -207,3 +207,13 @@ $base-bg-color: $base-color !default;
 	    margin: 0;
     }
 }
+
+body {
+	-webkit-perspective: none;
+	-webkit-transform-style: flat;
+}
+body > * {
+	-webkit-backface-visibility: visible;
+	-webkit-transform: none;
+}
+
