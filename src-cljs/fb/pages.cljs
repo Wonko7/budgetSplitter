@@ -54,7 +54,9 @@
 ; remove old div from page after page swap
 (add-init! #(.on ($ "body") "pageAnimationEnd" (fn [e info]
                                                  (.remove ($ "#old"))
-                                                 (.height ($ "body") (.height ($ "div.current"))) ;; ics scroll bug workaround.
+                                                 ;(.height ($ "#content") (.-innerHeight js/window)) ;; ics scroll bug workaround.
+                                                 ;(.css ($ "body") "min-height" (.-innerHeight js/window)) ;; ics scroll bug workaround.
+                                                 (.height ($ "body") (.height ($ "#content")))
                                                  )))
 
 (defn load-dyn-page [name e a]
