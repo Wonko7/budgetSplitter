@@ -1,5 +1,5 @@
 (ns fb.pages
-  (:use [fb.jq :only [$ clj->js]]
+  (:use [fb.jq :only [$ clj->js map->js]]
         [fb.sql :only [do-proj do-buddies do-row row-seq do-cost do-costs do-buddy do-settings
                        update-settings up-cost up-buddy
                        db-init add-cost add-buddy add-proj
@@ -21,8 +21,10 @@
 
 (add-init!
   ;#(def jQT (.jQTouch js/jQuery (clj->js {:icon "img/icon.png"}))) ; FIXME get this working with $
-  #(def jQT (.jQTouch $ (js-obj "icon" "img/icon.png"))) ; FIXME get this working with $
-  )
+  #(def jQT (.jQTouch $ (map->js {"icon" "img/icon.png"
+                                  "statusBar" "black-translucent"
+                                  ;"startupScreen" "img/startup.png"
+                                  }))))
 
 (defn add-page-init! [name func]
   (def page-dyn-inits (into page-dyn-inits {name func})))
