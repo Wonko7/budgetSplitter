@@ -100,7 +100,7 @@
     (.append menu (-> a
                     (.clone)
                     (.addClass "button")
-                    (.addClass "back")
+                    (.addClass "cancel")
                     (.attr "href" "back")
                     (.text "Cancel")))
     (condp = rmtype

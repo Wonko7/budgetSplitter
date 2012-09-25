@@ -94,7 +94,7 @@
                        (swap-page e origa))]
     (.append menu (-> a
                     (.clone)
-                    (.addClass "back")
+                    (.addClass "cancel")
                     (.attr "href" "back")
                     (.text "Back")))
     (do-settings set-settings)))

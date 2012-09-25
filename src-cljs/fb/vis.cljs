@@ -111,7 +111,7 @@
                                                     (.append (money tot))))))
                               (.append (-> a
                                          (.clone)
-                                         (.addClass "back")
+                                         (.addClass "cancel")
                                          (.addClass "button")
                                          (.attr "href" "back")
                                          (.text ((get-back-href) page-titles-map))
