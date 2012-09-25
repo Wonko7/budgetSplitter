@@ -83,9 +83,9 @@
         (js/alert "No money")
         (if cid
           (up-cost cid name
-                   (filter #(and (zero? (:rid %)) (:o? %)) costs)           ; New relation 
-                   (filter #(and (pos?  (:rid %)) (:o? %)) costs)           ; Update rel 
-                   (filter #(and (pos?  (:rid %)) (not (:o? %))) costs)     ; rm rel 
+                   (filter #(and (zero? (:rid %)) (:o? %)) costs)           ; New relation
+                   (filter #(and (pos?  (:rid %)) (:o? %)) costs)           ; Update rel
+                   (filter #(and (pos?  (:rid %)) (not (:o? %))) costs)     ; rm rel
                    pid total done)
           (add-cost name
                    (filter #(:o? %) costs)

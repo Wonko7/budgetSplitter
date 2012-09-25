@@ -108,8 +108,13 @@
                                                                (.data "anim" "pop")
                                                                (.attr "href" "rm")))))))
                                   pid)
-                        (swap-page e origa))]
-    (set-title-project set-proj-data pid)))
+                        (swap-page e origa))
+        check-empty (fn [t r]
+                      (if (zero? (.-length (.-rows r)))
+                        (trigger-new-page "buddies" {"buddies" [["pid" pid]]})
+                        (set-title-project set-proj-data pid)
+                        ))]
+    (do-buddies check-empty pid)))
 
 (add-page-init! "projects" show-projects)
 (add-page-init! "new" show-new-form)
