@@ -110,7 +110,7 @@
                           (let [total ($ "#content div.newcost .costtotal")
                                 alli  ($ "#content div.newcost form div.buddieslist [name=\"tot\"]")
                                 name  (.val ($ "#content div.newcost form [name=\"name\"]"))
-                                addb  ($ "#content div.newcost form div.buddieslist ul li.addli a")
+                                addb  ($ "#content div.newcost form div.buddieslist ul li.addli")
                                 tot   (reduce + 0 (for [i alli
                                                         :let [i ($ i)]
                                                         :when (.is i ":visible")]
@@ -198,8 +198,8 @@
                                             (.append ul (-> li
                                                           (.clone)
                                                           (.addClass "addli")
+                                                          (.hide)
                                                           (.append (-> ($ "<a></a>")
-                                                                     (.hide)
                                                                      (.text "Add")
                                                                      (.attr "href" "null")
                                                                      (.on "click" add-page-cost))))))
