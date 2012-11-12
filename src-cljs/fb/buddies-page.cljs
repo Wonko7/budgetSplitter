@@ -20,7 +20,7 @@
         li            ($ "<li></li>")
         a             ($ "<a></a>")
         ;; name edition:
-        validate      (mk-validate "#newpage div.indivbuddy div.editname a")
+        validate      (mk-validate "#newpage div.indivbuddy div.editname li.addli")
         update-name   (fn [e]
                        (let [v    (.val ($ "#content div.indivbuddy div.editname input"))
                              done (fn [e]
@@ -49,7 +49,7 @@
                               (.removeClass "addli")
                               (.addClass "rmli"))
                             (.focus (.find editdiv "input:first"))
-                            (.hide ($ "#content div.indivbuddy div.editname a")))))
+                            (.hide ($ "#content div.indivbuddy div.editname li.addli")))))
                         false)
         set-edit      (fn [bname]
                         (let [div  (.hide ($ "#newpage div.indivbuddy div.editname"))
@@ -139,7 +139,7 @@
                      inp     ($ "#content div.buddies form [name=\"name\"]")]
                  (.val inp "")
                  (append-buddy ul li pid (.-insertId r) (trim name) 100 0)))]
-    (.hide ($ "#content div.buddies form ul li.addli a"))
+    (.hide ($ "#content div.buddies form ul li.addli"))
     (if (<= (count name) 0)
       (js/alert "Invalid name")
       (add-buddy pid name "img" addb)))
@@ -151,7 +151,7 @@
         inp      ($ "#newpage div.buddies form [name=\"name\"]")
         ul       ($ "#newpage div.buddies form div.list ul")
         li       ($ "<li></li>")
-        add      "#newpage div.buddies form ul li.addli a"
+        add      "#newpage div.buddies form ul li.addli"
         validate (mk-validate add)
         set-buddy-data  (fn [id name tot tx settings]
                           (-> inp

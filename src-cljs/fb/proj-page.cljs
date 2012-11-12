@@ -25,7 +25,7 @@
 
 (defn show-new-form [e origa]
   (load-template "new")
-  (let [addb    "#newpage div.new form ul li a"
+  (let [addb    "#newpage div.new form ul li.addli"
         inp      ($ "#newpage div.new form [name=\"name\"]") ]
     (-> inp
       (.keyup (mk-validate addb))
