@@ -23,12 +23,12 @@
       bp)))
 
 (defn update-back! [name a]
-  (when (= name "settings")
-    (let [[[name data] & back-end] back-pages]
-      (def back-pages
-        (cons [name {name (replace {["anim" "slideright"] ["anim" "flipleft"]} (name data))}]
-              back-end)))) ;; another solution would be to read back anim data and use it on the page to load.
-  (when (some #(= name %1) ["proj" "projects" "buddies" "indivbuddy" "total" ])
+  ;(when (= name "settings")
+  ;  (let [[[name data] & back-end] back-pages]
+  ;    (def back-pages
+  ;      (cons [name {name (replace {["anim" "slideright"] ["anim" "flipleft"]} (name data))}]
+  ;            back-end)))) ;; another solution would be to read back anim data and use it on the page to load.
+  (when (some #(= name %1) ["proj" "projects" "buddies" "indivbuddy" "total" "settings"])
     ;(js/console.log "added " name)
     (def back-pages (cons [name {name (doall (cons ["anim" "slideright"]
                                                    (map #(vector % (.data a %)) ["pid" "bid" "cid"])))}]

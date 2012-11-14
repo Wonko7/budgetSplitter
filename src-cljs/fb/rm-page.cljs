@@ -20,22 +20,21 @@
         cid     (.data origa "cid")
         bid     (.data origa "bid")
         rmtype  (.data origa "rm")
-        title   ($ "#newpage div.rm div.toolbar h1")
         menu    ($ "#newpage div.rm div.toolbar")
         ul      ($ "#newpage div.rm ul")
         li      ($ "<li></li>")
         a       ($ "<a></a>")
         rm-proj-page (fn [e]
                        (rm-from-back! "pid" pid)
-                       (rm-proj #(trigger-new-page "projects" {"projects" [["anim" "pop"]]}) pid)
+                       (rm-proj #(trigger-new-page "projects" {"projects" [["anim" "slideright"]]}) pid)
                        false)
         rm-cost-page (fn [e]
                        (rm-from-back! "cid" cid)
-                       (rm-cost #(trigger-new-page "proj" {"proj" [["pid" pid] ["anim" "pop"]]}) cid)
+                       (rm-cost #(trigger-new-page "proj" {"proj" [["pid" pid] ["anim" "slideright"]]}) cid)
                        false)
         rm-budd-page (fn [e]
                        (rm-from-back! "bid" bid)
-                       (rm-buddy #(trigger-new-page "buddies" {"buddies" [["bid" bid] ["pid" pid] ["anim" "pop"]]}) bid)
+                       (rm-buddy #(trigger-new-page "buddies" {"buddies" [["bid" bid] ["pid" pid] ["anim" "slideright"]]}) bid)
                        false)
         set-rm-budd  (fn [t r]
                        (let [i   (.item (.-rows r) 0)

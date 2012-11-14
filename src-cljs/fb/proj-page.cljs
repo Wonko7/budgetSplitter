@@ -105,7 +105,7 @@
                                                                (.text "Delete Project")
                                                                (.data "pid" pid)
                                                                (.data "rm" "proj")
-                                                               (.data "anim" "pop")
+                                                               ;(.data "anim" "pop")
                                                                (.attr "href" "rm")))))))
                                   pid)
                         (swap-page e origa))

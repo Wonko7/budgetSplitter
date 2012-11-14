@@ -66,7 +66,7 @@
         li  ($ "<li></li>")
         a   ($ "<a></a>")
         curr (get-current-page :new)
-        data {"settings" [["anim" "flipright"]]}
+        data {"settings" nil}
         links (remove #(let [li (first %)]
                          (cond (or (= li "indivbuddy") (= li "buddies"))         (or (= curr "indivbuddy") (= curr "buddies"))
                                (or (= li "newcost") (= li "cost") (= li "proj")) (or (= curr "cost") (= curr "newcost") (= curr "proj"))

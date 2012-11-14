@@ -107,7 +107,7 @@
                                                                (.data "pid" pid)
                                                                (.data "bid" bid)
                                                                (.data "rm" "buddy")
-                                                               (.data "anim" "pop")
+                                                               ;(.data "anim" "pop")
                                                                (.attr "href" "rm"))))))
                                     (swap-page e origa))
                                   bid))]

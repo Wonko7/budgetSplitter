@@ -56,7 +56,7 @@
                                                               (.data "pid" pid)
                                                               (.data "cid" cid)
                                                               (.data "rm" "cost")
-                                                              (.data "anim" "pop")
+                                                              ;(.data "anim" "pop")
                                                               (.attr "href" "rm")))))))
                                  cid)
                         (swap-page e origa))]
